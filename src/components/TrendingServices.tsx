@@ -4,13 +4,14 @@ import { useState, useRef } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import PopularGameCard from "./PopularGameCard";
+import { useRouter } from "next/navigation"; 
 
 type Product = {
   _id: string;
   title: string;
   images: string[];
   offerCount: number;
-  service?: string;
+  service?: string; // This would be the service ID associated with the product
 };
 
 type Section = {
@@ -22,6 +23,8 @@ type Section = {
 const CARDS_PER_VIEW = 4;
 
 const TrendingServices = ({ data }: { data: Section[] }) => {
+  const router = useRouter();
+
   const [startIdx, setStartIdx] = useState<{ [key: string]: number }>({});
   const containerRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
 
@@ -29,22 +32,39 @@ const TrendingServices = ({ data }: { data: Section[] }) => {
   const [startX, setStartX] = useState(0);
   const [scrollLeft, setScrollLeft] = useState(0);
 
-  const handleCardClick = async (product: Product, title: string) => {
-    if (isDragging) return;
-    try {
-      if (!product.service) throw new Error("Service ID not found");
-      //   navigate(
-      //     `/product?productId=${product._id}&serviceId=${product.service}`,
-      //     {
-      //       state: { serviceName: title },
-      //     }
-      //   );
-      console.log(product);
-    } catch (error) {
-      console.error("Error navigating:", error);
-      toast.error("Failed to load product offers");
-    }
-  };
+// const handleCardClick = async (product: Product, title: string) => {
+//   if (isDragging) return;
+//   try {
+//     if (!product.service || !product._id) {
+//       throw new Error("Product or Service ID not found");
+//     }
+
+//     const serviceName = title.toLowerCase().replace(/\s+/g, '-');
+
+//     // Navigate to URL
+//     router.push(`/categories/${serviceName}`);
+
+//     console.log("Navigated to:", `/api/categories/${serviceName}`);
+//   } catch (error) {
+//     console.error("Error navigating:", error);
+//     toast.error("Failed to load product offers");
+//   }
+// };
+
+const handleCardClick = (product: Product, serviceName: string) => {
+  if (isDragging) return;
+
+  try {
+    const serviceSlug = serviceName.toLowerCase().replace(/\s+/g, '-');
+    const productSlug = product.title.toLowerCase().replace(/\s+/g, '-');
+
+    router.push(`/categories/${serviceSlug}/${productSlug}`);
+  } catch (error) {
+    console.error("Navigation error:", error);
+    toast.error("Failed to load product offers");
+  }
+};
+
 
   const handleMouseDown = (e: React.MouseEvent, sectionId: string) => {
     setIsDragging(true);
@@ -84,7 +104,7 @@ const TrendingServices = ({ data }: { data: Section[] }) => {
         {data.map((section) => {
           const products = section.products.map((p) => ({
             ...p,
-            service: section._id,
+            service: section._id, // Assign the section's _id as the product's service ID
           }));
           const currentStart = startIdx[section._id] || 0;
           const maxIdx = Math.max(0, products.length - CARDS_PER_VIEW);
@@ -162,7 +182,6 @@ const TrendingServices = ({ data }: { data: Section[] }) => {
 
               {/* Scrollable Container */}
               <div
-                //   ref={(el) => (containerRefs.current[section._id] = el)}
                 ref={(el: HTMLDivElement | null) => {
                   containerRefs.current[section._id] = el;
                 }}
@@ -179,7 +198,7 @@ const TrendingServices = ({ data }: { data: Section[] }) => {
                     transform: `translateX(-${
                       (currentStart / CARDS_PER_VIEW) * 100
                     }%)`,
-                    width: `${(products.length / CARDS_PER_VIEW) * 100}%`,
+                    width: `${(products.length / CARDS_PER_VIEW) * 100}%`, 
                   }}
                 >
                   {products.map((product) => (
