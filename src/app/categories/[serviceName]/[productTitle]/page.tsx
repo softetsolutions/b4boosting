@@ -24,8 +24,6 @@ export default async function CategoryProductPage({ params }: Props) {
 
   return (
     <ProductPageComp
-      // serviceName={serviceName}
-      // productTitle={productTitle}
       serviceName={serviceName}
       productTitle={productTitle}
       initialOffers={offers || []}

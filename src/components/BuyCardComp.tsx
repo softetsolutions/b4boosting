@@ -11,43 +11,6 @@ function BuyCardComp({ offer }: BuyCardCompProps) {
   const [onlineSellersOnly, setOnlineSellersOnly] = useState<boolean>(false);
   const [sortBy, setSortBy] = useState<string>('Recommended');
   const [count, setCount] = useState<number>(1);
-  // const [offer, setOffer] = useState<ApiOffer | null>(null);
-  // const [, setLoading] = useState(false);
-  // const [, setError] = useState<string | null>(null);
-
-  // Local Storage Logic inside useEffect
-  // useEffect(() => {
-  //   if (offerId) {
-  //     setLoading(true);
-  //     setError(null);
-  //     fetchOfferById(offerId)
-  //       .then((fetchedOffer) => {
-  //         setOffer(fetchedOffer);
-
-  //         // Store in localStorage (max 15, no duplicates)
-  //         try {
-  //           const key = "browsing_history";
-  //           const existing: ApiOffer[] = JSON.parse(localStorage.getItem(key) || "[]");
-
-  //           // Remove duplicate if it exists
-  //           const withoutDuplicate = existing.filter(item => item._id !== fetchedOffer._id);
-
-  //           // Add new one at the top
-  //           const updated = [fetchedOffer, ...withoutDuplicate];
-
-  //           // Limit to latest 15
-  //           const limited = updated.slice(0, 15);
-
-  //           // Save
-  //           localStorage.setItem(key, JSON.stringify(limited));
-  //         } catch (err) {
-  //           console.error("Error saving browsing history:", err);
-  //         }
-  //       })
-  //       .catch((err) => setError(err.message || 'Failed to fetch offer'))
-  //       .finally(() => setLoading(false));
-  //   }
-  // }, [offerId]);
 
   const handleInc = (): void => {
     setCount((prev) => prev + 1);
@@ -58,13 +21,6 @@ function BuyCardComp({ offer }: BuyCardCompProps) {
   };
 
   const totalAmount: string = (count * (offer ? offer.price : 0)).toFixed(2);
-
-//   const filteredSellers: OtherSeller[] = otherSellers
-//     .filter((seller) => (onlineSellersOnly ? seller.isOnline : true))
-//     .sort((a, b) => {
-//       if (sortBy === 'Lowest Price') return parseFloat(a.price) - parseFloat(b.price);
-//       return 0;
-//     });
 
   const getOfferDetail = (field: string): string | undefined => {
     if (!offer || !offer.offerDetails) return undefined;
