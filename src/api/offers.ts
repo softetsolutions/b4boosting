@@ -1,4 +1,3 @@
-import { API_BASE_URL } from "./config";
 import { getAuthInfo } from "../utils/auth";
 
 export interface OfferFormData {
@@ -24,7 +23,7 @@ export interface OfferFormData {
 //     service: string;
 //   };
 // };
-export type ApiOffer ={
+export type ApiOffer = {
   _id: string;
   price: number;
   currency: string;
@@ -44,7 +43,7 @@ export type ApiOffer ={
   deliveryTime: string;
   instantDelivery: boolean;
   images: string[];
-}
+};
 
 export type ServiceWithCount = {
   _id: string;
@@ -53,7 +52,9 @@ export type ServiceWithCount = {
   icon?: string;
 };
 
-export const createOffer = async (offerData: OfferFormData): Promise<ApiOffer> => {
+export const createOffer = async (
+  offerData: OfferFormData
+): Promise<ApiOffer> => {
   const { userId: seller } = getAuthInfo();
 
   const payload = {
@@ -70,7 +71,7 @@ export const createOffer = async (offerData: OfferFormData): Promise<ApiOffer> =
     seller,
   };
 
-  const response = await fetch(`${API_BASE_URL}/offers`, {
+  const response = await fetch(`${process.env.BACKEND_URL}/offers`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -90,8 +91,7 @@ export const createOffer = async (offerData: OfferFormData): Promise<ApiOffer> =
 };
 
 export const fetchOffers = async (): Promise<ApiOffer[]> => {
-
-  const response = await fetch(`${API_BASE_URL}/offers`, {
+  const response = await fetch(`${process.env.BACKEND_URL}/offers`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -107,7 +107,7 @@ export const fetchOffers = async (): Promise<ApiOffer[]> => {
   }
 
   const result = await response.json();
-  
+
   // nested response
   if (result.success && Array.isArray(result.data)) {
     return result.data;
@@ -119,8 +119,7 @@ export const fetchOffers = async (): Promise<ApiOffer[]> => {
 };
 
 export const fetchOfferById = async (offerId: string): Promise<ApiOffer> => {
-
-  const response = await fetch(`${API_BASE_URL}/offers/${offerId}`, {
+  const response = await fetch(`${process.env.BACKEND_URL}/offers/${offerId}`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -142,7 +141,10 @@ export const fetchOfferById = async (offerId: string): Promise<ApiOffer> => {
   throw new Error("Invalid response format for fetching an offer.");
 };
 
-export const updateOffer = async (offerId: string, offerData: OfferFormData): Promise<ApiOffer> => {
+export const updateOffer = async (
+  offerId: string,
+  offerData: OfferFormData
+): Promise<ApiOffer> => {
   const payload = {
     product: offerData.brand,
     offerDetails: Object.entries(offerData.dynamicFields).map(
@@ -156,7 +158,7 @@ export const updateOffer = async (offerId: string, offerData: OfferFormData): Pr
     images: offerData.images,
   };
 
-  const response = await fetch(`${API_BASE_URL}/offers/${offerId}`, {
+  const response = await fetch(`${process.env.BACKEND_URL}/offers/${offerId}`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
@@ -173,38 +175,42 @@ export const updateOffer = async (offerId: string, offerData: OfferFormData): Pr
   }
 
   return response.json();
-}; 
+};
 
-export const deleteOffer = async (offerId: string): Promise<{ message: string }> => {
-
-  const response = await fetch(`${API_BASE_URL}/offers/${offerId}`, {
-    method: 'DELETE',
+export const deleteOffer = async (
+  offerId: string
+): Promise<{ message: string }> => {
+  const response = await fetch(`${process.env.BACKEND_URL}/offers/${offerId}`, {
+    method: "DELETE",
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
     },
-    credentials: 'include',
+    credentials: "include",
   });
 
   if (!response.ok) {
     const errorData = await response
       .json()
       .catch(() => ({ message: `Offer deletion failed: ${response.status}` }));
-    throw new Error(errorData.message || 'Failed to delete offer');
+    throw new Error(errorData.message || "Failed to delete offer");
   }
 
   return response.json();
-}; 
+};
 
 export const fetchOffersBySellerId = async (): Promise<ApiOffer[]> => {
   const { userId } = getAuthInfo();
 
-  const response = await fetch(`${API_BASE_URL}/offers/seller/${userId}`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    credentials: "include",
-  });
+  const response = await fetch(
+    `${process.env.BACKEND_URL}/offers/seller/${userId}`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+    }
+  );
 
   if (!response.ok) {
     throw new Error("Failed to fetch offers");
@@ -215,14 +221,14 @@ export const fetchOffersBySellerId = async (): Promise<ApiOffer[]> => {
     return result.data;
   }
   throw new Error("Invalid response format from server");
-}; 
+};
 
 // export const fetchOffersByProductAndService = async (
 //   productId: string,
 //   serviceId: string
 // ): Promise<{ offers: ApiOffer[]; services: ServiceWithCount[] }> => {
 //   const response = await fetch(
-//     `${API_BASE_URL}/offers/filter?productId=${productId}&serviceId=${serviceId}`,
+//     `${process.env.BACKEND_URL}/offers/filter?productId=${productId}&serviceId=${serviceId}`,
 //     {
 //       method: "GET",
 //       headers: {
@@ -241,12 +247,11 @@ export const fetchOffersBySellerId = async (): Promise<ApiOffer[]> => {
 
 //   const result = await response.json();
 
-
 //   if (result.success && Array.isArray(result.offers)) {
 //     return {
 //       offers: result.offers,
 //       services: result.services,
- 
+
 //     };
 //   }
 
@@ -258,7 +263,7 @@ export const fetchOffersBySellerId = async (): Promise<ApiOffer[]> => {
 //   productTitle: string
 // ): Promise<{ offers: ApiOffer[]; services: ServiceWithCount[] }> => {
 //   const response = await fetch(
-//     `${API_BASE_URL}/offers/filter?serviceName=${encodeURIComponent(serviceName)}&productTitle=${encodeURIComponent(productTitle)}`,
+//     `${process.env.BACKEND_URL}/offers/filter?serviceName=${encodeURIComponent(serviceName)}&productTitle=${encodeURIComponent(productTitle)}`,
 //     {
 //       method: "GET",
 //       headers: {
@@ -292,9 +297,12 @@ export const fetchOffersByProductAndService = async (
   serviceName: string,
   productTitle?: string | null // Make it optional
 ): Promise<{ offers: ApiOffer[]; services: ServiceWithCount[] }> => {
-  let url = `${API_BASE_URL}/offers/filter?serviceName=${encodeURIComponent(serviceName)}`;
+  let url = `${
+    process.env.BACKEND_URL
+  }/offers/filter?serviceName=${encodeURIComponent(serviceName)}`;
 
-  if (productTitle) { // Only add productTitle to the URL if it's provided
+  if (productTitle) {
+    // Only add productTitle to the URL if it's provided
     url += `&productTitle=${encodeURIComponent(productTitle)}`;
   }
 
@@ -329,13 +337,10 @@ export const fetchOffersByServiceId = async (
   page: number = 1,
   limit: number = 10
 ) => {
-
   const { token } = getAuthInfo();
   try {
-
-    
     const response = await fetch(
-      `${API_BASE_URL}/offers/service/${serviceId}?page=${page}&limit=${limit}`,
+      `${process.env.BACKEND_URL}/offers/service/${serviceId}?page=${page}&limit=${limit}`,
       {
         headers: {
           "Content-Type": "application/json",
@@ -347,7 +352,9 @@ export const fetchOffersByServiceId = async (
 
     if (!response.ok) {
       const errorData = await response.json();
-      throw new Error(errorData.message || "Failed to fetch offers by serviceId");
+      throw new Error(
+        errorData.message || "Failed to fetch offers by serviceId"
+      );
     }
 
     return await response.json(); // { success, data: offers, pagination }

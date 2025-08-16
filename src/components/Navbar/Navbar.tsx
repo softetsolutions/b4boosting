@@ -1,23 +1,19 @@
 "use client";
 
 import { useState, useEffect } from "react";
-// import LogoIcon from "../../assets/svgIcons/LogoIcon.svg?react";
-// import { Link, useNavigate } from "react-router-dom";
-// import toast from "react-hot-toast";
-// import LanguageSelector from "./LanguageSelector";
-// import { logout, isAuthenticated } from "../../utils/auth";
+import Link from "next/link";
+import LanguageSelector from "../LanguageSelector";
 
-const Navbar = () => {
+const Navbar = ({
+  isLoggedIn,
+  role,
+}: {
+  isLoggedIn: boolean;
+  role: string;
+}) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-  const [isloggedIn, setisloggedIn] = useState(false);
-  //   const navigate = useNavigate();
-
-  useEffect(() => {
-    // Check authentication status on component mount
-    // setisloggedIn(isAuthenticated());
-  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -40,14 +36,6 @@ const Navbar = () => {
   //     }
   //   };
 
-  const menuItems = [
-    { label: "Home", href: "#home" },
-    { label: "Boosting", href: "#boosting" },
-    { label: "Accounts", href: "#accounts" },
-    { label: "Currency", href: "#currency" },
-    { label: "Games", href: "#games" },
-  ];
-
   return (
     <nav
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
@@ -65,10 +53,8 @@ const Navbar = () => {
           } shadow-2xl shadow-cyan-500/10`}
         >
           <div className="flex items-center justify-between">
-            {/* Logo  */}
             <div className="flex items-center space-x-3">
               <div className="bg-gradient-to-r from-cyan-500 to-blue-700 p-2 rounded-xl">
-                {/* <LogoIcon className="w-8 h-8 text-white" /> */}
                 <div className="w-8 h-8 text-white">Logo</div>
               </div>
               <div>
@@ -79,19 +65,6 @@ const Navbar = () => {
               </div>
             </div>
 
-            {/* Desktop Menu */}
-            <div className="hidden md:flex items-center space-x-8">
-              {menuItems.map((item) => (
-                <a
-                  key={item.href}
-                  href={item.href}
-                  className="relative text-gray-300 hover:text-cyan-400 transition-colors duration-200 font-medium group"
-                >
-                  {item.label}
-                  <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-cyan-400 to-blue-600 group-hover:w-full transition-all duration-300 ease-out shadow-lg shadow-cyan-400/50"></span>
-                </a>
-              ))}
-            </div>
             <div className="flex items-center space-x-4">
               <button
                 onClick={() => setIsOpen(true)}
@@ -99,18 +72,18 @@ const Navbar = () => {
               >
                 IN
               </button>
-              {/* {isOpen && <LanguageSelector onClose={() => setIsOpen(false)} />} */}
+              {isOpen && <LanguageSelector onClose={() => setIsOpen(false)} />}
 
-              {/* {isloggedIn ? (
+              {isLoggedIn ? (
                 <>
                   <button
-                    onClick={() => navigate("/orders")}
+                    onClick={() => {}}
                     className="px-4 py-2 text-sm text-white rounded-xl font-medium border border-cyan-200  hover:bg-gradient-to-r from-cyan-500 to-blue-700 shadow-lg hover:shadow-cyan-500/25 transition-all duration-300"
                   >
                     Create Offer
                   </button>
                   <button
-                    onClick={() => navigate("/chat")}
+                    onClick={() => {}}
                     className="px-3 py-2 text-sm text-white rounded-xl font-medium border border-cyan-200  hover:bg-gradient-to-r from-cyan-500 to-blue-700 shadow-lg hover:shadow-cyan-500/25 transition-all duration-300"
                   >
                     <i className="fa-solid fa-message"></i>
@@ -146,21 +119,21 @@ const Navbar = () => {
                transition-all duration-300 z-50"
                     >
                       <button
-                        onClick={() => navigate("/")}
+                        onClick={() => {}}
                         className="w-full text-left px-4 py-2 hover:bg-gray-500"
                       >
                         View Profile
                       </button>
 
                       <button
-                        onClick={() => navigate("/setting")}
+                        onClick={() => {}}
                         className="w-full text-left px-4 py-2 hover:bg-gray-500"
                       >
                         Settings
                       </button>
 
                       <button
-                        onClick={handleLogout}
+                        onClick={() => {}}
                         className="w-full text-left px-4 py-2 text-red-500 hover:bg-red-100"
                       >
                         Logout
@@ -170,20 +143,20 @@ const Navbar = () => {
                 </>
               ) : (
                 <>
-                  <button
-                    onClick={() => navigate("/login")}
-                    className="hidden md:block relative text-gray-300 hover:text-cyan-400 transition-colors duration-200 font-medium group hover:cursor-pointer"
-                  >
-                    Sign in
-                    <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-cyan-400 to-blue-600 group-hover:w-full transition-all duration-300 ease-out shadow-lg shadow-cyan-400/50"></span>
-                  </button>
-                  <Link to="/signup">
+                  <Link href="/login">
+                    <button className="hidden md:block relative text-gray-300 hover:text-cyan-400 transition-colors duration-200 font-medium group hover:cursor-pointer">
+                      Sign in
+                      <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-cyan-400 to-blue-600 group-hover:w-full transition-all duration-300 ease-out shadow-lg shadow-cyan-400/50"></span>
+                    </button>
+                  </Link>
+
+                  <Link href="/signup">
                     <button className="bg-gradient-to-r from-cyan-500 to-blue-700 hover:from-cyan-600 hover:to-blue-800 text-white font-semibold px-6 py-2 rounded-xl shadow-lg hover:shadow-cyan-500/25 transition-all duration-300">
                       Register
                     </button>
                   </Link>
                 </>
-              )} */}
+              )}
 
               {/* Mobile Menu Button */}
               <button

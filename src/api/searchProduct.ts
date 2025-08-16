@@ -1,5 +1,3 @@
-import { API_BASE_URL } from "./config";
-
 export interface ProductServiceSearchResult {
   productName: string;
   services: {
@@ -13,7 +11,9 @@ export const fetchProductAndServiceDetailBySearch = async (
   searchString: string
 ): Promise<ProductServiceSearchResult[]> => {
   const response = await fetch(
-    `${API_BASE_URL}/products/search/${encodeURIComponent(searchString)}`,
+    `${process.env.BACKEND_URL}/products/search/${encodeURIComponent(
+      searchString
+    )}`,
     {
       method: "GET",
       headers: {
@@ -41,5 +41,7 @@ export const fetchProductAndServiceDetailBySearch = async (
     return result.data;
   }
 
-  throw new Error("Invalid response format for fetchProductAndServiceDetailBySearch");
+  throw new Error(
+    "Invalid response format for fetchProductAndServiceDetailBySearch"
+  );
 };

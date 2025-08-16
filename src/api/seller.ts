@@ -1,4 +1,3 @@
-import { API_BASE_URL } from "./config";
 import { getAuthInfo, handleUnauthorized } from "../utils/auth";
 
 export interface SellerRequest {
@@ -23,7 +22,7 @@ export interface SellerRequest {
 export const fetchAllSellerRequests = async (): Promise<SellerRequest[]> => {
   const { token } = getAuthInfo();
 
-  const response = await fetch(`${API_BASE_URL}/seller`, {
+  const response = await fetch(`${process.env.BACKEND_URL}/seller`, {
     headers: {
       Accept: "application/json",
       Authorization: `Bearer ${token}`,
@@ -40,17 +39,22 @@ export const fetchAllSellerRequests = async (): Promise<SellerRequest[]> => {
   return Array.isArray(res.data) ? res.data : [];
 };
 
-export const approveSellerRequest = async (requestId: string): Promise<void> => {
+export const approveSellerRequest = async (
+  requestId: string
+): Promise<void> => {
   const { token } = getAuthInfo();
 
-  const response = await fetch(`${API_BASE_URL}/seller/${requestId}/approve`, {
-    method: "PATCH",
-    headers: {
-      Accept: "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-    credentials: "include",
-  });
+  const response = await fetch(
+    `${process.env.BACKEND_URL}/seller/${requestId}/approve`,
+    {
+      method: "PATCH",
+      headers: {
+        Accept: "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      credentials: "include",
+    }
+  );
 
   if (response.status === 401) await handleUnauthorized();
   if (!response.ok) {
@@ -61,14 +65,17 @@ export const approveSellerRequest = async (requestId: string): Promise<void> => 
 export const rejectSellerRequest = async (requestId: string): Promise<void> => {
   const { token } = getAuthInfo();
 
-  const response = await fetch(`${API_BASE_URL}/seller/${requestId}/reject`, {
-    method: "PATCH",
-    headers: {
-      Accept: "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-    credentials: "include",
-  });
+  const response = await fetch(
+    `${process.env.BACKEND_URL}/seller/${requestId}/reject`,
+    {
+      method: "PATCH",
+      headers: {
+        Accept: "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      credentials: "include",
+    }
+  );
 
   if (response.status === 401) await handleUnauthorized();
   if (!response.ok) {

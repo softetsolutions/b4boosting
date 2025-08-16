@@ -1,4 +1,3 @@
-import { API_BASE_URL } from "./config";
 import { getAuthInfo, handleUnauthorized } from "../utils/auth";
 
 export interface Service {
@@ -17,7 +16,7 @@ export interface CreateServiceRequest {
 }
 
 export const fetchServices = async (): Promise<Service[]> => {
-  const response = await fetch(`${API_BASE_URL}/services`, {
+  const response = await fetch(`${process.env.BACKEND_URL}/services`, {
     credentials: "include",
     headers: {
       Accept: "application/json",
@@ -33,7 +32,9 @@ export const fetchServices = async (): Promise<Service[]> => {
   return Array.isArray(data) ? data : [];
 };
 
-export const createService = async (service: CreateServiceRequest | FormData): Promise<Service> => {
+export const createService = async (
+  service: CreateServiceRequest | FormData
+): Promise<Service> => {
   try {
     const { token } = getAuthInfo();
 
@@ -51,7 +52,7 @@ export const createService = async (service: CreateServiceRequest | FormData): P
       body = JSON.stringify(service);
     }
 
-    const response = await fetch(`${API_BASE_URL}/services/create`, {
+    const response = await fetch(`${process.env.BACKEND_URL}/services/create`, {
       method: "POST",
       headers,
       credentials: "include",
@@ -90,7 +91,7 @@ export const fetchAllServices = async (): Promise<Service[]> => {
     await handleUnauthorized();
     throw new Error("No authentication token found");
   }
-  const response = await fetch(`${API_BASE_URL}/services`, {
+  const response = await fetch(`${process.env.BACKEND_URL}/services`, {
     credentials: "include",
     headers: {
       Accept: "application/json",
@@ -111,27 +112,33 @@ export const deleteService = async (serviceId: string): Promise<void> => {
     await handleUnauthorized();
     throw new Error("No authentication token found");
   }
-  const response = await fetch(`${API_BASE_URL}/services/${serviceId}`, {
-    method: "DELETE",
-    credentials: "include",
-    headers: {
-      Accept: "application/json",
-    },
-  });
+  const response = await fetch(
+    `${process.env.BACKEND_URL}/services/${serviceId}`,
+    {
+      method: "DELETE",
+      credentials: "include",
+      headers: {
+        Accept: "application/json",
+      },
+    }
+  );
   if (response.status === 401) await handleUnauthorized();
   if (!response.ok) {
     throw new Error("Failed to delete service");
   }
 };
 
-export const updateServiceVisibility = async (serviceId: string, show: boolean): Promise<void> => {
+export const updateServiceVisibility = async (
+  serviceId: string,
+  show: boolean
+): Promise<void> => {
   try {
     getAuthInfo();
   } catch {
     await handleUnauthorized();
     throw new Error("No authentication token found");
   }
-  const response = await fetch(`${API_BASE_URL}/services/select`, {
+  const response = await fetch(`${process.env.BACKEND_URL}/services/select`, {
     method: "POST",
     credentials: "include",
     headers: {
@@ -154,12 +161,15 @@ export const fetchServiceById = async (serviceId: string): Promise<Service> => {
     await handleUnauthorized();
     throw new Error("No authentication token found");
   }
-  const response = await fetch(`${API_BASE_URL}/services/${serviceId}`, {
-    credentials: "include",
-    headers: {
-      Accept: "application/json",
-    },
-  });
+  const response = await fetch(
+    `${process.env.BACKEND_URL}/services/${serviceId}`,
+    {
+      credentials: "include",
+      headers: {
+        Accept: "application/json",
+      },
+    }
+  );
   if (response.status === 401) await handleUnauthorized();
   if (!response.ok) {
     throw new Error("Failed to load service details");
@@ -167,24 +177,32 @@ export const fetchServiceById = async (serviceId: string): Promise<Service> => {
   return response.json();
 };
 
-export const updateService = async (serviceId: string, data: FormData): Promise<void> => {
+export const updateService = async (
+  serviceId: string,
+  data: FormData
+): Promise<void> => {
   try {
     getAuthInfo();
   } catch {
     await handleUnauthorized();
     throw new Error("No authentication token found");
   }
-  const response = await fetch(`${API_BASE_URL}/services/${serviceId}`, {
-    method: "PUT",
-    credentials: "include",
-    headers: {
-      Accept: "application/json",
-    },
-    body: data,
-  });
+  const response = await fetch(
+    `${process.env.BACKEND_URL}/services/${serviceId}`,
+    {
+      method: "PUT",
+      credentials: "include",
+      headers: {
+        Accept: "application/json",
+      },
+      body: data,
+    }
+  );
   if (response.status === 401) await handleUnauthorized();
   if (!response.ok) {
-    const errorData = await response.json().catch(() => ({ message: "Failed to update service" }));
+    const errorData = await response
+      .json()
+      .catch(() => ({ message: "Failed to update service" }));
     throw new Error(errorData.message || "Failed to update service");
   }
 };

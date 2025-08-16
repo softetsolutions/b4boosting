@@ -1,4 +1,3 @@
-import { API_BASE_URL } from "./config";
 import { handleUnauthorized } from "../utils/auth";
 
 export interface UserData {
@@ -23,7 +22,7 @@ export interface AuthResponse {
 }
 
 export const signupUser = async (userData: UserData): Promise<AuthResponse> => {
-  const res = await fetch(`${API_BASE_URL}/auth/register`, {
+  const res = await fetch(`${process.env.BACKEND_URL}/auth/register`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(userData),
@@ -38,11 +37,11 @@ export const signupUser = async (userData: UserData): Promise<AuthResponse> => {
 export const loginUser = async (
   credentials: LoginCredentials
 ): Promise<AuthResponse> => {
-  const res = await fetch(`${API_BASE_URL}/auth/login`, {
+  const res = await fetch(`${process.env.BACKEND_URL}/auth/login`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(credentials),
-    credentials:"include",
+    credentials: "include",
   });
 
   if (res.status === 401) await handleUnauthorized();
@@ -55,8 +54,11 @@ export const loginUser = async (
   return data;
 };
 
-export const logoutUser = async (): Promise<{ success: boolean; message: string }> => {
-  const res = await fetch(`${API_BASE_URL}/auth/logout`, {
+export const logoutUser = async (): Promise<{
+  success: boolean;
+  message: string;
+}> => {
+  const res = await fetch(`${process.env.BACKEND_URL}/auth/logout`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     credentials: "include",

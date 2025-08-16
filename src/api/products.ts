@@ -1,4 +1,3 @@
-import { API_BASE_URL } from "./config";
 import { getAuthInfo, handleUnauthorized } from "../utils/auth";
 
 export interface ProductFormData {
@@ -64,7 +63,7 @@ export const createProduct = async (
 ): Promise<Product> => {
   const { token } = getAuthInfo();
 
-  const response = await fetch(`${API_BASE_URL}/products`, {
+  const response = await fetch(`${process.env.BACKEND_URL}/products`, {
     method: "POST",
     headers: {
       Accept: "application/json",
@@ -86,12 +85,15 @@ export const createProduct = async (
 export const fetchProductsByService = async (
   serviceId: string
 ): Promise<Product[]> => {
-  const response = await fetch(`${API_BASE_URL}/products/service/${serviceId}`, {
-    credentials: "include",
-    headers: {
-      Accept: "application/json",
-    },
-  });
+  const response = await fetch(
+    `${process.env.BACKEND_URL}/products/service/${serviceId}`,
+    {
+      credentials: "include",
+      headers: {
+        Accept: "application/json",
+      },
+    }
+  );
 
   if (response.status === 401) await handleUnauthorized();
   if (!response.ok) {
@@ -112,12 +114,15 @@ export const fetchProductById = async (productId: string): Promise<Product> => {
     await handleUnauthorized();
     throw new Error("No authentication token found");
   }
-  const response = await fetch(`${API_BASE_URL}/products/${productId}`, {
-    credentials: "include",
-    headers: {
-      Accept: "application/json",
-    },
-  });
+  const response = await fetch(
+    `${process.env.BACKEND_URL}/products/${productId}`,
+    {
+      credentials: "include",
+      headers: {
+        Accept: "application/json",
+      },
+    }
+  );
   if (response.status === 401) await handleUnauthorized();
   if (!response.ok) {
     throw new Error("Failed to load product details");
@@ -126,7 +131,7 @@ export const fetchProductById = async (productId: string): Promise<Product> => {
 };
 
 export const fetchHomePageData = async (): Promise<HomePageService[]> => {
-  const response = await fetch(`${API_BASE_URL}/products/home`, {
+  const response = await fetch(`${process.env.BACKEND_URL}/products/home`, {
     headers: {
       Accept: "application/json",
     },
@@ -151,7 +156,7 @@ export const fetchAllProducts = async (): Promise<Product[]> => {
     await handleUnauthorized();
     throw new Error("No authentication token found");
   }
-  const response = await fetch(`${API_BASE_URL}/products`, {
+  const response = await fetch(`${process.env.BACKEND_URL}/products`, {
     credentials: "include",
     headers: {
       Accept: "application/json",
@@ -172,37 +177,48 @@ export const deleteProduct = async (productId: string): Promise<void> => {
     await handleUnauthorized();
     throw new Error("No authentication token found");
   }
-  const response = await fetch(`${API_BASE_URL}/products/${productId}`, {
-    method: "DELETE",
-    credentials: "include",
-    headers: {
-      Accept: "application/json",
-    },
-  });
+  const response = await fetch(
+    `${process.env.BACKEND_URL}/products/${productId}`,
+    {
+      method: "DELETE",
+      credentials: "include",
+      headers: {
+        Accept: "application/json",
+      },
+    }
+  );
   if (response.status === 401) await handleUnauthorized();
   if (!response.ok) {
     throw new Error("Failed to delete product");
   }
 };
 
-export const updateProduct = async (productId: string, data: FormData): Promise<void> => {
+export const updateProduct = async (
+  productId: string,
+  data: FormData
+): Promise<void> => {
   try {
     getAuthInfo();
   } catch {
     await handleUnauthorized();
     throw new Error("No authentication token found");
   }
-  const response = await fetch(`${API_BASE_URL}/products/${productId}`, {
-    method: "PUT",
-    credentials: "include",
-    headers: {
-      Accept: "application/json",
-    },
-    body: data,
-  });
+  const response = await fetch(
+    `${process.env.BACKEND_URL}/products/${productId}`,
+    {
+      method: "PUT",
+      credentials: "include",
+      headers: {
+        Accept: "application/json",
+      },
+      body: data,
+    }
+  );
   if (response.status === 401) await handleUnauthorized();
   if (!response.ok) {
-    const errorData = await response.json().catch(() => ({ message: "Failed to update product" }));
+    const errorData = await response
+      .json()
+      .catch(() => ({ message: "Failed to update product" }));
     throw new Error(errorData.message || "Failed to update product");
   }
 };
@@ -210,12 +226,15 @@ export const updateProduct = async (productId: string, data: FormData): Promise<
 export const fetchServiceAndProductBySlug = async (
   serviceName: string
 ): Promise<ServiceAndProductResponse> => {
-  const response = await fetch(`${API_BASE_URL}/services/slug/${serviceName}`, {
-    headers: {
-      Accept: "application/json",
-    },
-    credentials: "include",
-  });
+  const response = await fetch(
+    `${process.env.BACKEND_URL}/services/slug/${serviceName}`,
+    {
+      headers: {
+        Accept: "application/json",
+      },
+      credentials: "include",
+    }
+  );
 
   if (response.status === 401) await handleUnauthorized();
 
