@@ -4,7 +4,7 @@ import { useState, useRef } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import PopularGameCard from "./PopularGameCard";
-import { useRouter } from "next/navigation"; 
+import { useRouter } from "next/navigation";
 
 type Product = {
   _id: string;
@@ -32,38 +32,38 @@ const TrendingServices = ({ data }: { data: Section[] }) => {
   const [startX, setStartX] = useState(0);
   const [scrollLeft, setScrollLeft] = useState(0);
 
-// const handleCardClick = async (product: Product, title: string) => {
-//   if (isDragging) return;
-//   try {
-//     if (!product.service || !product._id) {
-//       throw new Error("Product or Service ID not found");
-//     }
+  // const handleCardClick = async (product: Product, title: string) => {
+  //   if (isDragging) return;
+  //   try {
+  //     if (!product.service || !product._id) {
+  //       throw new Error("Product or Service ID not found");
+  //     }
 
-//     const serviceName = title.toLowerCase().replace(/\s+/g, '-');
+  //     const serviceName = title.toLowerCase().replace(/\s+/g, '-');
 
-//     // Navigate to URL
-//     router.push(`/categories/${serviceName}`);
+  //     // Navigate to URL
+  //     router.push(`/categories/${serviceName}`);
 
-//     console.log("Navigated to:", `/api/categories/${serviceName}`);
-//   } catch (error) {
-//     console.error("Error navigating:", error);
-//     toast.error("Failed to load product offers");
-//   }
-// };
+  //     console.log("Navigated to:", `/api/categories/${serviceName}`);
+  //   } catch (error) {
+  //     console.error("Error navigating:", error);
+  //     toast.error("Failed to load product offers");
+  //   }
+  // };
 
-const handleCardClick = (product: Product, serviceName: string) => {
-  if (isDragging) return;
+  const handleCardClick = (product: Product, serviceName: string) => {
+    if (isDragging) return;
 
-  try {
-    const serviceSlug = serviceName.toLowerCase().replace(/\s+/g, '-');
-    const productSlug = product.title.toLowerCase().replace(/\s+/g, '-');
+    try {
+      const serviceSlug = serviceName.toLowerCase().replace(/\s+/g, '-');
+      const productSlug = product.title.toLowerCase().replace(/\s+/g, '-');
 
-    router.push(`/categories/${serviceSlug}/${productSlug}`);
-  } catch (error) {
-    console.error("Navigation error:", error);
-    toast.error("Failed to load product offers");
-  }
-};
+      router.push(`/categories/${serviceSlug}/${productSlug}`);
+    } catch (error) {
+      console.error("Navigation error:", error);
+      toast.error("Failed to load product offers");
+    }
+  };
 
 
   const handleMouseDown = (e: React.MouseEvent, sectionId: string) => {
@@ -97,10 +97,31 @@ const handleCardClick = (product: Product, serviceName: string) => {
     }));
   };
 
+
   return (
     <>
       <ToastContainer />
-      <div className="flex flex-col gap-20">
+      <div className="grid grid-cols-2 gap-6 items-center">
+        {data.map((service) => (
+          <div className="bg-blue-300 flex flex-col rounded-lg py-6 px-4" key={service._id}>
+            <span className="flex items-center text-lg font-bold font-lato mb-7">{service.name}</span>
+            <div className="grid grid-cols-2">
+              {
+                service.products.map((product) => (
+                  <div className="bg-blue-300 flex gap-2 items-center" key={product._id}>
+                    <div><img src={product.images[0]} className="w-[32px] h-[32px] rounded-lg"></img></div>
+                    <span className="text-[16px] font-bold font-lato">{product.title}</span>
+                  </div>
+                ))
+              }
+            </div>
+          </div>
+        ))}
+      </div>
+
+
+
+      {/* <div className="flex flex-col gap-20">
         {data.map((section) => {
           const products = section.products.map((p) => ({
             ...p,
@@ -126,7 +147,7 @@ const handleCardClick = (product: Product, serviceName: string) => {
                 </button>
               </div>
 
-              {/* Left Arrow */}
+             
               {currentStart > 0 && (
                 <div className="absolute inset-y-0 -left-3 flex items-center z-10">
                   <button
@@ -153,7 +174,7 @@ const handleCardClick = (product: Product, serviceName: string) => {
                 </div>
               )}
 
-              {/* Right Arrow */}
+            
               {currentStart < maxIdx && (
                 <div className="absolute inset-y-0 -right-3 flex items-center z-10 ">
                   <button
@@ -180,7 +201,7 @@ const handleCardClick = (product: Product, serviceName: string) => {
                 </div>
               )}
 
-              {/* Scrollable Container */}
+            
               <div
                 ref={(el: HTMLDivElement | null) => {
                   containerRefs.current[section._id] = el;
@@ -213,10 +234,10 @@ const handleCardClick = (product: Product, serviceName: string) => {
                   ))}
                 </div>
               </div>
-            </div>
+            </div> 
           );
         })}
-      </div>
+      </div>*/}
     </>
   );
 };
