@@ -15,6 +15,13 @@ const Navbar = ({
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
 
+  const menuItems = [
+  { label: "Account", href: "/account" },
+  { label: "Boosting", href: "/boosting" },
+  { label: "Games", href: "/games" },
+];
+
+
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50);
@@ -54,8 +61,12 @@ const Navbar = ({
         >
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
-              <div className="bg-gradient-to-r from-cyan-500 to-blue-700 p-2 rounded-xl">
-                <div className="w-8 h-8 text-white">Logo</div>
+              <div className="bg-gradient-to-r from-cyan-500 to-blue-700 p-2 rounded-xl shadow-lg shadow-cyan-500/20">
+                <img
+                  src="/svgIcons/LogoIcon.svg"
+                  alt="Logo"
+                  className="w-6 h-6"
+                />
               </div>
               <div>
                 <h1 className="text-2xl font-bold bg-gradient-to-r from-cyan-400 to-blue-600 bg-clip-text text-transparent">
@@ -150,11 +161,11 @@ const Navbar = ({
                     </button>
                   </Link>
 
-                  <Link href="/signup">
+                  {/* <Link href="/signup">
                     <button className="bg-gradient-to-r from-cyan-500 to-blue-700 hover:from-cyan-600 hover:to-blue-800 text-white font-semibold px-6 py-2 rounded-xl shadow-lg hover:shadow-cyan-500/25 transition-all duration-300">
                       Register
                     </button>
-                  </Link>
+                  </Link> */}
                 </>
               )}
 

@@ -1,11 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import facebookIcon from "../../assets/svgIcons/facebook.svg";
-import instagramIcon from "../../assets/svgIcons/instagram.svg";
-import twitterIcon from "../../assets/svgIcons/twitter.svg";
-import youtubeIcon from "../../assets/svgIcons/youtube.svg";
-import discordIcon from "../../assets/svgIcons/discord.svg";
 
 const Footer = () => {
   const [hoverEffect, setHoverEffect] = useState(false);
@@ -21,31 +16,31 @@ const Footer = () => {
 
   const socialLinks = [
     {
-      icon: facebookIcon,
+      icon: "svgIcons/facebook.svg",
       href: "#",
       label: "Facebook",
       hoverClass: "group-hover:text-[#1877F2]",
     },
     {
-      icon: instagramIcon,
+      icon: "svgIcons/instagram.svg",
       href: "#",
       label: "Instagram",
       hoverClass: "group-hover:text-[#E4405F]",
     },
     {
-      icon: twitterIcon,
+      icon: "svgIcons/twitter.svg",
       href: "#",
       label: "Twitter",
       hoverClass: "group-hover:text-[#1DA1F2]",
     },
     {
-      icon: youtubeIcon,
+      icon: "svgIcons/youtube.svg",
       href: "#",
       label: "YouTube",
       hoverClass: "group-hover:text-[#FF0000]",
     },
     {
-      icon: discordIcon,
+      icon: "svgIcons/discord.svg",
       href: "#",
       label: "Discord",
       hoverClass: "group-hover:text-[#5865F2]",
@@ -103,7 +98,7 @@ const Footer = () => {
             <div className="flex items-center space-x-3 mb-8">
               <div className="bg-gradient-to-r from-cyan-500 to-blue-700 p-2 rounded-xl shadow-lg shadow-cyan-500/20">
                 <img
-                  src="/src/assets/svgIcons/LogoIcon.svg"
+                  src="/svgIcons/LogoIcon.svg"
                   alt="Logo"
                   className="w-6 h-6"
                 />
@@ -197,23 +192,23 @@ const Footer = () => {
               {[
                 {
                   name: "Game Boosting",
-                  icon: "/src/assets/svgIcons/boostingArrow.svg",
+                  icon: "/svgIcons/boostingArrow.svg",
                 },
                 {
                   name: "Account Sales",
-                  icon: "/src/assets/svgIcons/userIcon.svg",
+                  icon: "/svgIcons/userIcon.svg",
                 },
                 {
                   name: "In-Game Currency",
-                  icon: "/src/assets/svgIcons/currencyIcon.svg",
+                  icon: "/svgIcons/currencyIcon.svg",
                 },
                 {
                   name: "Pro Coaching",
-                  icon: "/src/assets/svgIcons/coachIcon.svg",
+                  icon: "/svgIcons/coachIcon.svg",
                 },
                 {
                   name: "Tournaments",
-                  icon: "/src/assets/svgIcons/tournamentIcon.svg",
+                  icon: "/svgIcons/tournamentIcon.svg",
                 },
               ].map((service, index) => (
                 <a
@@ -239,9 +234,9 @@ const Footer = () => {
         </div>
         <div className="flex flex-wrap justify-center gap-8 mb-12">
           {[
-            { src: "/src/assets/images/visa.png", alt: "Visa" },
-            { src: "/src/assets/images/mastercard.png", alt: "Mastercard" },
-            { src: "/src/assets/images/paypal.png", alt: "PayPal" },
+            { src: "/images/visa.png", alt: "Visa" },
+            { src: "/images/mastercard.png", alt: "Mastercard" },
+            { src: "/images/paypal.png", alt: "PayPal" },
           ].map((payment, index) => (
             <div key={index} className="payment-icon-wrapper">
               <img
