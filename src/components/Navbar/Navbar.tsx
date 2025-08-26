@@ -4,6 +4,15 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import LanguageSelector from "../LanguageSelector";
 
+const dummyNavbarOptions = [
+  { label: 'Currency', link: '#currency' },
+  { label: 'Account', link: '#account' },
+  { label: 'Top Ups', link: '#topups' },
+  { label: 'Item', link: '#item' },
+  { label: 'Boosting', link: '#boosting' },
+  { label: 'Gift Cards', link: '#gift-card' },
+]
+
 const Navbar = ({
   isLoggedIn,
   role,
@@ -43,21 +52,14 @@ const Navbar = ({
   //     }
   //   };
 
+
   return (
     <nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled
-          ? "bg-gray-900/90 border-b border-cyan-500/20 shadow-lg py-2"
-          : "bg-transparent backdrop-blur-xl py-4"
-      }`}
+      className="fixed top-0 left-0 right-0 z-50 transition-all duration-300 mt-2"
     >
-      <div className="max-w-7xl mx-auto px-4">
+      <div className="max-w-7xl mx-auto px-4 bg-[#99a1af] rounded-[20px] p-3">
         <div
-          className={`transition-all duration-300 ${
-            isScrolled
-              ? "bg-black/40 backdrop-blur-lg border border-cyan-500/30 rounded-2xl px-6 py-3"
-              : "bg-black/20 backdrop-blur-lg border border-cyan-500/30 rounded-2xl px-6 py-4"
-          } shadow-2xl shadow-cyan-500/10`}
+          className="transition-all duration-300"
         >
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
@@ -72,8 +74,22 @@ const Navbar = ({
                 <h1 className="text-2xl font-bold bg-gradient-to-r from-cyan-400 to-blue-600 bg-clip-text text-transparent">
                   GameStore
                 </h1>
-                <p className="text-xs text-gray-400">Pro Gaming Services</p>
+                <p className="text-xs text-amber-100">Pro Gaming Services</p>
               </div>
+            </div>
+            <div className="flex gap-4">
+              {dummyNavbarOptions.map((option) => (
+                // <Link href={option.link}>
+                //   <span className="text-base font-sans">{option.label}</span></Link>
+                <div className="relative group">
+                  <Link href={option.link}>
+                    <span className="text-base font-sans">{option.label}</span>
+                  </Link>
+                  <div className="absolute left-0 top-full mt-2 hidden group-hover:block bg-white border p-2 shadow-lg z-10">
+                    links content yha dalne hai as per eldorado.
+                  </div>
+                </div>
+              ))}
             </div>
 
             <div className="flex items-center space-x-4">
@@ -88,13 +104,13 @@ const Navbar = ({
               {isLoggedIn ? (
                 <>
                   <button
-                    onClick={() => {}}
+                    onClick={() => { }}
                     className="px-4 py-2 text-sm text-white rounded-xl font-medium border border-cyan-200  hover:bg-gradient-to-r from-cyan-500 to-blue-700 shadow-lg hover:shadow-cyan-500/25 transition-all duration-300"
                   >
                     Create Offer
                   </button>
                   <button
-                    onClick={() => {}}
+                    onClick={() => { }}
                     className="px-3 py-2 text-sm text-white rounded-xl font-medium border border-cyan-200  hover:bg-gradient-to-r from-cyan-500 to-blue-700 shadow-lg hover:shadow-cyan-500/25 transition-all duration-300"
                   >
                     <i className="fa-solid fa-message"></i>
@@ -130,21 +146,21 @@ const Navbar = ({
                transition-all duration-300 z-50"
                     >
                       <button
-                        onClick={() => {}}
+                        onClick={() => { }}
                         className="w-full text-left px-4 py-2 hover:bg-gray-500"
                       >
                         View Profile
                       </button>
 
                       <button
-                        onClick={() => {}}
+                        onClick={() => { }}
                         className="w-full text-left px-4 py-2 hover:bg-gray-500"
                       >
                         Settings
                       </button>
 
                       <button
-                        onClick={() => {}}
+                        onClick={() => { }}
                         className="w-full text-left px-4 py-2 text-red-500 hover:bg-red-100"
                       >
                         Logout
