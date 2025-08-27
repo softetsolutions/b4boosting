@@ -30,39 +30,6 @@ export async function Loginaction(formData: FormData) {
   }
 }
 
-
-// export async function registerAction(formData: FormData, code?: string) {
-//   try {
-//     const payload: any = {
-//       firstName: formData.get("firstName"),
-//       lastName: formData.get("lastName"),
-//       email: formData.get("email"),
-//       password: formData.get("password"),
-//     };
-
-//     if (code) payload.code = code;
-
-//     const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/register`, {
-//       method: "POST",
-//       headers: { "Content-Type": "application/json" },
-//       body: JSON.stringify(payload),
-//     });
-
-//     const data = await response.json();
-
-//     if (!response.ok) {
-//       console.error("Signup failed:", response.status, data);
-//       return { success: false, message: data.message || "Signup failed" };
-//     }
-
-//     return data;
-//   } catch (error) {
-//     console.error("Error in registerAction:", error);
-//     throw error;
-//   }
-// }
-
-
 export async function registerAction(formData: FormData, code?: string) {
   try {
     const payload = {
@@ -90,7 +57,7 @@ export async function registerAction(formData: FormData, code?: string) {
       throw new Error(data.message || "Signup failed");
     }
 
-    // ✅ Store token in HttpOnly cookie
+    // Store token in HttpOnly cookie
     cookies().set("token", data.token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
@@ -98,7 +65,7 @@ export async function registerAction(formData: FormData, code?: string) {
       path: "/",
     });
 
-    // ✅ Redirect user straight to dashboard (already logged in)
+    // Redirect user straight to dashboard (already logged in)
     redirect("/");
   } catch (error: any) {
     console.error("Error in registerAction:", error);

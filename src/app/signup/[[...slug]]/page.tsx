@@ -16,7 +16,6 @@ export default function SignupPage({ params }: { params: { slug?: string[] } }) 
   async function clientSafeAction(formData: FormData) {
     try {
       await registerAction(formData, code);
-      // ✅ no need to redirect, server action already did it
     } catch (err: any) {
       setError(err.message || "Something went wrong");
       toast.error(err.message || "Something went wrong");
