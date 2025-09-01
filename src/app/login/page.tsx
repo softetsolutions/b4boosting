@@ -29,7 +29,7 @@ export default function Login() {
                 Login
               </h1>
 
-              {/* ✅ Form submits directly to server action */}
+              {/* Form submits directly to server action */}
               <form action={Loginaction} className="space-y-5">
                 {/* Email */}
                 <div>
