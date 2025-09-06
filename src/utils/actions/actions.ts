@@ -4,14 +4,17 @@ import { cookies } from "next/headers";
 export async function Loginaction(formData: FormData) {
   try {
     const cookieStore = await cookies();
-    const res = await fetch(`${process.env.BACKEND_URL}/auth/login`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        email: formData.get("email"),
-        password: formData.get("password"),
-      }),
-    });
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/login`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: formData.get("email"),
+          password: formData.get("password"),
+        }),
+      }
+    );
     const data = await res.json();
     if (!res.ok) {
       throw new Error(data.message || "Login failed");
@@ -19,8 +22,9 @@ export async function Loginaction(formData: FormData) {
     console.log("data is", data);
     cookieStore.set("token", data.token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
+      // secure: process.env.NODE_ENV === "production",
+      secure: true,
+      sameSite: "none",
       path: "/",
     });
     redirect("/");
@@ -40,7 +44,7 @@ export async function registerAction(formData: FormData, code?: string) {
     } as Record<string, string>;
     if (code) payload.code = code;
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/register`,
+      `${process.env.NEXT_PUBLIC_NEXT_PUBLIC_BACKEND_URL}/auth/register`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },

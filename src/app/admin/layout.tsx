@@ -12,9 +12,13 @@ interface AuthTokenPayload {
   [key: string]: any;
 }
 
-export default function AdminLayout({ children }: { children: ReactNode }) {
-  const cookieStore = cookies();
-  const token = cookieStore.get("userToken")?.value;
+export default async function AdminLayout({
+  children,
+}: {
+  children: ReactNode;
+}) {
+  const cookieStore = await cookies();
+  const token = cookieStore.get("token")?.value;
 
   if (!token) {
     redirect("/login");

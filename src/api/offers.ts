@@ -71,14 +71,17 @@ export const createOffer = async (
     seller,
   };
 
-  const response = await fetch(`${process.env.BACKEND_URL}/offers`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    credentials: "include",
-    body: JSON.stringify(payload),
-  });
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}/offers`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify(payload),
+    }
+  );
 
   if (!response.ok) {
     const errorData = await response
@@ -91,13 +94,16 @@ export const createOffer = async (
 };
 
 export const fetchOffers = async (): Promise<ApiOffer[]> => {
-  const response = await fetch(`${process.env.BACKEND_URL}/offers`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    credentials: "include",
-  });
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}/offers`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+    }
+  );
 
   if (!response.ok) {
     const errorData = await response
@@ -119,13 +125,16 @@ export const fetchOffers = async (): Promise<ApiOffer[]> => {
 };
 
 export const fetchOfferById = async (offerId: string): Promise<ApiOffer> => {
-  const response = await fetch(`${process.env.BACKEND_URL}/offers/${offerId}`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    credentials: "include",
-  });
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}/offers/${offerId}`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+    }
+  );
 
   if (!response.ok) {
     const errorData = await response
@@ -158,14 +167,17 @@ export const updateOffer = async (
     images: offerData.images,
   };
 
-  const response = await fetch(`${process.env.BACKEND_URL}/offers/${offerId}`, {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    credentials: "include",
-    body: JSON.stringify(payload),
-  });
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}/offers/${offerId}`,
+    {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify(payload),
+    }
+  );
 
   if (!response.ok) {
     const errorData = await response
@@ -180,13 +192,16 @@ export const updateOffer = async (
 export const deleteOffer = async (
   offerId: string
 ): Promise<{ message: string }> => {
-  const response = await fetch(`${process.env.BACKEND_URL}/offers/${offerId}`, {
-    method: "DELETE",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    credentials: "include",
-  });
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}/offers/${offerId}`,
+    {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+    }
+  );
 
   if (!response.ok) {
     const errorData = await response
@@ -202,7 +217,7 @@ export const fetchOffersBySellerId = async (): Promise<ApiOffer[]> => {
   const { userId } = getAuthInfo();
 
   const response = await fetch(
-    `${process.env.BACKEND_URL}/offers/seller/${userId}`,
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}/offers/seller/${userId}`,
     {
       method: "GET",
       headers: {
@@ -228,7 +243,7 @@ export const fetchOffersBySellerId = async (): Promise<ApiOffer[]> => {
 //   serviceId: string
 // ): Promise<{ offers: ApiOffer[]; services: ServiceWithCount[] }> => {
 //   const response = await fetch(
-//     `${process.env.BACKEND_URL}/offers/filter?productId=${productId}&serviceId=${serviceId}`,
+//     `${process.env.NEXT_PUBLIC_BACKEND_URL}/offers/filter?productId=${productId}&serviceId=${serviceId}`,
 //     {
 //       method: "GET",
 //       headers: {
@@ -263,7 +278,7 @@ export const fetchOffersBySellerId = async (): Promise<ApiOffer[]> => {
 //   productTitle: string
 // ): Promise<{ offers: ApiOffer[]; services: ServiceWithCount[] }> => {
 //   const response = await fetch(
-//     `${process.env.BACKEND_URL}/offers/filter?serviceName=${encodeURIComponent(serviceName)}&productTitle=${encodeURIComponent(productTitle)}`,
+//     `${process.env.NEXT_PUBLIC_BACKEND_URL}/offers/filter?serviceName=${encodeURIComponent(serviceName)}&productTitle=${encodeURIComponent(productTitle)}`,
 //     {
 //       method: "GET",
 //       headers: {
@@ -298,7 +313,7 @@ export const fetchOffersByProductAndService = async (
   productTitle?: string | null // Make it optional
 ): Promise<{ offers: ApiOffer[]; services: ServiceWithCount[] }> => {
   let url = `${
-    process.env.BACKEND_URL
+    process.env.NEXT_PUBLIC_BACKEND_URL
   }/offers/filter?serviceName=${encodeURIComponent(serviceName)}`;
 
   if (productTitle) {
@@ -340,7 +355,7 @@ export const fetchOffersByServiceId = async (
   const { token } = getAuthInfo();
   try {
     const response = await fetch(
-      `${process.env.BACKEND_URL}/offers/service/${serviceId}?page=${page}&limit=${limit}`,
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/offers/service/${serviceId}?page=${page}&limit=${limit}`,
       {
         headers: {
           "Content-Type": "application/json",

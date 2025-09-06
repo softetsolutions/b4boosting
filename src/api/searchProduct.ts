@@ -11,9 +11,9 @@ export const fetchProductAndServiceDetailBySearch = async (
   searchString: string
 ): Promise<ProductServiceSearchResult[]> => {
   const response = await fetch(
-    `${process.env.BACKEND_URL}/products/search/${encodeURIComponent(
-      searchString
-    )}`,
+    `${
+      process.env.NEXT_PUBLIC_BACKEND_URL
+    }/products/search/${encodeURIComponent(searchString)}`,
     {
       method: "GET",
       headers: {

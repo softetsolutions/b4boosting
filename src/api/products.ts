@@ -63,15 +63,18 @@ export const createProduct = async (
 ): Promise<Product> => {
   const { token } = getAuthInfo();
 
-  const response = await fetch(`${process.env.BACKEND_URL}/products`, {
-    method: "POST",
-    headers: {
-      Accept: "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-    credentials: "include",
-    body: productData,
-  });
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}/products`,
+    {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      credentials: "include",
+      body: productData,
+    }
+  );
 
   if (response.status === 401) await handleUnauthorized();
   if (!response.ok) {
@@ -86,7 +89,7 @@ export const fetchProductsByService = async (
   serviceId: string
 ): Promise<Product[]> => {
   const response = await fetch(
-    `${process.env.BACKEND_URL}/products/service/${serviceId}`,
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}/products/service/${serviceId}`,
     {
       credentials: "include",
       headers: {
@@ -115,7 +118,7 @@ export const fetchProductById = async (productId: string): Promise<Product> => {
     throw new Error("No authentication token found");
   }
   const response = await fetch(
-    `${process.env.BACKEND_URL}/products/${productId}`,
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}/products/${productId}`,
     {
       credentials: "include",
       headers: {
@@ -131,11 +134,14 @@ export const fetchProductById = async (productId: string): Promise<Product> => {
 };
 
 export const fetchHomePageData = async (): Promise<HomePageService[]> => {
-  const response = await fetch(`${process.env.BACKEND_URL}/products/home`, {
-    headers: {
-      Accept: "application/json",
-    },
-  });
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}/products/home`,
+    {
+      headers: {
+        Accept: "application/json",
+      },
+    }
+  );
 
   if (response.status === 401) await handleUnauthorized();
   if (!response.ok) {
@@ -156,12 +162,15 @@ export const fetchAllProducts = async (): Promise<Product[]> => {
     await handleUnauthorized();
     throw new Error("No authentication token found");
   }
-  const response = await fetch(`${process.env.BACKEND_URL}/products`, {
-    credentials: "include",
-    headers: {
-      Accept: "application/json",
-    },
-  });
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}/products`,
+    {
+      credentials: "include",
+      headers: {
+        Accept: "application/json",
+      },
+    }
+  );
   if (response.status === 401) await handleUnauthorized();
   if (!response.ok) {
     throw new Error("Failed to fetch products");
@@ -178,7 +187,7 @@ export const deleteProduct = async (productId: string): Promise<void> => {
     throw new Error("No authentication token found");
   }
   const response = await fetch(
-    `${process.env.BACKEND_URL}/products/${productId}`,
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}/products/${productId}`,
     {
       method: "DELETE",
       credentials: "include",
@@ -204,7 +213,7 @@ export const updateProduct = async (
     throw new Error("No authentication token found");
   }
   const response = await fetch(
-    `${process.env.BACKEND_URL}/products/${productId}`,
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}/products/${productId}`,
     {
       method: "PUT",
       credentials: "include",
@@ -227,7 +236,7 @@ export const fetchServiceAndProductBySlug = async (
   serviceName: string
 ): Promise<ServiceAndProductResponse> => {
   const response = await fetch(
-    `${process.env.BACKEND_URL}/services/slug/${serviceName}`,
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}/services/slug/${serviceName}`,
     {
       headers: {
         Accept: "application/json",
