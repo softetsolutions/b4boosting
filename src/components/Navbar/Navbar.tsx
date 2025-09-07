@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import LanguageSelector from "../LanguageSelector";
 
-const dummyNavbarOptions = [
+const navbarOptions = [
   { label: 'Currency', link: '#currency' },
   { label: 'Account', link: '#account' },
   { label: 'Top Ups', link: '#topups' },
@@ -12,6 +12,19 @@ const dummyNavbarOptions = [
   { label: 'Boosting', link: '#boosting' },
   { label: 'Gift Cards', link: '#gift-card' },
 ]
+
+const service = [
+  { id: 1, image: 'someurl.png', title: 'PUBG' },
+  { id: 2, image: 'https://upload.wikimedia.org/wikipedia/en/0/05/Minecraft.jpg', title: 'Minecraft' },
+  { id: 3, image: 'https://upload.wikimedia.org/wikipedia/en/7/77/Grand_Theft_Auto_V.png', title: 'Grand Theft Auto V' },
+  { id: 4, image: 'https://upload.wikimedia.org/wikipedia/en/1/16/Tetris_Gameboy.jpg', title: 'Tetris' },
+  { id: 5, image: 'https://upload.wikimedia.org/wikipedia/en/3/3a/League_of_Legends_logo.png', title: 'League of Legends' },
+  { id: 6, image: 'https://upload.wikimedia.org/wikipedia/en/2/28/Counter-Strike_Global_Offensive.svg', title: 'Counter-Strike: Global Offensive' },
+  { id: 7, image: 'https://upload.wikimedia.org/wikipedia/en/5/5f/Fortnite_-_Logo.png', title: 'Fortnite' },
+  { id: 8, image: 'https://upload.wikimedia.org/wikipedia/en/1/10/Overwatch_logo.svg', title: 'Overwatch' },
+  { id: 9, image: 'https://upload.wikimedia.org/wikipedia/en/2/21/The_Legend_of_Zelda_Breath_of_the_Wild.jpg', title: 'The Legend of Zelda: Breath of the Wild' },
+  { id: 10, image: 'https://upload.wikimedia.org/wikipedia/en/f/f1/Red_Dead_Redemption_II.jpg', title: 'Red Dead Redemption 2' }
+];
 
 const Navbar = ({
   isLoggedIn,
@@ -25,10 +38,10 @@ const Navbar = ({
   const [isScrolled, setIsScrolled] = useState(false);
 
   const menuItems = [
-  { label: "Account", href: "/account" },
-  { label: "Boosting", href: "/boosting" },
-  { label: "Games", href: "/games" },
-];
+    { label: "Account", href: "/account" },
+    { label: "Boosting", href: "/boosting" },
+    { label: "Games", href: "/games" },
+  ];
 
 
   useEffect(() => {
@@ -72,25 +85,38 @@ const Navbar = ({
               </div>
               <div>
                 <h1 className="text-2xl font-bold bg-gradient-to-r from-cyan-400 to-blue-600 bg-clip-text text-transparent">
-                  GameStore
+                  B4Boosting
                 </h1>
                 <p className="text-xs text-amber-100">Pro Gaming Services</p>
               </div>
             </div>
-            <div className="flex gap-4">
-              {dummyNavbarOptions.map((option) => (
-                // <Link href={option.link}>
-                //   <span className="text-base font-sans">{option.label}</span></Link>
-                <div className="relative group">
-                  <Link href={option.link}>
-                    <span className="text-base font-sans">{option.label}</span>
-                  </Link>
-                  <div className="absolute left-0 top-full mt-2 hidden group-hover:block bg-white border p-2 shadow-lg z-10">
-                    links content yha dalne hai as per eldorado.
+
+            <div className="relative group">
+
+              <div className="flex gap-4">
+                {navbarOptions.map((option, ind) => (
+                  <div key={`${ind}${option.label}`} className="inline-block">
+                    <Link href={option.link}>
+                      <span className="text-base font-sans">{option.label}</span>
+                    </Link>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
+
+              <div className="absolute left-0 top-full mt-0 hidden group-hover:grid 
+                  bg-white rounded-lg p-2 shadow-lg z-10 
+                  grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 w-[500px]">
+                {service.map((product) => (
+                  <div className="flex gap-2 items-center" key={product.id}>
+                    <div>
+                      <img src={product.image} className="w-[32px] h-[32px] rounded-lg" />
+                    </div>
+                    <span className="text-[14px] font-normal font-lato">{product.title}</span>
+                  </div>
+                ))}
+              </div>
             </div>
+
 
             <div className="flex items-center space-x-4">
               <button
