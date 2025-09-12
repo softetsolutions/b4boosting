@@ -156,12 +156,6 @@ export const fetchHomePageData = async (): Promise<HomePageService[]> => {
 };
 
 export const fetchAllProducts = async (): Promise<Product[]> => {
-  try {
-    getAuthInfo();
-  } catch {
-    await handleUnauthorized();
-    throw new Error("No authentication token found");
-  }
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_BACKEND_URL}/products`,
     {
