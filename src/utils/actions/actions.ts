@@ -24,7 +24,7 @@ export async function Loginaction(formData: FormData) {
       httpOnly: true,
       // secure: process.env.NODE_ENV === "production",
       secure: true,
-      sameSite: "none",
+      sameSite: "strict",
       path: "/",
     });
     redirect("/");
@@ -68,4 +68,10 @@ export async function registerAction(formData: FormData, code?: string) {
     console.error("Error in registerAction:", error);
     throw new Error(error.message || "Something went wrong");
   }
+}
+
+export async function logoutAction() {
+  const cookieStore = await cookies();
+  cookieStore.delete("token");
+  redirect("/");
 }

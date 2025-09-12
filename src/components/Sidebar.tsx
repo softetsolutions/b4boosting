@@ -7,6 +7,7 @@ import { LogOut, Play, ChevronRight, ChevronLeft } from "lucide-react";
 import toast from "react-hot-toast";
 import { routeMapping, iconMapping } from "src/utils/constants";
 import { logoutUser } from "src/api/api";
+import { logoutAction } from "src/utils/actions/actions";
 
 interface Props {
   navigation: string[];
@@ -96,7 +97,7 @@ export default function AdminSidebar({ navigation }: Props) {
       {/* Logout */}
       <div className="mt-auto border-t border-gray-800">
         <button
-          onClick={handleLogOut}
+          onClick={logoutAction}
           className="group flex items-center px-4 py-3 text-sm text-gray-400 hover:bg-gray-800 hover:text-red-400 rounded-lg w-full transition-colors hover:cursor-pointer"
         >
           <LogOut className="mr-3 h-5 w-5 text-gray-500 group-hover:text-red-400" />
