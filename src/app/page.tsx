@@ -1,11 +1,36 @@
-import { fetchProducts } from "src/api";
+"use client";
+
+import { useEffect, useState } from "react";
 import Navbar from "src/components/Navbar/Navbar";
 import Footer from "src/components/Footer/Footer";
 import TrendingServices from "src/components/TrendingServices";
+import { fetchProducts } from "src/api";
 
 
-export default async function Home() {
-  let res = await fetchProducts();
+export default function Home({ searchParams }: { searchParams: { ref?: string } }) {
+  const [products, setProducts] = useState<any[]>([]);
+
+ useEffect(() => {
+  if (searchParams?.ref) {
+    fetch (`${process.env.NEXT_PUBLIC_BACKEND_URL}/?ref=${searchParams.ref}`, {
+      method: "GET",
+      credentials: "include",
+    })
+      .then(res => res.json())
+     
+      .catch(err => console.error(err));
+  }
+}, [searchParams?.ref]);
+
+
+  useEffect(() => {
+    const getProducts = async () => {
+      const res = await fetchProducts();
+      if (res?.data) setProducts(res.data);
+    };
+    getProducts();
+  }, []); 
+ 
 
 
   return (
@@ -47,7 +72,7 @@ export default async function Home() {
               </div>
             </div>
 
-            <TrendingServices data={res?.data} />
+            <TrendingServices data={products} />
             {/* companyTagline */}
             <div className="bg-[#dcf5ff] flex mt-10 mb-10 py-6 px-4">
               {/* first container */}

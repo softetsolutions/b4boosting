@@ -4,6 +4,7 @@ import { cookies } from "next/headers";
 export async function Loginaction(formData: FormData) {
   try {
     const cookieStore = await cookies();
+    
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/login`,
       {
@@ -33,23 +34,27 @@ export async function Loginaction(formData: FormData) {
     throw error;
   }
 }
-export async function registerAction(formData: FormData, code?: string) {
+export async function registerAction(formData: FormData, affiliateRef?: string) {
   try {
     const cookieStore = await cookies();
+    
+    
     const payload = {
       firstName: formData.get("firstName"),
       lastName: formData.get("lastName"),
       email: formData.get("email"),
       password: formData.get("password"),
+      affiliateRef: cookieStore.get("affiliateRef")?.value
     } as Record<string, string>;
-    if (code) payload.code = code;
+   
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_NEXT_PUBLIC_BACKEND_URL}/auth/register`,
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/register`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
         cache: "no-store",
+        credentials: "include",
       }
     );
     const data = await response.json();
@@ -62,10 +67,10 @@ export async function registerAction(formData: FormData, code?: string) {
       sameSite: "lax",
       path: "/",
     });
-    // Redirect user straight to dashboard (already logged in)
+   
     redirect("/");
-  } catch (error: any) {
+  } catch (error) {
     console.error("Error in registerAction:", error);
-    throw new Error(error.message || "Something went wrong");
+   throw error;
   }
 }

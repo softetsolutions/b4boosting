@@ -7,15 +7,15 @@ import { ArrowLeft } from "lucide-react";
 import { registerAction } from "src/utils/actions/actions";
 import toast from "react-hot-toast";
 
-export default function SignupPage({ params }: { params: { slug?: string[] } }) {
-  const code = params?.slug?.[0]; // undefined if /signup, or "abc123" if /signup/abc123
-
+export default function SignupPage() {
+ 
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
 
   async function clientSafeAction(formData: FormData) {
     try {
-      await registerAction(formData, code);
+      await registerAction(formData);
+      toast.success("Signup successful!");
     } catch (err: any) {
       setError(err.message || "Something went wrong");
       toast.error(err.message || "Something went wrong");
@@ -37,7 +37,7 @@ export default function SignupPage({ params }: { params: { slug?: string[] } }) 
                 Back to Home
               </Link>
 
-              <div className="text-center mb-8">
+              {/* <div className="text-center mb-8">
                 <h1 className="text-2xl font-bold mb-2">
                   {code ? "Signup with Invite Code" : "Create Account"}
                 </h1>
@@ -46,7 +46,7 @@ export default function SignupPage({ params }: { params: { slug?: string[] } }) 
                     ? "You’re signing up with a referral/invite code."
                     : "Fill in your details to get started"}
                 </p>
-              </div>
+              </div> */}
 
               {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
 
@@ -113,12 +113,12 @@ export default function SignupPage({ params }: { params: { slug?: string[] } }) 
                   </div>
                 </div>
 
-                {code && (
+                {/* {code && (
                   <p className="text-sm text-gray-400 text-center">
                     Invite code applied:{" "}
                     <span className="text-cyan-400 font-medium">{code}</span>
                   </p>
-                )}
+                )} */}
 
                 <div className="text-sm text-gray-400 text-center mb-4">
                   By registering, you agree to our{" "}
