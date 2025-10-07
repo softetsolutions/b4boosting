@@ -16,8 +16,6 @@ export interface CreateServiceRequest {
 }
 
 export const fetchServices = async (): Promise<Service[]> => {
-  console.log("NEXT_PUBLIC_BACKEND_URL", process.env.NEXT_PUBLIC_BACKEND_URL);
-
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_BACKEND_URL}/services`,
     {
@@ -93,12 +91,6 @@ export const createService = async (
 };
 
 export const fetchAllServices = async (): Promise<Service[]> => {
-  try {
-    getAuthInfo();
-  } catch {
-    await handleUnauthorized();
-    throw new Error("No authentication token found");
-  }
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_BACKEND_URL}/services`,
     {
