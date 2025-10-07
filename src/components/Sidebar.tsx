@@ -8,11 +8,22 @@ import toast from "react-hot-toast";
 import { routeMapping, iconMapping } from "src/utils/constants";
 import { logoutUser } from "src/api/api";
 
-interface Props {
-  navigation: string[];
+// interface Props {
+//   navigation: string[];
+// }
+
+
+interface NavigationItem {
+  name: string;
+  href: string;
 }
 
-export default function AdminSidebar({ navigation }: Props) {
+interface Props {
+  navigation: (string | NavigationItem)[];
+  title?: string;
+  role?: string;
+}
+export default function AdminSidebar({ navigation, title, role }: Props) {
   const router = useRouter();
   const pathname = usePathname();
   const [collapsed, setCollapsed] = useState(false);
@@ -28,10 +39,24 @@ export default function AdminSidebar({ navigation }: Props) {
     }
   };
 
-  const getRoutePath = (item: string) => {
-    if (item === "dashboard") return "/admin";
-    return `/admin/${item}`;
+    // ✅ Helper to derive path
+  const getRoutePath = (item: string | NavigationItem) => {
+    if (typeof item === "string") {
+      if (item === "dashboard") return `/${role}/dashboard`;
+      return `/${role}/${item}`;
+    }
+    return item.href; // when object
   };
+
+  const getRouteName = (item: string | NavigationItem) => {
+    if (typeof item === "string") return routeMapping[item] || item;
+    return item.name;
+  };
+
+  // const getRoutePath = (item: string) => {
+  //   if (item === "dashboard") return "/admin";
+  //   return `/${role}/${item}`;
+  // };
 
   return (
     <div
@@ -46,7 +71,7 @@ export default function AdminSidebar({ navigation }: Props) {
             <div className="bg-gradient-to-r from-cyan-500 to-blue-700 p-1.5 rounded-lg">
               <Play className="w-5 h-5 text-white" />
             </div>
-            <span className="text-white font-bold text-lg">Admin Panel</span>
+            <span className="text-white font-bold text-lg">{title}</span>
           </div>
         )}
         <button
@@ -64,15 +89,21 @@ export default function AdminSidebar({ navigation }: Props) {
       {/* Navigation */}
       <nav className="flex-1 px-2 space-y-1 mt-6 overflow-y-auto">
         {navigation.map((item) => {
-          const Icon = iconMapping(item);
-          const routePath = getRoutePath(item);
-          const isActive =
-            pathname === routePath ||
-            (item === "manageOffers" && pathname.includes("/offers"));
+          // const Icon = iconMapping(item);
+          // const routePath = getRoutePath(item);
+          // const isActive =
+          //   pathname === routePath ||
+          //   (item === "manageOffers" && pathname.includes("/offers"));
+           const routePath = getRoutePath(item);
+          const routeName = getRouteName(item);
+          const Icon = iconMapping(
+            typeof item === "string" ? item : item.key
+          );
+          const isActive = pathname === routePath;
 
           return (
             <Link
-              key={item}
+              key={routePath} // ✅ now unique!
               href={routePath}
               className={`group flex items-center px-4 py-3 text-sm rounded-lg transition-all duration-300 ${
                 isActive
@@ -86,7 +117,7 @@ export default function AdminSidebar({ navigation }: Props) {
                     <Icon className="h-5 w-5 text-gray-500 group-hover:text-cyan-400" />
                   )}
                 </div>
-                {!collapsed && <span>{routeMapping[item]}</span>}
+                {!collapsed && <span>{routeName}</span>}
               </div>
             </Link>
           );

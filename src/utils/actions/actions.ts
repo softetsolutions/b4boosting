@@ -1,6 +1,8 @@
 "use server";
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
+
+
 export async function Loginaction(formData: FormData) {
   try {
     const cookieStore = await cookies();
@@ -22,23 +24,26 @@ export async function Loginaction(formData: FormData) {
     }
     console.log("data is", data);
     cookieStore.set("token", data.token, {
-      httpOnly: true,
+      httpOnly: false,
       // secure: process.env.NODE_ENV === "production",
       secure: true,
       sameSite: "none",
       path: "/",
     });
-    redirect("/");
+   redirect(data.user.role === "admin" ? "/admin" : `/${data.user.role}/dashboard`);
+
   } catch (error) {
     console.error("Got error while signing in", error);
     throw error;
   }
 }
-export async function registerAction(formData: FormData, affiliateRef?: string) {
+export async function registerAction(formData: FormData) {
+  console.log("Backend URL:", process.env.NEXT_PUBLIC_BACKEND_URL);
+
   try {
     const cookieStore = await cookies();
     
-    
+    console.log(cookieStore,"cookieStore", process.env.NEXT_PUBLIC_BACKEND_URL, "process.env.NEXT_PUBLIC_BACKEND_URL");
     const payload = {
       firstName: formData.get("firstName"),
       lastName: formData.get("lastName"),
@@ -57,6 +62,7 @@ export async function registerAction(formData: FormData, affiliateRef?: string) 
         credentials: "include",
       }
     );
+    console.log("response of signup is", response);
     const data = await response.json();
     if (!response.ok) {
       throw new Error(data.message || "Signup failed");
@@ -68,7 +74,7 @@ export async function registerAction(formData: FormData, affiliateRef?: string) 
       path: "/",
     });
    
-    redirect("/");
+    redirect("/login");
   } catch (error) {
     console.error("Error in registerAction:", error);
    throw error;

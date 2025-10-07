@@ -5,6 +5,7 @@ import type { ReactNode } from "react";
 import { routeMapping } from "src/utils/constants";
 import Sidebar from "src/components/Sidebar";
 
+
 interface AuthTokenPayload {
   id: string;
   role: string;
@@ -44,7 +45,7 @@ export default async function AdminLayout({
   return (
     <div className="flex h-screen bg-gray-900">
       {/* Sidebar (Client Component) */}
-      <Sidebar navigation={navigation} />
+      <Sidebar title="Admin Dashboard" navigation={navigation} role="admin" />
 
       {/* Main Content */}
       <main className="flex-1 h-screen overflow-hidden ml-64">

@@ -9,6 +9,8 @@ import {
   FileText,
   List,
   Package,
+    BarChart, // for performance icon
+  Link as LinkIcon, // for createReflink icon
 } from "lucide-react";
 
 export const routeMapping: { [key: string]: string } = {
@@ -30,6 +32,11 @@ export const routeMapping: { [key: string]: string } = {
   // Seller routes
   createOffer: "Create Offer",
   manageOffers: "Manage Offers",
+
+    // Affiliate routes
+  createReflink: "Create Reflink",
+  performance: "Performance",
+
 };
 
 export const iconMapping = (route: string): LucideIcon | null => {
@@ -52,6 +59,10 @@ export const iconMapping = (route: string): LucideIcon | null => {
     // Seller routes
     createOffer: Plus,
     manageOffers: FileText,
+
+  // Affiliate routes
+    createReflink: LinkIcon,
+    performance: BarChart,
   };
 
   return iconMap[route] || null;
