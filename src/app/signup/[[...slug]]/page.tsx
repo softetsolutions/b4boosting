@@ -1,5 +1,4 @@
 "use client";
-
 import Link from "next/link";
 import { useState } from "react";
 import { EyeIcon } from "src/assets/svgComp";
@@ -17,6 +16,7 @@ export default function SignupPage() {
       await registerAction(formData);
       toast.success("Signup successful!");
     } catch (err: any) {
+      if (err?.message?.includes("NEXT_REDIRECT")) return;
       setError(err.message || "Something went wrong");
       toast.error(err.message || "Something went wrong");
     }

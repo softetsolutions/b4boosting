@@ -1,5 +1,5 @@
 "use client";
-
+import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import Navbar from "src/components/Navbar/Navbar";
 import Footer from "src/components/Footer/Footer";
@@ -7,12 +7,15 @@ import TrendingServices from "src/components/TrendingServices";
 import { fetchProducts } from "src/api";
 
 
-export default function Home({ searchParams }: { searchParams: { ref?: string } }) {
+export default function Home() {
+  
+   const searchParams = useSearchParams();
+  const ref = searchParams?.get("ref") || null;
   const [products, setProducts] = useState<any[]>([]);
 
  useEffect(() => {
-  if (searchParams?.ref) {
-    fetch (`${process.env.NEXT_PUBLIC_BACKEND_URL}/?ref=${searchParams.ref}`, {
+  if (ref) {
+    fetch (`${process.env.NEXT_PUBLIC_BACKEND_URL}/?ref=${ref}`, {
       method: "GET",
       credentials: "include",
     })
@@ -20,7 +23,7 @@ export default function Home({ searchParams }: { searchParams: { ref?: string } 
      
       .catch(err => console.error(err));
   }
-}, [searchParams?.ref]);
+}, [ref]);
 
 
   useEffect(() => {

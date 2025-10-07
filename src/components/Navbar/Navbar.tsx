@@ -81,7 +81,7 @@ const Navbar = ({
               {dummyNavbarOptions.map((option) => (
                 // <Link href={option.link}>
                 //   <span className="text-base font-sans">{option.label}</span></Link>
-                <div className="relative group">
+                <div key={option.link} className="relative group">
                   <Link href={option.link}>
                     <span className="text-base font-sans">{option.label}</span>
                   </Link>

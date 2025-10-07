@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "cookies-next": "^6.1.0",
     "jsonwebtoken": "^9.0.2",
     "jwt-decode": "^4.0.0",
     "lucide-react": "^0.541.0",

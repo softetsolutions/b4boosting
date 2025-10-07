@@ -5,9 +5,18 @@ import { ArrowLeft } from "lucide-react";
 import { EyeIcon } from "src/assets/svgComp";
 import { useState } from "react";
 import { Loginaction } from "src/utils/actions/actions";
-
+import toast from "react-hot-toast"; 
 export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
+    async function clientSafeAction(formData: FormData) {
+    try {
+      await Loginaction(formData);
+      toast.success("Login successful!");
+    } catch (err: any) {
+      if (err?.message?.includes("NEXT_REDIRECT")) return;
+      toast.error(err.message || "Login failed");
+    }
+  }
 
   return (
     <div className="min-h-screen bg-black text-white flex flex-col">
@@ -30,7 +39,7 @@ export default function Login() {
               </h1>
 
               {/* Form submits directly to server action */}
-              <form action={Loginaction} className="space-y-5">
+              <form action={clientSafeAction} className="space-y-5">
                 {/* Email */}
                 <div>
                   <label className="block text-sm font-medium text-gray-300 mb-1">
