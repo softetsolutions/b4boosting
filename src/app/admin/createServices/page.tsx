@@ -114,7 +114,7 @@ export default function CreateServicePage() {
               required
               placeholder="Enter service name"
               className="w-full bg-gray-700/50 border border-gray-600 rounded-lg py-2 px-3 text-sm text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent hover:border-gray-500 transition-all duration-200"
-              style={{ backgroundColor: "rgb(55 65 81 / 0.5)" }}
+              // style={{ backgroundColor: "rgb(55 65 81 / 0.5)" }}
             />
           </div>
 
@@ -135,7 +135,7 @@ export default function CreateServicePage() {
               required
               placeholder="Enter service type"
               className="w-full bg-gray-700/50 border border-gray-600 rounded-lg py-2 px-3 text-sm text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent hover:border-gray-500 transition-all duration-200"
-              style={{ backgroundColor: "rgb(55 65 81 / 0.5)" }}
+              // style={{ backgroundColor: "rgb(55 65 81 / 0.5)" }}
             />
           </div>
 

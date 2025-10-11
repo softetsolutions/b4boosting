@@ -60,7 +60,7 @@ const Footer = () => {
         ></div>
         <div className="absolute inset-0 bg-gradient-to-b from-gray-900/80 to-black"></div>
       </div>
-      <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-cyan-500 to-transparent opacity-30 z-10"></div>
+      <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-amber-400 to-transparent opacity-30 z-10"></div>
       <div
         className={`absolute top-0 left-1/2 -translate-x-1/2 w-64 h-1 bg-cyan-500 blur-xl transition-all duration-1000 ease-in-out ${
           hoverEffect ? "opacity-40 w-96" : "opacity-20 w-64"
@@ -75,7 +75,7 @@ const Footer = () => {
         }}
       ></div>
       <div className="absolute bottom-0 right-0 w-64 h-64 opacity-5 z-0">
-        <svg viewBox="0 0 24 24" fill="currentColor" className="text-cyan-400">
+        <svg viewBox="0 0 24 24" fill="currentColor" className="text-amber-400">
           <path d="M7.5 12a.75.75 0 01-.75-.75v-1.5h-1.5a.75.75 0 010-1.5h1.5v-1.5a.75.75 0 011.5 0v1.5h1.5a.75.75 0 010 1.5h-1.5v1.5a.75.75 0 01-.75.75zm7.5-6a4.5 4.5 0 100 9 4.5 4.5 0 000-9z" />
           <path
             fillRule="evenodd"
@@ -96,14 +96,14 @@ const Footer = () => {
           {/* Company Info*/}
           <div className="relative">
             <div className="flex items-center space-x-3 mb-8">
-              <div className="bg-gradient-to-r from-cyan-500 to-blue-700 p-2 rounded-xl shadow-lg shadow-cyan-500/20">
+              <div className="bg-gradient-to-r yellow-bg p-2 rounded-xl shadow-lg shadow-cyan-500/20">
                 <img
                   src="/svgIcons/LogoIcon.svg"
                   alt="Logo"
                   className="w-6 h-6"
                 />
               </div>
-              <h3 className="text-2xl font-bold bg-gradient-to-r from-cyan-400 to-blue-600 bg-clip-text text-transparent">
+              <h3 className="text-2xl font-bold bg-gradient-to-r yellow-bg bg-clip-text text-transparent">
                 GameStore
               </h3>
             </div>
@@ -148,13 +148,13 @@ const Footer = () => {
                 </a>
               ))}
             </div>
-            <div className="absolute -bottom-4 left-0 w-24 h-1 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-full opacity-50"></div>
+            {/* <div className="absolute -bottom-4 left-0 w-24 h-1 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-full opacity-50"></div> */}
           </div>
 
           {/* Quick Links */}
           <div className="relative">
             <h3 className="text-xl font-bold text-white mb-8 flex items-center">
-              <span className="w-1 h-6 bg-gradient-to-b from-cyan-400 to-blue-600 rounded-full mr-3"></span>
+              <span className="w-1 h-6 bg-gradient-to-b yellow-bg rounded-full mr-3"></span>
               Quick Links
             </h3>
             <ul className="grid grid-cols-2 gap-y-3 gap-x-8">
@@ -171,21 +171,21 @@ const Footer = () => {
                 <li key={index}>
                   <a
                     href="#"
-                    className="text-gray-400 hover:text-cyan-400 transition-colors text-sm flex items-center group"
+                    className="text-gray-400 hover:text-amber-400 transition-colors text-sm flex items-center group"
                   >
-                    <span className="w-1 h-1 bg-gray-600 rounded-full mr-2 group-hover:bg-cyan-400 transition-colors"></span>
+                    <span className="w-1 h-1 bg-gray-600 rounded-full mr-2 group-hover:bg-amber-400 transition-colors"></span>
                     {link}
                   </a>
                 </li>
               ))}
             </ul>
-            <div className="absolute -bottom-4 left-0 w-24 h-1 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-full opacity-50"></div>
+            {/* <div className="absolute -bottom-4 left-0 w-24 h-1 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-full opacity-50"></div> */}
           </div>
 
           {/* Services*/}
           <div className="relative">
             <h3 className="text-xl font-bold text-white mb-8 flex items-center">
-              <span className="w-1 h-6 bg-gradient-to-b from-cyan-400 to-blue-600 rounded-full mr-3"></span>
+              <span className="w-1 h-6 bg-gradient-to-b yellow-bg rounded-full mr-3"></span>
               Our Services
             </h3>
             <div className="grid grid-cols-1 gap-4">
@@ -220,39 +220,24 @@ const Footer = () => {
                     <img
                       src={service.icon}
                       alt=""
-                      className="w-4 h-4 text-gray-400 group-hover:text-cyan-400 transition-colors"
+                      className="w-4 h-4 text-gray-400 group-hover:text-amber-400 transition-colors"
                     />
                   </div>
-                  <span className="text-gray-400 group-hover:text-cyan-400 transition-colors text-sm">
+                  <span className="text-gray-400 group-hover:text-amber-400 transition-colors text-sm">
                     {service.name}
                   </span>
                 </a>
               ))}
             </div>
-            <div className="absolute -bottom-4 left-0 w-24 h-1 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-full opacity-50"></div>
+            {/* <div className="absolute -bottom-4 left-0 w-24 h-1 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-full opacity-50"></div> */}
           </div>
         </div>
-        <div className="flex flex-wrap justify-center gap-8 mb-12">
-          {[
-            { src: "/images/visa.png", alt: "Visa" },
-            { src: "/images/mastercard.png", alt: "Mastercard" },
-            { src: "/images/paypal.png", alt: "PayPal" },
-          ].map((payment, index) => (
-            <div key={index} className="payment-icon-wrapper">
-              <img
-                src={payment.src}
-                alt={payment.alt}
-                className="w-16 h-10 transition-transform hover:scale-105"
-                loading="lazy"
-              />
-            </div>
-          ))}
-        </div>
+       
         {/* Bottom Bar  */}
         <div className="pt-8 mt-8 border-t border-gray-800/50 flex flex-col md:flex-row justify-between items-center">
           <p className="text-gray-500 text-sm mb-4 md:mb-0">
             © {new Date().getFullYear()}{" "}
-            <span className="text-cyan-500">GameStore</span>. All rights
+            <span className="yellow-text">GameStore</span>. All rights
             reserved.
           </p>
           <div className="flex flex-wrap justify-center gap-6">
@@ -261,7 +246,7 @@ const Footer = () => {
                 <a
                   key={index}
                   href="#"
-                  className="text-gray-500 hover:text-cyan-400 transition-colors text-sm"
+                  className="text-gray-500 hover:text-amber-400 transition-colors text-sm"
                 >
                   {link}
                 </a>

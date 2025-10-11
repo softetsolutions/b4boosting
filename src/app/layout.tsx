@@ -1,18 +1,14 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Roboto } from "next/font/google";
 import "./globals.css";
-import Navbar from "src/components/Navbar/Navbar";
-import Footer from "src/components/Footer/Footer";
 import { Toaster } from "react-hot-toast";
+import { ThemeProvider } from "next-themes";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const roboto = Roboto({
   subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+  weight: ["300", "400", "500", "700", "900"], // Add only the weights you need
+  variable: "--font-roboto",
+  style: ["normal", "italic"], // Optional: if you need italic support
 });
 
 export const metadata: Metadata = {
@@ -26,12 +22,22 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+      suppressHydrationWarning
+         className={`${roboto.variable} antialiased`}
       >
-        {children}
-          <Toaster position="top-center" />
+         <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          {children}
+           <Toaster position="top-center" />
+        </ThemeProvider>
+        
+         
       </body>
     </html>
   );
