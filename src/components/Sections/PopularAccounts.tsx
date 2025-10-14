@@ -1,7 +1,5 @@
-"use client";
-
 import Image from "next/image";
-import { useState, useEffect } from "react";
+import SeeMore from "../seeMore";
 import clashRoyale from "src/assets/images/clashRoyale.jpg";
 import cod from "src/assets/images/cod.png";
 import valorant from "src/assets/images/valorant.png";
@@ -12,13 +10,6 @@ import leagueOfLegends from "src/assets/images/leagueOfLegends.png";
 import oldSchool from "src/assets/images/oldSchool.png";
 import counterStrike from "src/assets/images/counterStrike.jpg";
 import fortnite from "src/assets/images/fortnite.jpg";
-
-
-
-interface Account {
-  name: string;
-  src: string;
-}
 
 const accounts= [
    { src: clashRoyale, title: "Clash Royale" },
@@ -34,71 +25,47 @@ const accounts= [
 ];
 
 export default function PopularAccounts() {
- const [visible, setVisible] = useState(10);
-  const [isMobile, setIsMobile] = useState(false);
-
-  // Detect screen size
-  useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth < 768) {
-        setIsMobile(true);
-        setVisible(2);
-      } else {
-        setIsMobile(false);
-        setVisible(accounts.length);
-      }
-    };
-    handleResize();
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
-  const handleToggle = () => {
-    if (isMobile) {
-      setVisible((prev) => (prev === 2 ? accounts.length : 2));
-    }
-  };
 
   return (
     <section className="px-4 lg:mx-12 mb-4  lg:py-10 md:px-8 mt-12 ">
-      {/* Header Section */}
-       <h2 className="text-3xl mb-4 font-semibold text-foreground text-center lg:block md:block sm:hidden hidden">
-          POPULAR ACCOUNTS
-        </h2>
-      <div className="flex items-center justify-between  mb-6 ">
-        <h2 className="text-xl font-semibold text-foreground text-center sm:block lg:hidden md:hidden">
-          POPULAR ACCOUNTS
-        </h2>
-       {isMobile && (
-          <button
-            type="button"
-            onClick={handleToggle}
-            className="text-sm font-medium yellow-text hover:underline"
-          >
-            {visible === 2 ? "See All" : "See Less"}
-          </button>
-        )}
+
+        <h2 className="lg:text-3xl text-2xl mb-8 font-semibold text-foreground text-center md:block sm:hidden hidden">
+        POPULAR ACCOUNTS
+      </h2>
+
+      {/* ✅ Mobile Only: SeeMore Logic */}
+      <div className="block md:hidden">
+        <SeeMore
+        title="POPULAR ACCOUNTS"
+          data={accounts}
+          initialVisible={2} // show 2 items by default on mobile
+          renderItem={(account, index) => (
+            <div key={index} className="relative group overflow-hidden rounded-md">
+              <Image
+                src={account.src}
+                alt={account.title}
+                width={200}
+                height={200}
+                className="object-cover w-full h-20"
+              />
+              <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white font-semibold text-lg">
+                {account.title}
+              </div>
+            </div>
+          )}
+        />
       </div>
 
-      {/* Grid Container */}
-      <div
-        className="
-          grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4
-          overflow-x-auto scrollbar-hide
-          justify-center
-        "
-      >
-        {accounts.slice(0, visible).map((account, index) => (
-          <div
-            key={index}
-            className="relative group overflow-hidden rounded-md"
-          >
+      {/* ✅ Desktop: Show All Without Toggle */}
+      <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {accounts.map((account, index) => (
+          <div key={index} className="relative group overflow-hidden rounded-md">
             <Image
               src={account.src}
               alt={account.title}
               width={200}
               height={200}
-              className="object-cover w-full h-20 "
+              className="object-cover w-full h-20"
             />
             <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white font-semibold text-lg">
               {account.title}
@@ -106,6 +73,7 @@ export default function PopularAccounts() {
           </div>
         ))}
       </div>
+
     </section>
   );
 }

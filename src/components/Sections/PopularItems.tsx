@@ -266,12 +266,12 @@ export default function PopularAccounts() {
       </div>
     </section>
 
-      <section>
+      <section className="px-4 py-10 md:px-8 mt-10 lg:mx-24 ">
   <div
-    className="grid grid-cols-1 mx-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4
-    place-items-center
+    className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4
+    justify-self-center
     overflow-x-auto scrollbar-hide
-    lg:mx-100 "
+    "
   >
     {support.map((support, index) => (
       <div

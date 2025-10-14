@@ -309,7 +309,7 @@ const Navbar = () => {
           priority
         />
         <div className="absolute inset-0 bg-black/40 flex flex-col items-center justify-center text-center px-4 pt-15">
-          <h1 className="lg:text-4xl md:text-4xl sm:text-2xl font-bold text-white lg:mb-4 md:mb-4 sm:mb-2 transition-all">
+          <h1 className="lg:text-4xl md:text-4xl text-2xl font-bold text-white lg:mb-4 md:mb-4 sm:mb-2 transition-all">
             Welcome to GameStore
           </h1>
           <p className="text-white sm:text-lg lg:text-lg lg:mb-6 md:mb-4 sm:mb-2 mb-2">
