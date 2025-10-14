@@ -60,7 +60,7 @@ export default function PopularAccounts() {
   };
 
   return (
-    <section className="px-4 lg:mx-12  py-10 md:px-8 mt-12 ">
+    <section className="px-4 lg:mx-12 mb-4  lg:py-10 md:px-8 mt-12 ">
       {/* Header Section */}
        <h2 className="text-3xl mb-4 font-semibold text-foreground text-center lg:block md:block sm:hidden hidden">
           POPULAR ACCOUNTS
@@ -83,7 +83,7 @@ export default function PopularAccounts() {
       {/* Grid Container */}
       <div
         className="
-          grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-4
+          grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4
           overflow-x-auto scrollbar-hide
           justify-center
         "
@@ -109,3 +109,4 @@ export default function PopularAccounts() {
     </section>
   );
 }
+

@@ -33,7 +33,7 @@ export default function PopularAccounts() {
     const handleResize = () => {
       if (window.innerWidth < 768) {
         setIsMobile(true);
-        setVisible(2);
+        setVisible(1);
       } else {
         setIsMobile(false);
         setVisible(accounts.length);
@@ -46,12 +46,12 @@ export default function PopularAccounts() {
 
   const handleToggle = () => {
     if (isMobile) {
-      setVisible((prev) => (prev === 2 ? accounts.length : 2));
+      setVisible((prev) => (prev === 1 ? accounts.length : 1));
     }
   };
 
   return (
-    <section className="px-4 py-10 md:px-8 mt-10 lg:mx-12">
+    <section className="px-4 lg:py-10 md:px-8 mt-10 lg:mx-12">
       {/* Header Section */}
        <h2 className="text-3xl mb-4 font-semibold text-foreground text-center lg:block md:block sm:hidden hidden ">
           POPULAR CURRENCY
@@ -66,7 +66,7 @@ export default function PopularAccounts() {
             onClick={handleToggle}
             className="text-sm font-medium yellow-text hover:underline"
           >
-            {visible === 2 ? "See All" : "See Less"}
+            {visible === 1 ? "See All" : "See Less"}
           </button>
         )}
       </div>
@@ -74,7 +74,7 @@ export default function PopularAccounts() {
       {/* Grid Container */}
       <div
         className="
-          grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-4
+          grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4
           overflow-x-auto scrollbar-hide
           justify-center
         "
