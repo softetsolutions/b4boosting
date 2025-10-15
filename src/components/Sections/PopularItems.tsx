@@ -138,11 +138,9 @@ export default function PopularAccounts() {
         {/* Grid Container */}
         <div
           className="
-          grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-2 gap-2
-    place-items-center
-    overflow-x-auto scrollbar-hide
-   lg:mx-90
-   
+          grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-2
+   justify-self-center
+    overflow-x-auto scrollbar-hide   
         "
         >
           {accounts.slice(0, visible).map((account, index) => (
@@ -155,7 +153,7 @@ export default function PopularAccounts() {
                 alt={account.title}
                 className="object-fit w-full h-70"
               />
-              <div className="py-4 bg-black/40 opacity-100 transition-opacity flex items-center justify-center text-white font-semibold text-lg">
+              <div className="py-4 bg-black/100 opacity-100 transition-opacity flex items-center justify-center text-white font-semibold text-lg">
                 {account.title}
               </div>
             </div>
@@ -164,7 +162,7 @@ export default function PopularAccounts() {
       </section>
 
       <section>
-        <h2 className="text-3xl my-4 font-semibold text-foreground text-center lg:block md:block sm:hidden hidden ">
+        <h2 className="text-3xl my-4 font-semibold text-foreground text-center ">
           SAFE AND EASY TRADING
         </h2>
 
@@ -186,7 +184,7 @@ export default function PopularAccounts() {
         <h2 className="text-3xl mb-4 font-semibold text-foreground text-center lg:block md:block sm:hidden hidden ">
           ORDER EASILY
         </h2>
-        <div className="flex items-center justify-between mb-6 ">
+        <div className="flex items-center justify-between mb-6 flex-wrap">
           <h2 className="text-xl font-semibold text-foreground sm:block lg:hidden md:hidden">
             ORDER EASILY
           </h2>
@@ -201,12 +199,13 @@ export default function PopularAccounts() {
           )}
         </div>
 
-        {/* Grid Container */}
+        {/* Grid Container   xl:mx-100 lg:mx-70 md:mx-50*/}
         <div
-          className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-2 gap-4
-    place-items-center
+          className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 gap-4
+    justify-self-center
     overflow-x-auto scrollbar-hide
-   lg:mx-100 "
+
+ "
         >
           {orderEasily.slice(0, orderVisible).map((order, index) => (
             <div
@@ -266,38 +265,41 @@ export default function PopularAccounts() {
         </div>
       </div>
     </section>
-      <section>
-        <div
-          className="grid grid-cols-1 mx-4 sm:grid-cols-1 lg:grid-cols-2 gap-4
-    place-items-center
-    overflow-x-auto scrollbar-hide
-   lg:mx-100 "
-        >
-          {support.map((support, index) => (
-            <div
-              key={index}
-              className="mb-10 border-zinc-600 border-2 relative group overflow-hidden rounded-lg bg-black/100 px-5  flex items-center justify-between py-10"
-            >
-              <Image
-                src={support.src}
-                alt={support.title}
-                className="object-fit w-55 h-35 "
-              />
 
-              <div className="flex items-center justify-center text-white font-semibold text-lg flex-col mx-4">
-                <p>{support.title}</p>
-                <p className="text-md flex items-center justify-center text-center py-5 text-zinc-500 ">
-                  {support.desc}
-                </p>
-                <p className="flex items-center justify-center text-xl">
-                  Learn More{" "}
-                  <ArrowRightIcon className="w-4 h-4 mx-2 yellow-text" />
-                </p>
-              </div>
-            </div>
-          ))}
+      <section className="px-4 py-10 md:px-8 mt-10 lg:mx-24 ">
+  <div
+    className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4
+    justify-self-center
+    overflow-x-auto scrollbar-hide
+    "
+  >
+    {support.map((support, index) => (
+      <div
+        key={index}
+        className="mb-10 border-zinc-600 border-2 relative group overflow-hidden rounded-lg bg-black/100 px-5 
+        flex flex-col lg:flex-row items-center justify-between py-10"
+      >
+        <Image
+          src={support.src}
+          alt={support.title}
+          className="object-fit w-55 h-35 mb-4 md:mb-2"
+        />
+
+        <div className="flex items-center justify-center text-white font-semibold text-lg flex-col mx-4 text-center">
+          <p>{support.title}</p>
+          <p className="text-md flex items-center justify-center text-center py-5 text-zinc-500 ">
+            {support.desc}
+          </p>
+          <p className="flex items-center justify-center text-xl">
+            Learn More{" "}
+            <ArrowRightIcon className="w-4 h-4 mx-2 yellow-text" />
+          </p>
         </div>
-      </section>
+      </div>
+    ))}
+  </div>
+</section>
+
 
       <section className="bg-white py-3.5 px-4 flex items-center justify-center">
         <div className="flex flex-wrap items-center gap-2 justify-center">

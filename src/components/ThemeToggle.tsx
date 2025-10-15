@@ -9,7 +9,7 @@ export default function ThemeToggle() {
   return (
     <button
       onClick={() => setTheme(theme === "light" ? "dark" : "light")}
-      className=""
+      className="text-zinc-200 hover:text-yellow-400 transition-all duration-300"
     >
       {theme === "light" ? <MoonIcon /> : <SunIcon />}
     </button>

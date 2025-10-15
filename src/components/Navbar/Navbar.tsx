@@ -261,7 +261,7 @@ import Image from "next/image";
 import bannerImg from "src/assets/images/banner.svg";
 import ThemeToggle from "../ThemeToggle";
 import LanguageSelector from "../LanguageSelector";
-import { SettingsIcon, SearchIcon, HamIcon, Ham } from "lucide-react";
+import { SettingsIcon, SearchIcon, Menu,X } from "lucide-react";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
 
@@ -308,15 +308,15 @@ const Navbar = () => {
           className="w-full h-full object-cover"
           priority
         />
-        <div className="absolute inset-0 bg-black/40 flex flex-col items-center justify-center text-center px-4">
-          <h1 className="text-4xl md:text-6xl font-bold text-white mb-4 transition-all">
+        <div className="absolute inset-0 bg-black/40 flex flex-col items-center justify-center text-center px-4 pt-15">
+          <h1 className="lg:text-4xl md:text-4xl text-2xl font-bold text-white lg:mb-4 md:mb-4 sm:mb-2 transition-all">
             Welcome to GameStore
           </h1>
-          <p className="text-white text-lg md:text-2xl mb-6">
+          <p className="text-white sm:text-lg lg:text-lg lg:mb-6 md:mb-4 sm:mb-2 mb-2">
             Pro Gaming Services at Your Fingertips
           </p>
           <Link href="/boosting">
-            <button className="text-2xl yellow-bg text-zinc-950 px-16 py-3 rounded-xl font-bold shadow-lg transition-all duration-300">
+            <button type="button" className="lg:text-2xl md:text-2xl sm:text-lg  yellow-bg text-zinc-950 lg:px-16 md:px-12 sm:px-5 px-5  lg:py-3 py-1  rounded-xl font-bold shadow-lg transition-all duration-300">
               Get Started
             </button>
           </Link>
@@ -329,9 +329,9 @@ const Navbar = () => {
           isScrolled ? "backdrop-blur-md bg-black/60" : "bg-transparent"
         }`}
       >
-        <div className="max-w-11xl mx-auto px-4 py-3 flex flex-col md:flex-row items-start md:items-center justify-between gap-3 md:gap-0">
+        <div className="max-w-11xl mx-auto px-4 py-3 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-3 lg:gap-0">
           {/* Top row: Logo + Hamburger */}
-          <div className="flex items-center justify-between w-full md:w-auto">
+          <div className="flex items-center justify-between w-full lg:w-auto">
             <div className="flex items-center space-x-7">
               <div className="bg-gradient-to-r yellow-bg p-2 rounded-xl shadow-lg shadow-cyan-500/20">
                 <img
@@ -351,19 +351,19 @@ const Navbar = () => {
             {/* Hamburger icon for mobile */}
             <button
               type="button"
-              className="md:hidden text-white hover:text-cyan-400 transition-colors"
+              className="lg:hidden text-white hover:text-yellow-400 transition-colors"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
             >
               {isMenuOpen ? (
-                <HamIcon />
+                <X/>
               ) : (
-               <Ham />
+               <Menu />
               )}
             </button>
           </div>
 
           {/* Desktop Links */}
-          <div className="hidden md:flex items-center gap-10">
+          <div className="hidden lg:flex items-center xl:gap-10 lg:gap-6">
             {dummyNavbarOptions.map((option) => (
               <Link
                 key={option.link}
@@ -377,7 +377,7 @@ const Navbar = () => {
           </div>
 
           {/* Desktop Right Items */}
-          <div className="hidden md:flex flex-row items-center gap-4">
+          <div className="hidden lg:flex flex-row items-center gap-4">
             {/* Search */}
             <div className="flex items-center gap-2 p-2 rounded-lg bg-white/10 text-white hover:bg-white/20 transition-colors">
               <SearchIcon />
@@ -395,7 +395,7 @@ const Navbar = () => {
             {!isLoggedIn && (
               <Link href="/login">
                 <button className="rounded-lg px-3 py-2 yellow-bg text-zinc-950 font-semibold hover:text-white-400 transition-colors duration-200">
-                  Login
+                  Sign In
                 </button>
               </Link>
             )}
@@ -449,7 +449,7 @@ const Navbar = () => {
 
         {/* Mobile Slide-Down Menu */}
         {isMenuOpen && (
-          <div className="md:hidden mt-2 pt-4 border-t border-cyan-500/20 bg-black/80 backdrop-blur-sm rounded-b-xl">
+          <div className=" mt-2 pt-4 border-t border-yellow-400 bg-black/80 backdrop-blur-sm rounded-b-xl">
             <div className="flex flex-col space-y-4 px-4 pb-4">
               {/* Search */}
               <div className="flex items-center gap-2 p-2 rounded-lg bg-white/10 text-white hover:bg-white/20 transition-colors w-full">
@@ -466,7 +466,7 @@ const Navbar = () => {
                 <Link
                   key={option.link}
                   href={option.link}
-                  className="text-white hover:text-cyan-400 font-medium"
+                  className="text-white hover:text-yellow-400 font-medium"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   {option.label}
@@ -499,6 +499,7 @@ const Navbar = () => {
                   <div className="flex flex-col mt-2 space-y-2 px-4">
                     {isLoggedIn && (
                       <button
+                        type="button"
                         onClick={() => {
                           handleLogout();
                           setIsMenuOpen(false);
@@ -508,7 +509,7 @@ const Navbar = () => {
                         Logout
                       </button>
                     )}
-                    <button className="text-white hover:text-cyan-400 text-left">
+                    <button className="text-white hover:text-yellow-400 text-left">
                       Profile
                     </button>
                    
@@ -526,10 +527,10 @@ const Navbar = () => {
               {!isLoggedIn && (
                 <Link
                   href="/login"
-                  className="text-white hover:text-cyan-400 font-medium"
+                  className="text-white hover:text-yellow-400 font-medium"
                   onClick={() => setIsMenuOpen(false)}
                 >
-                  Login
+                  Sign In
                 </Link>
               )}
             </div>
