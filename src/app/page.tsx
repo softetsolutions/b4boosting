@@ -5,9 +5,14 @@ import PopularBoostingServices from "src/components/Sections/PopularBoostingServ
 import PopularItems from "src/components/Sections/PopularItems";
 import ReferralTracker from "src/components/ReferralTracker";
 
-export default async function Home({ searchParams }: { searchParams?: { ref?: string } }) {
+export default async function Home({
+  searchParams,
+}: {
+  searchParams?: { ref?: string };
+}) {
   // Use nullish coalescing safely
-  const ref = searchParams?.ref ?? null;
+  const query = await searchParams;
+  const ref = query?.ref;
 
   return (
     <>
