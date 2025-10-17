@@ -7,6 +7,7 @@ import worldOfwarcraft from "src/assets/images/worldOfwarcraftImg.jpg";
 import oldSchool from "src/assets/images/oldSchoolImg.jpg";
 import roblox from "src/assets/images/robloxImg.jpg";
 import { useEffect, useState } from "react";
+import { redirect } from "next/navigation";
 
 interface Account {
   name: string;
@@ -75,6 +76,7 @@ export default function PopularAccounts() {
           <div
             key={index}
             className="relative group overflow-hidden rounded-lg"
+            onClick={() => redirect("/categories/Account/PUBG")}
           >
             <Image
               src={account.src}
