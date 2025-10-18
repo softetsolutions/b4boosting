@@ -1,15 +1,16 @@
 "use client";
-import { useState } from 'react';
-import type {ApiOffer} from 'src/api/offers';
+import { useState } from "react";
+import type { ApiOffer } from "src/api/offers";
+import Navbar from "./Navbar/Navbar";
+import { redirect } from "next/navigation";
 
 interface BuyCardCompProps {
   offer: ApiOffer;
 }
 
 function BuyCardComp({ offer }: BuyCardCompProps) {
-
   const [onlineSellersOnly, setOnlineSellersOnly] = useState<boolean>(false);
-  const [sortBy, setSortBy] = useState<string>('Recommended');
+  const [sortBy, setSortBy] = useState<string>("Recommended");
   const [count, setCount] = useState<number>(1);
 
   const handleInc = (): void => {
@@ -30,13 +31,24 @@ function BuyCardComp({ offer }: BuyCardCompProps) {
 
   return (
     <>
-      <div className="min-h-screen bg-gray-950 text-gray-200 pb-16 relative pt-26">
+      <div className="min-h-screen bg-gray-950 text-gray-200 pb-16 relative">
         {/* Top Navigation */}
         <div className="bg-gray-900/80 backdrop-blur-sm py-4 px-8 text-sm text-gray-400 border-b border-gray-800 relative z-10">
-          <a href="#" className="hover:text-cyan-400 transition-colors">Home</a> &gt;
-          <a href="#" className="hover:text-cyan-400 transition-colors">Gift Cards</a> &gt;
-          <a href="#" className="hover:text-cyan-400 transition-colors">eGift Cards</a> &gt;
-          <a href="#" className="hover:text-cyan-400 transition-colors">Xbox</a>
+          <a href="#" className="hover:text-cyan-400 transition-colors">
+            Home
+          </a>{" "}
+          &gt;
+          <a href="#" className="hover:text-cyan-400 transition-colors">
+            Gift Cards
+          </a>{" "}
+          &gt;
+          <a href="#" className="hover:text-cyan-400 transition-colors">
+            eGift Cards
+          </a>{" "}
+          &gt;
+          <a href="#" className="hover:text-cyan-400 transition-colors">
+            Xbox
+          </a>
         </div>
 
         <div className="flex flex-col lg:flex-row max-w-7xl mx-auto py-8 px-4 lg:px-8 relative z-10">
@@ -46,18 +58,34 @@ function BuyCardComp({ offer }: BuyCardCompProps) {
             <div className="p-6 mb-6 flex justify-between items-center">
               <div>
                 <h1 className="text-2xl font-bold text-gray-100 leading-tight">
-                  {offer ? offer.product.title : 'Loading...'}
+                  {offer ? offer.product.title : "Loading..."}
                 </h1>
                 {offer && offer.seller && (
                   <div className="mt-1 text-gray-400 text-sm">
-                    Seller: <span className="text-gray-200 font-semibold">{offer.seller.displayName}</span>
-                    <span className="ml-2 text-gray-500">(ID: {offer.seller._id})</span>
+                    Seller:{" "}
+                    <span className="text-gray-200 font-semibold">
+                      {offer.seller.displayName}
+                    </span>
+                    <span className="ml-2 text-gray-500">
+                      (ID: {offer.seller._id})
+                    </span>
                   </div>
                 )}
               </div>
               <button className="flex items-center px-4 py-2 border border-gray-700 rounded-md text-gray-400 text-sm hover:bg-gray-800 hover:text-cyan-400 transition duration-150">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 0a3 3 0 110 2.684m0-2.684a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z" />
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-4 w-4 mr-2"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 0a3 3 0 110 2.684m0-2.684a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z"
+                  />
                 </svg>
                 Share
               </button>
@@ -77,40 +105,61 @@ function BuyCardComp({ offer }: BuyCardCompProps) {
 
             {/* Product Info */}
             <div className="p-6 mb-6">
-              <h2 className="text-xl font-bold text-gray-100 mb-4">Product info</h2>
+              <h2 className="text-xl font-bold text-gray-100 mb-4">
+                Product info
+              </h2>
               {offer ? (
                 <div className="space-y-2">
                   {/* Price */}
                   <div className="flex items-center text-lg">
                     <span className="text-gray-400 mr-2">Price:</span>
-                    <span className="text-cyan-400 font-bold">{offer.price} {offer.currency}</span>
+                    <span className="text-cyan-400 font-bold">
+                      {offer.price} {offer.currency}
+                    </span>
                   </div>
                   {/* Quantity Available */}
                   <div className="flex items-center">
-                    <span className="text-gray-400 mr-2">Quantity Available:</span>
-                    <span className="text-gray-200 font-semibold">{offer.quantityAvailable}</span>
+                    <span className="text-gray-400 mr-2">
+                      Quantity Available:
+                    </span>
+                    <span className="text-gray-200 font-semibold">
+                      {offer.quantityAvailable}
+                    </span>
                   </div>
                   {/* Delivery Speed */}
                   <div className="flex items-center">
                     <span className="text-gray-400 mr-2">Delivery Speed:</span>
-                    <span className="text-gray-200 font-semibold">{offer.deliveryTime}</span>
+                    <span className="text-gray-200 font-semibold">
+                      {offer.deliveryTime}
+                    </span>
                   </div>
                   {/* Instant Delivery */}
                   <div className="flex items-center">
-                    <span className="text-gray-400 mr-2">Instant Delivery:</span>
+                    <span className="text-gray-400 mr-2">
+                      Instant Delivery:
+                    </span>
                     <span className="font-semibold {offer.instantDelivery ? 'text-emerald-400' : 'text-red-400'}">
-                      {offer.instantDelivery ? 'Yes' : 'No'}
+                      {offer.instantDelivery ? "Yes" : "No"}
                     </span>
                   </div>
                   {/* Offer Details Fields */}
                   <div className="mt-4">
-                    <h3 className="text-gray-300 font-semibold mb-2">Offer Details</h3>
+                    <h3 className="text-gray-300 font-semibold mb-2">
+                      Offer Details
+                    </h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
                       {offer.offerDetails && offer.offerDetails.length > 0 ? (
                         offer.offerDetails.map((detail, idx) => (
-                          <div key={idx} className="flex flex-col bg-gray-800/60 rounded-lg p-2">
-                            <span className="text-gray-400 text-xs">{detail.fieldName}</span>
-                            <span className="text-gray-200 font-semibold">{detail.value}</span>
+                          <div
+                            key={idx}
+                            className="flex flex-col bg-gray-800/60 rounded-lg p-2"
+                          >
+                            <span className="text-gray-400 text-xs">
+                              {detail.fieldName}
+                            </span>
+                            <span className="text-gray-200 font-semibold">
+                              {detail.value}
+                            </span>
                           </div>
                         ))
                       ) : (
@@ -122,18 +171,38 @@ function BuyCardComp({ offer }: BuyCardCompProps) {
                   {offer.seller && (
                     <div className="mt-8 p-5 bg-gradient-to-r from-gray-800/80 to-gray-900/80 rounded-xl border border-cyan-700/40 shadow-lg flex items-center space-x-4">
                       <div className="flex-shrink-0 bg-cyan-700/20 rounded-full p-3 flex items-center justify-center">
-                        <svg className="w-8 h-8 text-cyan-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                        <svg
+                          className="w-8 h-8 text-cyan-400"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+                          />
                         </svg>
                       </div>
                       <div className="flex flex-col space-y-1">
                         <div className="flex items-center">
-                          <span className="text-gray-400 text-sm mr-2">Seller Name:</span>
-                          <span className="text-cyan-300 font-semibold text-base">{offer.seller.displayName || offer.seller.username || offer.seller._id}</span>
+                          <span className="text-gray-400 text-sm mr-2">
+                            Seller Name:
+                          </span>
+                          <span className="text-cyan-300 font-semibold text-base">
+                            {offer.seller.displayName ||
+                              offer.seller.username ||
+                              offer.seller._id}
+                          </span>
                         </div>
                         <div className="flex items-center">
-                          <span className="text-gray-400 text-sm mr-2">Seller ID:</span>
-                          <span className="text-gray-200 font-mono text-sm">{offer.seller._id}</span>
+                          <span className="text-gray-400 text-sm mr-2">
+                            Seller ID:
+                          </span>
+                          <span className="text-gray-200 font-mono text-sm">
+                            {offer.seller._id}
+                          </span>
                         </div>
                       </div>
                     </div>
@@ -148,9 +217,17 @@ function BuyCardComp({ offer }: BuyCardCompProps) {
           {/* Right Sidebar */}
           <div className="lg:w-96 lg:flex-shrink-0 lg:sticky lg:top-8 lg:self-start mt-6 lg:mt-0">
             <div className="flex flex-col items-center p-4 min-h-screen">
-              <div id="box-1" className="shadow-lg p-6 w-full max-w-sm mb-6 bg-gray-900/80 backdrop-blur-lg rounded-2xl border border-gray-700">
+              <div
+                id="box-1"
+                className="shadow-lg p-6 w-full max-w-sm mb-6 bg-gray-900/80 backdrop-blur-lg rounded-2xl border border-gray-700"
+              >
                 <div className="flex justify-between items-center mb-4">
-                  <h3 className="text-gray-400 text-sm">{offer ? (getOfferDetail('level') || offer.quantityAvailable) : 'Loading...'} available</h3>
+                  <h3 className="text-gray-400 text-sm">
+                    {offer
+                      ? getOfferDetail("level") || offer.quantityAvailable
+                      : "Loading..."}{" "}
+                    available
+                  </h3>
                   <button className="text-cyan-400 text-xs font-semibold px-2 py-1 rounded-full border border-cyan-500/50 hover:bg-cyan-500/10 transition-colors">
                     Volume discount
                   </button>
@@ -163,15 +240,18 @@ function BuyCardComp({ offer }: BuyCardCompProps) {
                     className={`
                     flex items-center justify-center w-8 h-8 rounded-full border
                     text-lg font-bold transition duration-300
-                    ${count <= 1
+                    ${
+                      count <= 1
                         ? "bg-gray-700 border-gray-600 text-gray-500 cursor-not-allowed"
                         : "bg-gradient-to-r from-cyan-500 to-blue-700 hover:from-cyan-600 hover:to-blue-800 border-none text-white"
-                      }
+                    }
                   `}
                   >
                     -
                   </button>
-                  <p className="w-12 text-center text-lg font-semibold text-gray-200">{count}</p>
+                  <p className="w-12 text-center text-lg font-semibold text-gray-200">
+                    {count}
+                  </p>
                   <button
                     onClick={handleInc}
                     className="
@@ -186,7 +266,9 @@ function BuyCardComp({ offer }: BuyCardCompProps) {
 
                 <div className="flex justify-between items-center mb-6">
                   <h2 className="text-gray-200 text-lg">Total Amount</h2>
-                  <h2 className="text-cyan-400 text-xl font-bold">{totalAmount} USD</h2>
+                  <h2 className="text-cyan-400 text-xl font-bold">
+                    {totalAmount} USD
+                  </h2>
                 </div>
 
                 <button className="w-full bg-gradient-to-r from-cyan-500 to-blue-700 hover:from-cyan-600 hover:to-blue-800 text-white py-3 rounded-lg text-lg font-semibold transition duration-300 shadow-md shadow-cyan-500/30">
@@ -194,10 +276,15 @@ function BuyCardComp({ offer }: BuyCardCompProps) {
                 </button>
               </div>
 
-              <div id="box-2" className="rounded-2xl shadow-lg p-6 w-full max-w-sm bg-gray-900/80 backdrop-blur-lg border border-gray-700">
+              <div
+                id="box-2"
+                className="rounded-2xl shadow-lg p-6 w-full max-w-sm bg-gray-900/80 backdrop-blur-lg border border-gray-700"
+              >
                 <div className="flex items-center justify-between mb-4">
                   <p className="text-gray-400 text-sm">
-                    <span className="text-emerald-400 font-bold mr-1">👍 100.00%</span>
+                    <span className="text-emerald-400 font-bold mr-1">
+                      👍 100.00%
+                    </span>
                     <span className="text-gray-400">758 sold</span>
                   </p>
 
@@ -219,9 +306,23 @@ function BuyCardComp({ offer }: BuyCardCompProps) {
                     </div>
                   </div>
 
-                  <button className="bg-emerald-600 text-white py-2 px-4 rounded-full text-sm font-semibold hover:bg-emerald-700 transition duration-300 flex items-center shadow-md shadow-emerald-600/30">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+                  <button
+                    className="bg-emerald-600 text-white py-2 px-4 rounded-full text-sm font-semibold hover:bg-emerald-700 transition duration-300 flex items-center shadow-md shadow-emerald-600/30"
+                    onClick={() => redirect("/chat")}
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-4 w-4 mr-1"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"
+                      />
                     </svg>
                     Chat
                   </button>
@@ -232,7 +333,9 @@ function BuyCardComp({ offer }: BuyCardCompProps) {
         </div>
         <div className="bg-gray-900/80 backdrop-blur-lg rounded-xl shadow-lg border border-gray-700 mb-6 max-w-7xl mx-auto py-8 px-4 lg:px-8 relative z-10">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-4">
-            <h2 className="text-xl font-bold text-gray-100 mb-3 sm:mb-0">Other sellers </h2>
+            <h2 className="text-xl font-bold text-gray-100 mb-3 sm:mb-0">
+              Other sellers{" "}
+            </h2>
             <div className="flex items-center space-x-4">
               {/* Checkbox for online sellers */}
               <label className="flex items-center text-gray-400 text-sm cursor-pointer">
@@ -252,20 +355,22 @@ function BuyCardComp({ offer }: BuyCardCompProps) {
                     type="radio"
                     name="sort-by"
                     value="Recommended"
-                    checked={sortBy === 'Recommended'}
-                    onChange={() => setSortBy('Recommended')}
+                    checked={sortBy === "Recommended"}
+                    onChange={() => setSortBy("Recommended")}
                     className="mr-1 text-cyan-500 bg-gray-800 border-gray-600 focus:ring-cyan-500 focus:ring-offset-gray-900"
-                  /> Recommended
+                  />{" "}
+                  Recommended
                 </label>
                 <label className="ml-2 flex items-center cursor-pointer">
                   <input
                     type="radio"
                     name="sort-by"
                     value="Lowest Price"
-                    checked={sortBy === 'Lowest Price'}
-                    onChange={() => setSortBy('Lowest Price')}
+                    checked={sortBy === "Lowest Price"}
+                    onChange={() => setSortBy("Lowest Price")}
                     className="mr-1 text-cyan-500 bg-gray-800 border-gray-600 focus:ring-cyan-500 focus:ring-offset-gray-900"
-                  /> Lowest Price
+                  />{" "}
+                  Lowest Price
                 </label>
               </div>
             </div>
@@ -314,9 +419,7 @@ function BuyCardComp({ offer }: BuyCardCompProps) {
           </div>
         </div>
       </div>
-
     </>
-
   );
 }
 
