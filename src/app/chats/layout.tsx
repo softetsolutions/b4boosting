@@ -2,6 +2,7 @@ import { cookies } from "next/headers";
 import { jwtDecode } from "jwt-decode";
 import { redirect } from "next/navigation";
 import type { ReactNode } from "react";
+import AuthProvider from "src/utils/providers/AuthProvider";
 
 interface AuthTokenPayload {
   id: string;
@@ -30,5 +31,5 @@ export default async function ChatLayout({
     redirect("/login");
   }
 
-  return children;
+  return <AuthProvider value={decoded}>{children}</AuthProvider>;
 }
