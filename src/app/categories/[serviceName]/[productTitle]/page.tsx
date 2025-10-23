@@ -1,5 +1,5 @@
-import ProductPageComp from 'src/components/ProductPageComp';
-import { fetchOffersByProductAndService } from 'src/api/offers';
+import ProductPageComp from "src/components/ProductPageComp";
+import { fetchOffersByProductAndService } from "src/api/offers";
 
 interface Props {
   params: {
@@ -8,19 +8,12 @@ interface Props {
   };
 }
 
-// Deslugify helper
-function deslugify(slug: string) {
-  return slug
-    .split('-')
-    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(' ');
-}
-
 export default async function CategoryProductPage({ params }: Props) {
-  const serviceName = deslugify(params.serviceName);
-  const productTitle = deslugify(params.productTitle);
-
-  const { offers, services } = await fetchOffersByProductAndService(serviceName, productTitle);
+  const { serviceName, productTitle } = await params;
+  const { offers, services } = await fetchOffersByProductAndService(
+    serviceName,
+    productTitle
+  );
 
   return (
     <ProductPageComp
