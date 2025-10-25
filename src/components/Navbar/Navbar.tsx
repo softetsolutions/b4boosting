@@ -263,7 +263,12 @@ import ThemeToggle from "../ThemeToggle";
 import LanguageSelector from "../LanguageSelector";
 import { SettingsIcon, SearchIcon, Menu,X } from "lucide-react";
 import Cookies from "js-cookie";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
+
+interface NavbarProps {
+  activeService?: string;
+}
+
 
 const dummyNavbarOptions = [
   { label: "Currency", link: "#currency" },
@@ -274,12 +279,15 @@ const dummyNavbarOptions = [
   { label: "Gift Cards", link: "#gift-card" },
 ];
 
-const Navbar = () => {
+export default function Navbar({ activeService }: NavbarProps) {
   const router = useRouter();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+    const pathname = usePathname();
+  const isHomePage = pathname === "/"; 
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 50);
@@ -301,6 +309,7 @@ const Navbar = () => {
   return (
     <header className="relative w-full">
       {/* Banner */}
+       {isHomePage && (
       <div className="relative w-full">
         <Image
           src={bannerImg}
@@ -322,6 +331,7 @@ const Navbar = () => {
           </Link>
         </div>
       </div>
+       )}
 
       {/* Navbar */}
       <nav
@@ -332,7 +342,7 @@ const Navbar = () => {
         <div className="max-w-11xl mx-auto px-4 py-3 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-3 lg:gap-0">
           {/* Top row: Logo + Hamburger */}
           <div className="flex items-center justify-between w-full lg:w-auto">
-            <div className="flex items-center space-x-7">
+            <Link href="/" className="flex items-center space-x-7">
               <div className="bg-gradient-to-r yellow-bg p-2 rounded-xl shadow-lg shadow-cyan-500/20">
                 <img
                   src="/svgIcons/LogoIcon.svg"
@@ -346,12 +356,12 @@ const Navbar = () => {
                 </h1>
                 <p className="text-xs text-amber-100">Pro Gaming Services</p>
               </div>
-            </div>
+            </Link>
 
             {/* Hamburger icon for mobile */}
             <button
               type="button"
-              className="lg:hidden text-white hover:text-yellow-400 transition-colors"
+              className="lg:hidden  hover:text-yellow-400 transition-colors"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
             >
               {isMenuOpen ? (
@@ -363,27 +373,37 @@ const Navbar = () => {
           </div>
 
           {/* Desktop Links */}
+            {isHomePage && (
           <div className="hidden lg:flex items-center xl:gap-10 lg:gap-6">
-            {dummyNavbarOptions.map((option) => (
+              {dummyNavbarOptions.map((option) => {
+              const isActive =
+                activeService?.toLowerCase() === option.label.toLowerCase();
+
+              return (
               <Link
                 key={option.link}
                 href={option.link}
-                className="text-xl text-white hover:text-yellow-400 transition-colors duration-200 font-medium relative group"
+                className="text-xl hover:text-yellow-400 transition-colors duration-200 font-medium relative group"
               >
                 {option.label}
-                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-yellow-400 group-hover:w-full transition-all duration-300"></span>
-              </Link>
-            ))}
+                <span
+                    className={`absolute -bottom-1 left-0 h-0.5 bg-yellow-400 transition-all duration-300 ${
+                      isActive ? "w-full" : "w-0 group-hover:w-full"
+                    }`}
+                  />
+                </Link>
+              );
+            })}
           </div>
-
+            )}
           {/* Desktop Right Items */}
           <div className="hidden lg:flex flex-row items-center gap-4">
             {/* Search */}
-            <div className="flex items-center gap-2 p-2 rounded-lg bg-white/10 text-white hover:bg-white/20 transition-colors">
+            <div className="flex items-center gap-2 p-2 rounded-lg bg-white/10  hover:bg-white/20 transition-colors">
               <SearchIcon />
               <input
                 type="text"
-                className="bg-transparent border-none outline-none text-white placeholder-white/70"
+                className="bg-transparent border-none outline-none"
                 placeholder="Search ..."
               />
             </div>
@@ -405,7 +425,7 @@ const Navbar = () => {
               <button
                 type="button"
                 onClick={() => setIsSettingsOpen(!isSettingsOpen)}
-                className="flex items-center gap-2 text-white font-semibold px-4 py-2 rounded-xl shadow-lg transition-all duration-300"
+                className="flex items-center gap-2 font-semibold px-4 py-2 rounded-xl border-1 border-gray-400/20 transition-all duration-300"
               >
                 <SettingsIcon />
                 <svg
@@ -477,12 +497,12 @@ const Navbar = () => {
               <div className="flex flex-col">
                 <button
                   type="button"
-                  className="flex items-center justify-between text-white font-semibold px-4 py-2 rounded-xl shadow-lg bg-white/10 hover:bg-white/20"
+                  className="flex items-center justify-between  font-semibold px-4 py-2 rounded-xl "
                   onClick={() => setIsSettingsOpen(!isSettingsOpen)}
                 >
-                  <span>Settings</span>
+                  <span className="text-white">Settings</span>
                   <svg
-                    className="w-4 h-4"
+                    className="w-4 h-4 text-white"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -541,4 +561,3 @@ const Navbar = () => {
   );
 };
 
-export default Navbar;
