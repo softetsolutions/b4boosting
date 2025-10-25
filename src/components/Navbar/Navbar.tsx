@@ -343,7 +343,7 @@ export default function Navbar({ activeService }: NavbarProps) {
           {/* Top row: Logo + Hamburger */}
           <div className="flex items-center justify-between w-full lg:w-auto">
             <Link href="/" className="flex items-center space-x-7">
-              <div className="bg-gradient-to-r yellow-bg p-2 rounded-xl shadow-lg shadow-cyan-500/20">
+              <div className="bg-gradient-to-r yellow-bg p-2 rounded-xl shadow-lg">
                 <img
                   src="/svgIcons/LogoIcon.svg"
                   alt="Logo"

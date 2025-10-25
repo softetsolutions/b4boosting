@@ -61,10 +61,10 @@ export default function Chat() {
   };
 
   return (
-    <div className="flex">
-      <div className="w-[340px] h-[100vh] border-r border-r-solid border-r-gray-50 shrink-0">
-        <div></div>
-        <div>
+    <div className="flex flex-col md:flex-row px-12 py-5 bg-black h-screen gap-4" >
+      <div className="w-full md:w-[340px]  border-r border-r-solid border-r-gray-400/20 shrink-0 gray-bg rounded-2xl">
+       
+        <div className="flex flex-col gap-2 p-2">
           {conversationData.length ? (
             conversationData.map((value: any, index: number) => (
               <InboxTab
@@ -82,7 +82,7 @@ export default function Chat() {
           )}
         </div>
       </div>
-      <div className="flex-1">
+      <div className="flex-1 gray-bg rounded-2xl rounded-br-2xl">
         {reciverId ? (
           <MessageContainer
             sendMessage={sendMessage}

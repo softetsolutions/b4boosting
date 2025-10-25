@@ -42,8 +42,14 @@ export async function getAllMessagesBetweenTwoUsers(
       await handleUnauthorized();
       return;
     }
-    const errMessage = await response.json();
-    throw new Error(errMessage.message);
+  let errMessage = "Failed to fetch messages.";
+      try {
+        const json = await response.json();
+        errMessage = json?.message || errMessage;
+      } catch {
+        // In case response is not valid JSON
+      }
+      throw new Error(errMessage);
   }
 
   const data = await response.json();
