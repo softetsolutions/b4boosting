@@ -32,6 +32,10 @@ html, body {
   color: rgba(254, 193, 55, 1) !important;
 } 
 
+.gray-bg{
+  background-color: rgba(51, 50, 67, 0.8) !important;
+}
+
 @theme inline {
   --color-background: var(--background) !important;
   --color-foreground: var(--foreground)        !important;
