@@ -171,7 +171,7 @@ export default function CreateServicePage() {
             >
               {isSubmitting ? (
                 <>
-                  <SpinnerIcon className="animate-spin -ml-1 mr-2 h-3.5 w-3.5 text-white" />
+                  {/* <SpinnerIcon className="animate-spin -ml-1 mr-2 h-3.5 w-3.5 text-white" /> */}
                   Creating...
                 </>
               ) : (
