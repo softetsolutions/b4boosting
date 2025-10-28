@@ -39,11 +39,7 @@ export const createService = async (
   service: CreateServiceRequest | FormData
 ): Promise<Service> => {
   try {
-    const { token } = getAuthInfo();
-
-    const headers: Record<string, string> = {
-      Authorization: `Bearer ${token}`,
-    };
+    const headers: Record<string, string> = {};
 
     let body: string | FormData;
 
@@ -109,12 +105,6 @@ export const fetchAllServices = async (): Promise<Service[]> => {
 };
 
 export const deleteService = async (serviceId: string): Promise<void> => {
-  try {
-    getAuthInfo();
-  } catch {
-    await handleUnauthorized();
-    throw new Error("No authentication token found");
-  }
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_BACKEND_URL}/services/${serviceId}`,
     {
