@@ -264,9 +264,11 @@ import LanguageSelector from "../LanguageSelector";
 import { SettingsIcon, SearchIcon, Menu,X } from "lucide-react";
 import Cookies from "js-cookie";
 import { useRouter, usePathname } from "next/navigation";
+import Marquee from "src/components/Marquee";
 
 interface NavbarProps {
   activeService?: string;
+  dynamicdata?: any;
 }
 
 
@@ -279,7 +281,9 @@ const dummyNavbarOptions = [
   { label: "Gift Cards", link: "#gift-card" },
 ];
 
-export default function Navbar({ activeService }: NavbarProps) {
+export default function Navbar({ activeService, dynamicdata }: NavbarProps) {
+  const SettingsData = dynamicdata.settings;
+  console.log(SettingsData,"Setting Data")
   const router = useRouter();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
@@ -307,24 +311,35 @@ export default function Navbar({ activeService }: NavbarProps) {
   };
 
   return (
-    <header className="relative w-full">
+    <>
+       <Marquee
+        text="🔥 Get 50% off on all premium game boosts this weekend! 🔥"
+        link="/offers"
+        speed={150}
+        className="fixed top-0 left-0 right-0 z-50"
+      />
+         <header className="relative w-full">
+     
+
       {/* Banner */}
        {isHomePage && (
       <div className="relative w-full">
         <Image
-          src={bannerImg}
+          src={SettingsData.bannerImg}
           alt="Banner"
           className="w-full h-full object-cover"
+          width={1920}
+          height={1080}
           priority
         />
         <div className="absolute inset-0 bg-black/40 flex flex-col items-center justify-center text-center px-4 pt-15">
           <h1 className="lg:text-4xl md:text-4xl text-2xl font-bold text-white lg:mb-4 md:mb-4 sm:mb-2 transition-all">
-            Welcome to GameStore
+           {SettingsData.bannerTitle}
           </h1>
           <p className="text-white sm:text-lg lg:text-lg lg:mb-6 md:mb-4 sm:mb-2 mb-2">
-            Pro Gaming Services at Your Fingertips
+            {SettingsData.bannerSubtitle}
           </p>
-          <Link href="/boosting">
+          <Link href={SettingsData.bannerRedirectionLink}>
             <button type="button" className="lg:text-2xl md:text-2xl sm:text-lg  yellow-bg text-zinc-950 lg:px-16 md:px-12 sm:px-5 px-5  lg:py-3 py-1  rounded-xl font-bold shadow-lg transition-all duration-300">
               Get Started
             </button>
@@ -335,7 +350,7 @@ export default function Navbar({ activeService }: NavbarProps) {
 
       {/* Navbar */}
       <nav
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        className={`fixed top-9 left-0 right-0 z-50 transition-all duration-300 ${
           isScrolled ? "backdrop-blur-md bg-black/60" : "bg-transparent"
         }`}
       >
@@ -558,6 +573,8 @@ export default function Navbar({ activeService }: NavbarProps) {
         )}
       </nav>
     </header>
+    </>
+ 
   );
 };
 

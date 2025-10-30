@@ -35,11 +35,14 @@ export default function ImageUpload({
       const newFiles: File[] = [];
       for (let i = 0; i < files.length; i++) {
         const file = files[i];
-        if (!file.type.startsWith('image/')) {
-          setError('Please upload only image files');
-          setIsUploading(false);
-          return;
-        }
+      const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+
+if (!allowedTypes.includes(file.type)) {
+  setError('Only JPG, PNG, or WEBP images are allowed');
+  setIsUploading(false);
+  return;
+}
+
         if (file.size > 5 * 1024 * 1024) {
           setError('Image size should be less than 5MB');
           setIsUploading(false);
@@ -89,7 +92,7 @@ export default function ImageUpload({
         <input
           type="file"
           multiple
-          accept="image/*"
+         accept="image/png, image/jpeg, image/jpg, image/webp"
           onChange={(e) => handleImageUpload(e.target.files)}
           className="hidden"
           id="image-upload"
@@ -152,7 +155,7 @@ export default function ImageUpload({
                   or drag and drop
                 </p>
                 <p className="text-xs text-gray-500 mt-1">
-                  PNG, JPG, GIF up to 5MB each (Max {maxImages} images)
+                  PNG, JPG, SVG, WEBP up to 5MB each (Max {maxImages} images)
                 </p>
               </div>
             )}
