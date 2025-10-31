@@ -32,7 +32,7 @@ const accounts = [
 
 export default function PopularAccounts() {
   const [isMobile, setIsMobile] = useState(false);
-
+const [currentSlide, setCurrentSlide] = useState(0);
   // Detect screen size
   useEffect(() => {
     const handleResize = () => {
@@ -47,20 +47,36 @@ export default function PopularAccounts() {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+    const totalSlides = Math.ceil(accounts.length / 2);
+
+  const nextSlide = () => {
+    setCurrentSlide((prev) => (prev + 1) % totalSlides);
+  };
+
+  const prevSlide = () => {
+    setCurrentSlide((prev) => (prev - 1 + totalSlides) % totalSlides);
+  };
+
+  // Slice for mobile (2 per slide)
+  const displayedAccounts = isMobile
+    ? accounts.slice(currentSlide * 2, currentSlide * 2 + 2)
+    : accounts;
+
   return (
     <section className="px-4 lg:mx-12 mb-4  lg:py-10 md:px-8 mt-12 ">
       {/* Header Section */}
       <h2 className="text-3xl mb-4 font-semibold text-foreground text-center lg:block md:block sm:hidden hidden">
         POPULAR ACCOUNTS
       </h2>
-      <div className="flex items-center justify-between  mb-6 ">
-        <h2 className="text-xl font-semibold text-foreground text-center sm:block lg:hidden md:hidden">
+       <h2 className="text-xl font-semibold text-foreground text-center sm:block lg:hidden md:hidden mb-2">
           POPULAR ACCOUNTS
         </h2>
+      <div className="mb-1 flex items-center justify-end-safe">
+       
 
         <button
           type="button"
-          className="text-sm font-medium yellow-text hover:underline"
+          className="text-sm font-medium yellow-text hover:underline text-end"
           onClick={() => {}}
         >
           See All
@@ -70,12 +86,12 @@ export default function PopularAccounts() {
       {/* Grid Container */}
       <div
         className="
-          grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4
+          grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4
           overflow-x-auto scrollbar-hide
           justify-center
         "
       >
-        {accounts.map((account, index) => (
+        {displayedAccounts?.map((account, index) => (
           <div
             key={index}
             className="relative group overflow-hidden rounded-md"
@@ -85,7 +101,7 @@ export default function PopularAccounts() {
               alt={account.title}
               width={200}
               height={200}
-              className="object-cover w-full h-20"
+              className="object-fit w-full  h-full"
             />
             <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white font-semibold text-lg">
               {account.title}
@@ -93,6 +109,22 @@ export default function PopularAccounts() {
           </div>
         ))}
       </div>
+
+       {/* Dots Indicator for mobile */}
+      {isMobile && (
+        <div className="flex items-center justify-center gap-2 mt-4 mb-4">
+          {Array.from({ length: totalSlides }).map((_, i) => (
+            <button
+            type="button"
+              key={i}
+              onClick={() => setCurrentSlide(i)}
+              className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${
+                i === currentSlide ? "bg-yellow-400 scale-125" : "bg-gray-400"
+              }`}
+            ></button>
+          ))}
+        </div>
+      )}
     </section>
   );
 }

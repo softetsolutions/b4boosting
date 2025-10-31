@@ -12,7 +12,7 @@ interface MarqueeProps {
 export default function Marquee({
   text,
   link,
-  speed = 150,
+  speed = 100,
   className = "",
 }: MarqueeProps) {
   const marqueeRef = useRef<HTMLDivElement>(null);

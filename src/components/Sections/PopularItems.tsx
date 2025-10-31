@@ -120,10 +120,11 @@ export default function PopularAccounts() {
         <h2 className="text-3xl mb-4 font-semibold text-foreground text-center lg:block md:block sm:hidden hidden ">
           POPULAR ITEMS
         </h2>
-        <div className="flex items-center justify-between mb-6 ">
-          <h2 className="text-xl font-semibold text-foreground sm:block lg:hidden md:hidden">
+          <h2 className="text-xl mb-2 font-semibold text-foreground text-center sm:block lg:hidden md:hidden">
             POPULAR ITEMS
           </h2>
+        <div className="flex items-center justify-end-safe mb-1">
+        
           {isMobile && (
             <button
               type="button"
@@ -138,7 +139,7 @@ export default function PopularAccounts() {
         {/* Grid Container */}
         <div
           className="
-          grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-2
+          grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 gap-2
    justify-self-center
     overflow-x-auto scrollbar-hide   
         "
@@ -151,7 +152,8 @@ export default function PopularAccounts() {
               <Image
                 src={account.src}
                 alt={account.title}
-                className="object-fit w-full h-70"
+                className="object-cover w-full h-[10.5rem] sm:h-[10.5rem] lg:h-[17.5rem] md:h-[12.5rem] rounded-lg"
+
               />
               <div className="py-4 bg-black/100 opacity-100 transition-opacity flex items-center justify-center text-white font-semibold text-lg">
                 {account.title}
@@ -161,7 +163,7 @@ export default function PopularAccounts() {
         </div>
       </section>
 
-      <section>
+      <section className="px-4 lg:px-0 ">
         <h2 className="text-3xl my-4 font-semibold text-foreground text-center ">
           SAFE AND EASY TRADING
         </h2>
@@ -181,13 +183,13 @@ export default function PopularAccounts() {
 
       <section className="px-4 py-10 md:px-8 mt-10 lg:mx-12 ">
         {/* Header Section */}
-        <h2 className="text-3xl mb-4 font-semibold text-foreground text-center lg:block md:block sm:hidden hidden ">
+        <h2 className="text-3xl mb-6 font-semibold text-foreground text-center lg:block md:block sm:hidden hidden ">
           ORDER EASILY
         </h2>
-        <div className="flex items-center justify-between mb-6 flex-wrap">
-          <h2 className="text-xl font-semibold text-foreground sm:block lg:hidden md:hidden">
+         <h2 className="text-xl font-semibold text-foreground sm:block lg:hidden md:hidden text-center mb-6">
             ORDER EASILY
           </h2>
+        {/* <div className="flex items-center justify-between mb-6 flex-wrap">      
           {isMobile && (
             <button
               type="button"
@@ -197,7 +199,7 @@ export default function PopularAccounts() {
               {orderVisible === 2 ? "See All" : "See Less"}
             </button>
           )}
-        </div>
+        </div> */}
 
         {/* Grid Container   xl:mx-100 lg:mx-70 md:mx-50*/}
         <div
@@ -210,17 +212,17 @@ export default function PopularAccounts() {
           {orderEasily.slice(0, orderVisible).map((order, index) => (
             <div
               key={index}
-              className=" border-zinc-600 border-2 relative group overflow-hidden rounded-lg bg-black/100 px-5  lg:px-15 flex items-center flex-col py-10"
+              className=" border-zinc-600 border-3 relative group overflow-hidden rounded-lg bg-black/100 px-1  lg:px-15 flex items-center flex-col py-4 lg:py-10"
             >
               <Image
                 src={order.src}
                 alt={order.title}
-                className="object-fit w-25 h-25 mb-5"
+                className="object-fit w-20 h-20 mb-5"
               />
-              <p className=" flex items-center justify-center text-white font-semibold text-lg">
+              <p className=" flex items-center justify-center text-white font-semibold text-lg text-center">
                 {order.title}
               </p>
-              <p className="text-md flex items-center justify-center text-white ">
+              <p className="text-md flex items-center justify-center text-white text-center text-medium">
                 {order.desc}
               </p>
             </div>
@@ -235,7 +237,7 @@ export default function PopularAccounts() {
           src={chooseImage}
           alt="Choose Background"
           fill
-          className="object-fit w-full h-full"
+          className="object-cover w-full h-full"
           priority
         />
 

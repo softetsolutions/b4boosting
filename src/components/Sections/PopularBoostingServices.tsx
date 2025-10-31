@@ -72,7 +72,7 @@ export default function PopularBoostingServices() {
       <div className="absolute inset-0 bg-black/40"></div>
 
       {/* Title */}
-      <h2 className="relative text-3xl md:text-4xl font-semibold text-white mb-10 text-center z-10">
+      <h2 className="relative text-3xl md:text-4xl font-semibold text-white mb-10 text-center z-10 hidden md:block lg:block">
         Popular Boosting Services
       </h2>
 
