@@ -44,16 +44,19 @@ export default function PopularAccounts() {
     }
   };
 
+   const displayedAccounts = isMobile ? accounts.slice(0, 4) : accounts;
+
   return (
     <section className="px-4 lg:py-10 md:px-8 mt-10 lg:mx-12">
       {/* Header Section */}
       <h2 className="text-3xl mb-4 font-semibold text-foreground text-center lg:block md:block sm:hidden hidden ">
         POPULAR CURRENCY
       </h2>
-      <div className="flex items-center justify-between mb-6 ">
-        <h2 className="text-xl font-semibold text-foreground sm:block lg:hidden md:hidden">
+        <h2 className="mb-2 text-xl text-center font-semibold text-foreground sm:block lg:hidden md:hidden">
           POPULAR CURRENCY
         </h2>
+      <div className="flex items-center justify-end-safe mb-1 ">
+      
 
         <button
           type="button"
@@ -67,12 +70,12 @@ export default function PopularAccounts() {
       {/* Grid Container */}
       <div
         className="
-          grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4
+          grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4
           overflow-x-auto scrollbar-hide
           justify-center
         "
       >
-        {accounts.map((account, index) => (
+        {displayedAccounts?.map((account, index) => (
           <div
             key={index}
             className="relative group overflow-hidden rounded-lg"
@@ -81,9 +84,9 @@ export default function PopularAccounts() {
             <Image
               src={account.src}
               alt={account.title}
-              className="object-fit w-full h-70 "
+               className="object-fit w-full h-[10.5rem] sm:h-[10.5rem] lg:h-[17.5rem] md:h-[12.5rem] rounded-lg"
             />
-            <div className="py-4 bg-black opacity-90 flex items-center justify-center text-white font-semibold text-lg">
+            <div className="py-4 bg-black opacity-90 flex items-center justify-center text-white font-semibold text-lg text-center">
               {account.title}
             </div>
           </div>

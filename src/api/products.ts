@@ -149,7 +149,8 @@ export const fetchHomePageData = async (): Promise<HomePageService[]> => {
   }
 
   const res = await response.json();
-  if (res.success && Array.isArray(res.data)) {
+  
+  if (res.success && res.data) {
     return res.data;
   }
   throw new Error("Invalid homepage data format");
