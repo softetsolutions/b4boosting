@@ -31,7 +31,7 @@ export const routeMapping: { [key: string]: string } = {
   support: "Support",
 
   // Seller routes
-  createOffer: "Create Offer",
+  createOffer: "Create Offers",
   manageOffers: "Manage Offers",
 
     // Affiliate routes
@@ -59,7 +59,7 @@ export const iconMapping = (route: string): LucideIcon | null => {
     support: HelpCircle,
 
     // Seller routes
-    createOffer: Plus,
+    createOffers: Plus,
     manageOffers: FileText,
 
   // Affiliate routes

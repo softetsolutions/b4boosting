@@ -1,6 +1,8 @@
+import { getCookie } from "cookies-next";
 import { jwtDecode } from "jwt-decode";
 import { logoutUser } from "src/api/api";
 import toast from "react-hot-toast";
+
 
 interface AuthTokenPayload {
   id: string;
@@ -9,13 +11,14 @@ interface AuthTokenPayload {
 }
 
 export const getAuthInfo = () => {
-  const token = localStorage.getItem("userToken");
+
+  const userId = getCookie("userId");
+  const token = getCookie("token");
   if (!token) {
     throw new Error("No authentication token found");
   }
 
   const decoded = jwtDecode<AuthTokenPayload>(token);
-  const userId = decoded.id;
   const role = decoded.role;
 
   if (!userId) {
