@@ -30,6 +30,12 @@ export async function Loginaction(formData: FormData) {
       sameSite: "strict",
       path: "/",
     });
+     cookieStore.set("userId", data.user.id, {
+      httpOnly: false,
+      secure: true,
+      sameSite: "strict",
+      path: "/",
+    });
    redirect(data.user.role === "admin" ? "/admin" : `/${data.user.role}/dashboard`);
 
   } catch (error) {

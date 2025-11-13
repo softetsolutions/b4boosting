@@ -1,7 +1,11 @@
 "use client";
 import { useState } from "react";
+import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import type { ApiOffer } from "src/api/offers";
 import { redirect } from "next/navigation";
+import toast from "react-hot-toast";
+import { createPayPalOrder, capturePayPalOrder } from "src/api/orders";
+
 
 interface BuyCardCompProps {
   offer: ApiOffer;
@@ -27,6 +31,30 @@ function BuyCardComp({ offer }: BuyCardCompProps) {
     const found = offer.offerDetails.find((d) => d.fieldName === field);
     return found ? found.value : undefined;
   };
+
+  const createOrder = async (): Promise<string> => {
+  try {
+    const response = await createPayPalOrder(Number(totalAmount));
+    if (!response.success) throw new Error("Failed to create order");
+    return response.orderID;
+  } catch (error) {
+    toast.error("Failed to create PayPal order");
+    throw error;
+  }
+};
+
+
+const onApprove = async (data: any) => {
+  try {
+    const result = await capturePayPalOrder(data.orderID, offer._id, count);
+    if (result.success) toast.success("Payment successful!");
+    else toast.error(result.message || "Payment failed!");
+  } catch (error) {
+    toast.error("Payment error");
+  }
+};
+
+
 
   return (
     <>
@@ -225,9 +253,35 @@ function BuyCardComp({ offer }: BuyCardCompProps) {
                   <h2 className="text-xl font-bold">{totalAmount} USD</h2>
                 </div>
 
-                <button className="w-full border-none text-white yellow-bg py-3 rounded-lg text-lg font-semibold transition duration-300 shadow-md">
-                  Buy now
-                </button>
+              <PayPalScriptProvider
+        options={{
+          "client-id": process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID!,
+          currency: "USD",
+        }}
+      >
+        <PayPalButtons
+          style={{ layout: "vertical", color: "gold" }}
+          createOrder={() => createOrder()}
+          onApprove={onApprove}
+          onError={() => toast.error("Something went wrong!")}
+        />
+      </PayPalScriptProvider>
+       {/* <PayPalScriptProvider options={{ clientId: process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID! }}>
+      <PayPalButtons
+        createOrder={async () => {
+          const res = await fetch("/api/order", { method: "POST" });
+          const data = await res.json();
+          return data.orderID;
+        }}
+        onApprove={async (data) => {
+          const res = await fetch(`/api/order?orderID=${data.orderID}`, {
+            method: "PUT",
+          });
+          const paymentResult = await res.json();
+          console.log("Payment captured:", paymentResult);
+        }}
+      />
+    </PayPalScriptProvider> */}
               </div>
 
               <div

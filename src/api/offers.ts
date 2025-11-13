@@ -52,41 +52,19 @@ export type ServiceWithCount = {
   icon?: string;
 };
 
-export const createOffer = async (
-  offerData: OfferFormData
-): Promise<ApiOffer> => {
-  const { userId: seller } = getAuthInfo();
 
-  const payload = {
-    product: offerData.brand,
-    offerDetails: Object.entries(offerData.dynamicFields).map(
-      ([fieldName, value]) => ({ fieldName, value })
-    ),
-    price: offerData.price,
-    currency: offerData.currency,
-    quantityAvailable: offerData.quantityAvailable,
-    deliveryTime: offerData.deliveryTime,
-    instantDelivery: offerData.instantDelivery,
-    images: offerData.images,
-    seller,
-  };
-
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_BACKEND_URL}/offers`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include",
-      body: JSON.stringify(payload),
-    }
-  );
+export const createOffer = async (formData: FormData): Promise<ApiOffer> => {
+  const { userId} = getAuthInfo();
+  const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/offers`, {
+    method: "POST",
+    body: formData,
+    credentials: "include",
+  });
 
   if (!response.ok) {
-    const errorData = await response
-      .json()
-      .catch(() => ({ message: `Offer creation failed: ${response.status}` }));
+    const errorData = await response.json().catch(() => ({
+      message: `Offer creation failed: ${response.status}`,
+    }));
     throw new Error(errorData.message || "Failed to create offer");
   }
 
@@ -152,30 +130,15 @@ export const fetchOfferById = async (offerId: string): Promise<ApiOffer> => {
 
 export const updateOffer = async (
   offerId: string,
-  offerData: OfferFormData
+  offerData: FormData
 ): Promise<ApiOffer> => {
-  const payload = {
-    product: offerData.brand,
-    offerDetails: Object.entries(offerData.dynamicFields).map(
-      ([fieldName, value]) => ({ fieldName, value })
-    ),
-    price: offerData.price,
-    currency: offerData.currency,
-    quantityAvailable: offerData.quantityAvailable,
-    deliveryTime: offerData.deliveryTime,
-    instantDelivery: offerData.instantDelivery,
-    images: offerData.images,
-  };
-
+ 
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_BACKEND_URL}/offers/${offerId}`,
     {
       method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
       credentials: "include",
-      body: JSON.stringify(payload),
+      body: offerData,
     }
   );
 
@@ -214,7 +177,10 @@ export const deleteOffer = async (
 };
 
 export const fetchOffersBySellerId = async (): Promise<ApiOffer[]> => {
-  const { userId } = getAuthInfo();
+  const {userId}  = getAuthInfo();
+  if (!userId) {
+    throw new Error("User ID not found in fetchOffersBySellerId");
+  }
 
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_BACKEND_URL}/offers/seller/${userId}`,

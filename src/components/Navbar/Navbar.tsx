@@ -282,8 +282,7 @@ const dummyNavbarOptions = [
 ];
 
 export default function Navbar({ activeService, dynamicdata }: NavbarProps) {
-  const SettingsData = dynamicdata.settings;
-  console.log(SettingsData,"Setting Data")
+  const SettingsData = dynamicdata?.settings;
   const router = useRouter();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
@@ -325,7 +324,7 @@ export default function Navbar({ activeService, dynamicdata }: NavbarProps) {
        {isHomePage && (
       <div className="relative w-full">
         <Image
-          src={SettingsData.bannerImg}
+          src={SettingsData?.bannerImg}
           alt="Banner"
           className="w-full h-full object-cover"
           width={1920}
@@ -334,12 +333,12 @@ export default function Navbar({ activeService, dynamicdata }: NavbarProps) {
         />
         <div className="absolute inset-0 bg-black/40 flex flex-col items-center justify-center text-center px-4 pt-15">
           <h1 className="lg:text-4xl md:text-4xl text-2xl font-bold text-white lg:mb-4 md:mb-4 sm:mb-2 transition-all">
-           {SettingsData.bannerTitle}
+           {SettingsData?.bannerTitle}
           </h1>
           <p className="text-white sm:text-lg lg:text-lg lg:mb-6 md:mb-4 sm:mb-2 mb-2">
-            {SettingsData.bannerSubtitle}
+            {SettingsData?.bannerSubtitle}
           </p>
-          <Link href={SettingsData.bannerRedirectionLink}>
+          <Link href={SettingsData?.bannerRedirectionLink}>
             <button type="button" className="lg:text-2xl md:text-2xl sm:text-lg  yellow-bg text-zinc-950 lg:px-16 md:px-12 sm:px-5 px-5  lg:py-3 py-1  rounded-xl font-bold shadow-lg transition-all duration-300">
               Get Started
             </button>
