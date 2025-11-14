@@ -11,7 +11,7 @@ interface PageProps {
 }
 
 export default async function BuyPage({ params }: PageProps) {
-  const offer: ApiOffer = await fetchOfferById(params.offerId);
+  const offer: ApiOffer = await fetchOfferById(params?.offerId);
   return  (
   <>
         <Navbar />

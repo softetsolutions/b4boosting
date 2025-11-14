@@ -258,7 +258,6 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import bannerImg from "src/assets/images/banner.svg";
 import ThemeToggle from "../ThemeToggle";
 import LanguageSelector from "../LanguageSelector";
 import { SettingsIcon, SearchIcon, Menu,X } from "lucide-react";
@@ -312,8 +311,8 @@ export default function Navbar({ activeService, dynamicdata }: NavbarProps) {
   return (
     <>
        <Marquee
-        text="🔥 Get 50% off on all premium game boosts this weekend! 🔥"
-        link="/offers"
+        text={SettingsData?.marqueeText}
+        link={SettingsData?.marqueeLink}
         speed={150}
         className="fixed top-0 left-0 right-0 z-50"
       />
@@ -468,9 +467,9 @@ export default function Navbar({ activeService, dynamicdata }: NavbarProps) {
                       Logout
                     </button>
                   )}
-                  <button className="w-full text-left px-4 py-2 hover:bg-gray-500">
+                  <Link href="/profile" className="w-full text-left px-4 py-2 hover:bg-gray-500">
                     Profile
-                  </button>
+                  </Link>
                  
                   <div className="px-4 py-2 flex justify-between items-center hover:bg-gray-500 cursor-pointer">
                     <ThemeToggle />

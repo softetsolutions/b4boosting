@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import type { ApiOffer } from "src/api/offers";
 import { redirect } from "next/navigation";
@@ -12,6 +13,7 @@ interface BuyCardCompProps {
 }
 
 function BuyCardComp({ offer }: BuyCardCompProps) {
+  const router = useRouter();
   const [onlineSellersOnly, setOnlineSellersOnly] = useState<boolean>(false);
   const [sortBy, setSortBy] = useState<string>("Recommended");
   const [count, setCount] = useState<number>(1);
@@ -47,8 +49,12 @@ function BuyCardComp({ offer }: BuyCardCompProps) {
 const onApprove = async (data: any) => {
   try {
     const result = await capturePayPalOrder(data.orderID, offer._id, count);
-    if (result.success) toast.success("Payment successful!");
-    else toast.error(result.message || "Payment failed!");
+   if (result.success) {
+        toast.success("Payment successful!");
+        router.push("/profile"); 
+      } else {
+        toast.error(result.message || "Payment failed!");
+      }
   } catch (error) {
     toast.error("Payment error");
   }

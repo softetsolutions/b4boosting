@@ -41,6 +41,7 @@ export interface CapturePayPalOrderResponse {
 export const createPayPalOrder = async (
   amount: number
 ): Promise<CreatePayPalOrderResponse> => {
+    try {
   const { token } = getAuthInfo();
 
   const response = await fetch(
@@ -62,6 +63,15 @@ export const createPayPalOrder = async (
   }
 
   return response.json();
+  } catch (err: any) {
+    console.error("PayPal order error:", err);
+    if (err.message.includes("authentication") || err.message.includes("token")) {
+      window.location.href = "/login";
+      return;
+    }
+
+    throw err;
+  }
 };
 
 
@@ -127,14 +137,12 @@ export const fetchAllOrders = async (
 
 /* ------------------  Get Orders by Buyer  ------------------ */
 export const fetchOrdersByBuyer = async (
-  status?: string
+  buyerId?: string
 ): Promise<{ success: boolean; data: ApiOrder[] }> => {
   const { token } = getAuthInfo();
 
-  const query = status ? `?status=${status}` : "";
-
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_BACKEND_URL}/orders/buyer${query}`,
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}/orders/buyer/${buyerId}`,
     {
       headers: {
         "Content-Type": "application/json",
@@ -144,11 +152,13 @@ export const fetchOrdersByBuyer = async (
     }
   );
 
+
   if (!response.ok) {
     const error = await response.json().catch(() => ({}));
     throw new Error(error.message || "Failed to fetch buyer orders");
   }
 
+ 
   return response.json();
 };
 
