@@ -20,7 +20,7 @@ export const routeMapping: { [key: string]: string } = {
   manageProducts: "Manage Products",
   createServices: "Create Services",
   manageServices: "Manage Services",
-  sellerRequest: "Seller Request",
+  sellerRequests: "Seller Requests",
   systemSettings:"System Settings",
 
   // User routes
@@ -48,7 +48,7 @@ export const iconMapping = (route: string): LucideIcon | null => {
     manageProducts: Package,
     createServices: Settings,
     manageServices: List,
-    sellerRequest: User,
+    sellerRequests: User,
     systemSettings:Settings,
 
     // User routes
