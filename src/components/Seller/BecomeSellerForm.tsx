@@ -1,14 +1,12 @@
-// src/components/seller/BecomeSellerForm.tsx
 "use client";
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import isValidDob from "src/utils/isValidDob";
-import ImageUpload from "src/components/ui/ImageUpload"; // 🔹 same as SystemSettings
+import ImageUpload from "src/components/ui/ImageUpload"; 
 import { createSellerRequest } from "src/api/seller";
 
-// 🔹 Helper for max allowed DOB (12+)
 const getMaxDob = () => {
   const today = new Date();
   today.setFullYear(today.getFullYear() - 12);
@@ -82,7 +80,6 @@ export default function BecomeSellerForm() {
               type="date"
               className="bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring focus:ring-blue-500/40"
               value={dob}
-              // 🔹 Disable future & <12y dates from being picked
               max={getMaxDob()}
               onChange={(e) => {
                 const value = e.target.value;
@@ -188,11 +185,10 @@ export default function BecomeSellerForm() {
           Upload clear images of your Aadhar, PAN or other valid ID proofs.
         </p>
 
-        {/* 🔹 Reuse ImageUpload like SystemSettings */}
         <ImageUpload
           images={idProofImages}
           onImagesChange={(imgs) => setIdProofImages(imgs)}
-          maxImages={3} // or 2 if you want just Aadhar + PAN
+          maxImages={3} 
         />
       </div>
 

@@ -272,22 +272,7 @@ const onApprove = async (data: any) => {
           onError={() => toast.error("Something went wrong!")}
         />
       </PayPalScriptProvider>
-       {/* <PayPalScriptProvider options={{ clientId: process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID! }}>
-      <PayPalButtons
-        createOrder={async () => {
-          const res = await fetch("/api/order", { method: "POST" });
-          const data = await res.json();
-          return data.orderID;
-        }}
-        onApprove={async (data) => {
-          const res = await fetch(`/api/order?orderID=${data.orderID}`, {
-            method: "PUT",
-          });
-          const paymentResult = await res.json();
-          console.log("Payment captured:", paymentResult);
-        }}
-      />
-    </PayPalScriptProvider> */}
+      
               </div>
 
               <div

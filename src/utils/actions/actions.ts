@@ -25,7 +25,6 @@ export async function Loginaction(formData: FormData) {
     console.log("data is", data);
     cookieStore.set("token", data.token, {
       httpOnly: false,
-      // secure: process.env.NODE_ENV === "production",
       secure: true,
       sameSite: "strict",
       path: "/",
@@ -90,5 +89,6 @@ export async function registerAction(formData: FormData) {
 export async function logoutAction() {
   const cookieStore = await cookies();
   cookieStore.delete("token");
+  cookieStore.delete("userId");
   redirect("/");
 }

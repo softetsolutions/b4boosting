@@ -55,15 +55,13 @@ export default function Navbar({ activeService, dynamicdata }: NavbarProps) {
 
   const token = Cookies.get("token");
 
-  if (token && typeof token === "string") {
+  if (token && typeof token == "string") {
     try {
       const decoded = jwtDecode<AuthTokenPayload>(token);
-      console.log("Decoded token:", decoded);
       setIsLoggedIn(true);
       setUserRole(decoded.role);
     } catch (error) {
       console.error("Invalid token:", error);
-      // optional: clear bad token
       Cookies.remove("token");
       setIsLoggedIn(false);
       setUserRole("");
