@@ -2,62 +2,55 @@
 
 import Image from "next/image";
 import { useState, useEffect } from "react";
-import pathExile from "src/assets/images/pathExileImg.jpg";
-import sportsImg from "src/assets/images/sportsImg.jpg";
-import worldOfwarcraft from "src/assets/images/worldOfwarcraftImg.jpg";
-import oldSchool from "src/assets/images/oldSchoolImg.jpg";
-import roblox from "src/assets/images/robloxImg.jpg";
-
 import backgroundImg from "src/assets/images/boostingServices.svg";
+import { useRouter } from "next/navigation";
 
-const services = [
-  {
-    id: 1,
-    title: "Path of Exile 2 Currency",
-    description: "Get your gaming rank boosted by top professionals.",
-    img: pathExile,
-  },
-  {
-    id: 2,
-    title: "EA Sports FC Coins",
-    description: "Guaranteed win streaks in competitive matches.",
-    img: sportsImg,
-  },
-  {
-    id: 3,
-    title: "World of Warcraft Gold",
-    description: "Level up your account fast and safely.",
-    img: worldOfwarcraft,
-  },
-  {
-    id: 4,
-    title: "Old School RuneScape",
-    description: "Unlock exclusive weapons and skins.",
-    img: oldSchool,
-  },
-  {
-    id: 5,
-    title: "Roblox Robux",
-    description: "Train with expert players and improve your skills.",
-    img: roblox,
-  },
-];
+interface Product {
+  _id: string;
+  title: string;
+  images?: string;      
+  // description?: string;
+}
 
-export default function PopularBoostingServices() {
+interface Service {
+  _id: string;
+  name: string;
+  icon?: string;
+  products: Product[];
+}
+
+interface HomePageData {
+  services: Service[];
+  settings: any;
+}
+
+interface PopularBoostingServicesProps {
+  dynamicdata: HomePageData;
+}
+
+export default function PopularBoostingServices({
+  dynamicdata,
+}: PopularBoostingServicesProps) {
+  const router = useRouter();
   const [currentIndex, setCurrentIndex] = useState(1);
+ const boostingServices = dynamicdata?.services.find(
+    (s) => s.name === "Boosting Services"
+  );
+
+  const services = boostingServices?.products;
 
   // Auto-slide every 4 seconds
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentIndex((prev) => (prev + 1) % services.length);
+      setCurrentIndex((prev) => (prev + 1) % services?.length);
     }, 4000);
     return () => clearInterval(interval);
   }, []);
 
   // Get visible cards (previous, current, next)
   const getVisibleCards = () => {
-    const prev = (currentIndex - 1 + services.length) % services.length;
-    const next = (currentIndex + 1) % services.length;
+    const prev = (currentIndex - 1 + services?.length) % services?.length;
+    const next = (currentIndex + 1) % services?.length;
     return [prev, currentIndex, next];
   };
 
@@ -83,19 +76,22 @@ export default function PopularBoostingServices() {
           const isCenter = index === currentIndex;
           return (
             <div
-              key={service.id}
+              key={service._id}
               className={`relative transition-all duration-500 ${
                 isCenter
                   ? "scale-110 opacity-100 z-20"
                   : "scale-90 opacity-50 z-10 bg-black/100 "
               }`}
+               onClick={() =>
+              router.push(`/categories/Boosting Services/${service._id}`)
+            }
             >
               <div className="w-[240px] sm:w-[280px] md:w-[300px] lg:w-[320px]  overflow-hidden shadow-lg bg-black/100 backdrop-blur-md  text-white text-center ">
                 <Image
-                  src={service.img}
-                  alt={service.title}
-                  // width={300}
-                  // height={200}
+                  src={service?.images[0]}
+                  alt={service?.title}
+                  width={500}
+                  height={500}
                   className="object-fit w-full h-60"
                 />
               </div>

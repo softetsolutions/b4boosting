@@ -1,29 +1,21 @@
 import Image from "next/image";
 import SeeMore from "../seeMore";
-
-import pathExile from "src/assets/images/pathExileImg.jpg";
-import sportsImg from "src/assets/images/sportsImg.jpg";
-import worldOfwarcraft from "src/assets/images/worldOfwarcraftImg.jpg";
-import oldSchool from "src/assets/images/oldSchoolImg.jpg";
-import roblox from "src/assets/images/robloxImg.jpg";
 import { useEffect, useState } from "react";
-import { redirect } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 
-interface Account {
-  name: string;
-  src: string;
+
+interface PopularClientsProps {
+  service?: {
+    products: any[];
+   
+  };
 }
 
-const accounts = [
-  { title: "Old School RuneScape Gold", src: oldSchool },
-  { title: "Roblox Robux", src: roblox },
-  { src: pathExile, title: "Path of Exile 2 Currency" },
-  { src: worldOfwarcraft, title: "World of Warcraft Gold" },
-  { src: sportsImg, title: "EA Sports FC Coins" },
-];
 
-export default function PopularAccounts() {
+export default function PopularCurrency({ service }: PopularClientsProps) {
+  const router = useRouter();
   const [isMobile, setIsMobile] = useState(false);
+  const accounts = service?.products || [];
 
   // Detect screen size
   useEffect(() => {
@@ -79,11 +71,20 @@ export default function PopularAccounts() {
           <div
             key={index}
             className="relative group overflow-hidden rounded-lg"
-            onClick={() => redirect("/categories/Account/PUBG")}
+            // onClick={() => redirect("/categories/Currency/" + account.title)}
+            onClick={() =>
+              router.push(`/categories/Currency/${account._id}`)
+            }
+//             onClick={() =>
+//   router.push("/categories/Currency/" + encodeURIComponent(account.title))
+// }
+
           >
             <Image
-              src={account.src}
+              src={account?.images[0]}
               alt={account.title}
+              width={150}
+              height={150}
                className="object-fit w-full h-[10.5rem] sm:h-[10.5rem] lg:h-[17.5rem] md:h-[12.5rem] rounded-lg"
             />
             <div className="py-4 bg-black opacity-90 flex items-center justify-center text-white font-semibold text-lg text-center">

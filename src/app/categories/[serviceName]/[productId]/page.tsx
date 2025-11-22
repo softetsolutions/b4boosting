@@ -7,12 +7,12 @@ import ProductPageStreamedComp from "src/components/StreamedServerComps/ProductP
 interface Props {
   params: {
     serviceName: string;
-    productTitle: string;
+    productId : string;
   };
 }
 
 export default async function CategoryProductPage({ params }: Props) {
-  const { serviceName, productTitle } = await params;
+  const { serviceName, productId  } = await params;
 
   return (
     <>
@@ -32,7 +32,7 @@ export default async function CategoryProductPage({ params }: Props) {
         >
           <ProductPageStreamedComp
             serviceName={serviceName}
-            productTitle={productTitle}
+            productId ={productId }
           />
         </Suspense>
       </main>

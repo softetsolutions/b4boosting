@@ -12,14 +12,14 @@ import Link from "next/link";
 
 interface ProductPageCompProps {
   serviceName: string;
-  productTitle: string;
+  productId: string;
   initialOffers: ApiOffer[];
   initialServices: ServiceWithCount[];
 }
 
 const ProductPageComp: React.FC<ProductPageCompProps> = ({
   serviceName,
-  productTitle,
+  productId,
   initialOffers,
   initialServices,
 }) => {
@@ -44,7 +44,7 @@ const ProductPageComp: React.FC<ProductPageCompProps> = ({
     try {
       const { offers } = await fetchOffersByProductAndService(
         newServiceName,
-        productTitle
+        productId
       );
       setOffers(offers || []);
     } catch (err: any) {

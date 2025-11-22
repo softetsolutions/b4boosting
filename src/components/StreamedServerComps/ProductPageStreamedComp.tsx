@@ -3,22 +3,22 @@ import { fetchOffersByProductAndService } from "src/api/offers";
 
 interface Props {
   serviceName: string;
-  productTitle: string;
+  productId: string;
 }
 
 export default async function ProductPageServer({
   serviceName,
-  productTitle,
+  productId,
 }: Props) {
   const { offers, services } = await fetchOffersByProductAndService(
     serviceName,
-    productTitle
+    productId
   );
 
   return (
     <ProductPageComp
       serviceName={serviceName}
-      productTitle={productTitle}
+      productId={productId}
       initialOffers={offers || []}
       initialServices={services || []}
     />

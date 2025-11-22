@@ -11,20 +11,22 @@ export default async function Home({
 }: {
   searchParams?: { ref?: string };
 }) {
-  // Use nullish coalescing safely
+ 
   const query = await searchParams;
   const ref = query?.ref;
 
     const homePageData = await fetchHomePageData();
+    console.log(homePageData,"homePageData");
+
 
   return (
     <>
       {ref && <ReferralTracker refCode={ref} />}
       <Navbar dynamicdata={homePageData} />
       <main>
-        <Client />
-        <PopularBoostingServices />
-        <PopularItems />
+        <Client  dynamicdata={homePageData} />
+        <PopularBoostingServices  dynamicdata={homePageData}/>
+        <PopularItems  dynamicdata={homePageData}/>
       </main>
       <Footer />
     </>

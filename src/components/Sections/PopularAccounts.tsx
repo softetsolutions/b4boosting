@@ -1,38 +1,22 @@
 import Image from "next/image";
-import SeeMore from "../seeMore";
-import clashRoyale from "src/assets/images/clashRoyale.jpg";
-import cod from "src/assets/images/cod.png";
-import valorant from "src/assets/images/valorant.png";
-import rainbowsix from "src/assets/images/rainbowsix.png";
-import roblox from "src/assets/images/roblox.png";
-import grandTheft from "src/assets/images/grandTheft.png";
-import leagueOfLegends from "src/assets/images/leagueOfLegends.png";
-import oldSchool from "src/assets/images/oldSchool.png";
-import counterStrike from "src/assets/images/counterStrike.jpg";
-import fortnite from "src/assets/images/fortnite.jpg";
 import { useEffect, useState } from "react";
+import {useRouter} from "next/navigation"
 
-interface Account {
-  name: string;
-  src: string;
+interface PopularAccountsProps {
+  service?: {
+    products: any[];
+   
+  };
 }
 
-const accounts = [
-  { src: clashRoyale, title: "Clash Royale" },
-  { src: cod, title: "Call of Duty" },
-  { src: valorant, title: "Valorant" },
-  { title: "Rainbow Six", src: rainbowsix },
-  { title: "Roblox", src: roblox },
-  { title: "Grand Theft Auto", src: grandTheft },
-  { title: "League of Legends", src: leagueOfLegends },
-  { title: "Old School Runescape", src: oldSchool },
-  { title: "Counter Strike", src: counterStrike },
-  { title: "Fortnite", src: fortnite },
-];
 
-export default function PopularAccounts() {
+export default function PopularAccounts({ service }: PopularAccountsProps)  {
+  const router = useRouter();
   const [isMobile, setIsMobile] = useState(false);
 const [currentSlide, setCurrentSlide] = useState(0);
+
+const accounts = service?.products || [];
+
   // Detect screen size
   useEffect(() => {
     const handleResize = () => {
@@ -95,9 +79,12 @@ const [currentSlide, setCurrentSlide] = useState(0);
           <div
             key={index}
             className="relative group overflow-hidden rounded-md"
+              onClick={() =>
+              router.push(`/categories/Account/${account._id}`)
+            }
           >
             <Image
-              src={account.src}
+              src={account.images[0]}
               alt={account.title}
               width={200}
               height={200}
