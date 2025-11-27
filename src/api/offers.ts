@@ -276,16 +276,17 @@ export const fetchOffersBySellerId = async (): Promise<ApiOffer[]> => {
 // src/api/offers.ts
 export const fetchOffersByProductAndService = async (
   serviceName: string,
-  productId: string
+  productTitle: string
 ): Promise<{ offers: ApiOffer[]; services: ServiceWithCount[] }> => {
 
-  console.log(`[fetchOffersByProductAndService] serviceName: ${serviceName}, productId: ${productId}`);
+  
+  console.log(`[fetchOffersByProductAndService] serviceName: ${serviceName}, productTitle: ${productTitle}`);
   let url = `${
     process.env.NEXT_PUBLIC_BACKEND_URL
   }/offers/filter?serviceName=${encodeURIComponent(serviceName)}`;
 
-  if (productId) {
-    url += `&productId=${productId}`;
+  if (productTitle) {
+    url += `&productTitle=${encodeURIComponent(productTitle)}`;
   }
 
   const response = await fetch(url, {

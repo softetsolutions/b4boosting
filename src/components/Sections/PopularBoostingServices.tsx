@@ -34,7 +34,7 @@ export default function PopularBoostingServices({
   const router = useRouter();
   const [currentIndex, setCurrentIndex] = useState(1);
  const boostingServices = dynamicdata?.services.find(
-    (s) => s.name === "Boosting Services"
+    (s) => s.name === "boosting-services"
   );
 
   const services = boostingServices?.products;
@@ -83,7 +83,7 @@ export default function PopularBoostingServices({
                   : "scale-90 opacity-50 z-10 bg-black/100 "
               }`}
                onClick={() =>
-              router.push(`/categories/Boosting Services/${service._id}`)
+              router.push(`/categories/${boostingServices?.name}/${service._id}`)
             }
             >
               <div className="w-[240px] sm:w-[280px] md:w-[300px] lg:w-[320px]  overflow-hidden shadow-lg bg-black/100 backdrop-blur-md  text-white text-center ">

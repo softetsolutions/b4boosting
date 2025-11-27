@@ -6,7 +6,8 @@ import type { ApiOffer } from "src/api/offers";
 import { redirect } from "next/navigation";
 import toast from "react-hot-toast";
 import { createPayPalOrder, capturePayPalOrder } from "src/api/orders";
-
+import ShareMenu from "./ShareMenu";
+import { getAuthInfo } from "src/utils/auth";
 
 interface BuyCardCompProps {
   offer: ApiOffer;
@@ -18,8 +19,21 @@ function BuyCardComp({ offer }: BuyCardCompProps) {
   const [sortBy, setSortBy] = useState<string>("Recommended");
   const [count, setCount] = useState<number>(1);
 
+  // const {userId}  = getAuthInfo();
+  // const handleInc = (): void => {
+  //   setCount((prev) => prev + 1);
+  // };
+  const availableQuantity =
+    (offer?.quantityAvailable as number | undefined) ?? 0;
+
   const handleInc = (): void => {
-    setCount((prev) => prev + 1);
+    setCount((prev) => {
+      const next = prev + 1;
+      // Do not exceed availableQuantity
+      if (availableQuantity <= 0) return prev; // no stock
+      if (next > availableQuantity) return prev; // cannot go above stock
+      return next;
+    });
   };
 
   const handleDec = (): void => {
@@ -35,32 +49,29 @@ function BuyCardComp({ offer }: BuyCardCompProps) {
   };
 
   const createOrder = async (): Promise<string> => {
-  try {
-    const response = await createPayPalOrder(Number(totalAmount));
-    if (!response.success) throw new Error("Failed to create order");
-    return response.orderID;
-  } catch (error) {
-    toast.error("Failed to create PayPal order");
-    throw error;
-  }
-};
+    try {
+      const response = await createPayPalOrder(Number(totalAmount));
+      if (!response.success) throw new Error("Failed to create order");
+      return response.orderID;
+    } catch (error) {
+      toast.error("Failed to create PayPal order");
+      throw error;
+    }
+  };
 
-
-const onApprove = async (data: any) => {
-  try {
-    const result = await capturePayPalOrder(data.orderID, offer._id, count);
-   if (result.success) {
+  const onApprove = async (data: any) => {
+    try {
+      const result = await capturePayPalOrder(data.orderID, offer._id, count);
+      if (result.success) {
         toast.success("Payment successful!");
-        router.push("/profile"); 
+        router.push("/profile?tab=orders");
       } else {
         toast.error(result.message || "Payment failed!");
       }
-  } catch (error) {
-    toast.error("Payment error");
-  }
-};
-
-
+    } catch (error) {
+      toast.error("Payment error");
+    }
+  };
 
   return (
     <>
@@ -75,7 +86,6 @@ const onApprove = async (data: any) => {
             Gift Cards
           </a>{" "}
           &gt;
-        
           <a href="#" className="hover:text-amber-400 transition-colors">
             Xbox
           </a>
@@ -87,12 +97,11 @@ const onApprove = async (data: any) => {
             {/* Product Title and Share Button */}
             <div className="p-6 mb-6 flex justify-between items-center">
               <div>
-                <h1 className="text-2xl font-bold text-gray-100 leading-tight">
+                <h1 className="text-2xl font-bold leading-tight">
                   {offer ? offer.product.title : "Loading..."}
                 </h1>
-             
               </div>
-              <button className="flex items-center px-4 py-2 border border-gray-700 rounded-md text-gray-400 text-sm hover:bg-gray-800 hover:text-cyan-400 transition duration-150">
+              {/* <button className="flex items-center px-4 py-2 border border-gray-700 rounded-md text-gray-400 text-sm hover:bg-gray-800 hover:text-cyan-400 transition duration-150">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   className="h-4 w-4 mr-2"
@@ -108,29 +117,36 @@ const onApprove = async (data: any) => {
                   />
                 </svg>
                 Share
-              </button>
+              </button> */}
+              <ShareMenu
+                shareUrl={
+                  typeof window !== "undefined"
+                    ? window.location.href
+                    : "https://your-default-url.com"
+                }
+                title="Awesome product"
+                // UserId={userId} // pass logged-in user id
+              />
             </div>
 
             <div className="p-6 rounded-xl">
               <div className="flex flex-col md:flex-row justify-between items-center gap-8">
                 {/* Left: Product Info */}
                 <div className="flex-1 w-full">
-                  <h2 className="text-xl font-bold text-gray-100 mb-4">
-                    Product Info
-                  </h2>
+                  <h2 className="text-xl font-bold mb-4">Product Info</h2>
 
                   <div className="space-y-2">
                     <div className="flex items-center">
-                      <span className="text-gray-400 mr-2">
+                      <span className="text-gray-400/100 mr-2">
                         Delivery Speed:
                       </span>
-                      <span className="text-gray-200 font-semibold">
+                      <span className="text-gray-400/100 font-semibold">
                         {offer.deliveryTime}
                       </span>
                     </div>
 
                     <div className="flex items-center">
-                      <span className="text-gray-400 mr-2">
+                      <span className="text-gray-400/100 mr-2">
                         Instant Delivery:
                       </span>
                       <span
@@ -144,8 +160,6 @@ const onApprove = async (data: any) => {
                       </span>
                     </div>
                   </div>
-
-                 
                 </div>
 
                 {/* Right: Product Image */}
@@ -158,42 +172,41 @@ const onApprove = async (data: any) => {
                 </div>
               </div>
 
-               <div className="p-6">
-                    {offer ? (
-                      <div className="space-y-2">
-                        {/* Offer Details Fields */}
-                        <div className="mt-4">
-                          <h3 className="text-gray-300 font-semibold mb-2">
-                            Offer Details
-                          </h3>
-                          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
-                            {offer.offerDetails &&
-                            offer.offerDetails.length > 0 ? (
-                              offer.offerDetails.map((detail, idx) => (
-                                <div
-                                  key={idx}
-                                  className="flex flex-col border-1 border-gray-400/20 rounded-lg p-2"
-                                >
-                                  <span className="text-gray-400 text-xs">
-                                    {detail.fieldName}
-                                  </span>
-                                  <span className="text-gray-200 font-semibold">
-                                    {detail.value}
-                                  </span>
-                                </div>
-                              ))
-                            ) : (
-                              <span className="text-gray-400">
-                                No offer details.
+              <div className="p-6">
+                {offer ? (
+                  <div className="space-y-2">
+                    {/* Offer Details Fields */}
+                    <div className="mt-4">
+                      <h3 className="text-gray-400/100 font-semibold mb-2">
+                        Offer Details
+                      </h3>
+                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
+                        {offer.offerDetails && offer.offerDetails.length > 0 ? (
+                          offer.offerDetails.map((detail, idx) => (
+                            <div
+                              key={idx}
+                              className="flex flex-col border-1 border-gray-400/20 rounded-lg p-2"
+                            >
+                              <span className="text-gray-400 text-xs">
+                                {detail.fieldName}
                               </span>
-                            )}
-                          </div>
-                        </div>
+                              <span className="text-gray-200 font-semibold">
+                                {detail.value}
+                              </span>
+                            </div>
+                          ))
+                        ) : (
+                          <span className="text-gray-400">
+                            No offer details.
+                          </span>
+                        )}
                       </div>
-                    ) : (
-                      <p className="text-gray-400">Loading product info...</p>
-                    )}
+                    </div>
                   </div>
+                ) : (
+                  <p className="text-gray-400">Loading product info...</p>
+                )}
+              </div>
             </div>
           </div>
 
@@ -206,12 +219,9 @@ const onApprove = async (data: any) => {
               >
                 <div className="flex justify-between items-center mb-4">
                   <h3 className="text-gray-400 text-sm">
-                    {offer
-                      ? getOfferDetail("level") || offer.quantityAvailable
-                      : "Loading..."}{" "}
-                    available
+                    {offer ? offer?.quantityAvailable : "Loading..."} available
                   </h3>
-                  <button className="text-cyan-400 text-xs font-semibold px-2 py-1 rounded-full border border-gray-400/20 hover:bg-cyan-500/10 transition-colors">
+                  <button className="text-yellow-400/100 text-xs font-semibold px-2 py-1 rounded-full border border-gray-400/20 hover:bg-cyan-500/10 transition-colors">
                     Volume discount
                   </button>
                 </div>
@@ -259,20 +269,19 @@ const onApprove = async (data: any) => {
                   <h2 className="text-xl font-bold">{totalAmount} USD</h2>
                 </div>
 
-              <PayPalScriptProvider
-        options={{
-          "client-id": process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID!,
-          currency: "USD",
-        }}
-      >
-        <PayPalButtons
-          style={{ layout: "vertical", color: "gold" }}
-          createOrder={() => createOrder()}
-          onApprove={onApprove}
-          onError={() => toast.error("Something went wrong!")}
-        />
-      </PayPalScriptProvider>
-      
+                <PayPalScriptProvider
+                  options={{
+                    "client-id": process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID!,
+                    currency: "USD",
+                  }}
+                >
+                  <PayPalButtons
+                    style={{ layout: "vertical", color: "gold" }}
+                    createOrder={() => createOrder()}
+                    onApprove={onApprove}
+                    onError={() => toast.error("Something went wrong!")}
+                  />
+                </PayPalScriptProvider>
               </div>
 
               <div
@@ -302,7 +311,7 @@ const onApprove = async (data: any) => {
                         <span className="text-gray-400 text-sm mr-2">
                           Seller Name:
                         </span>
-                        <span className="text-cyan-300 font-semibold text-base">
+                        <span className="text-yellow-400/100 font-semibold text-base">
                           {offer.seller.displayName ||
                             offer.seller.username ||
                             offer.seller._id}
@@ -331,7 +340,10 @@ const onApprove = async (data: any) => {
                     <span className="text-gray-400">758 sold</span>
                   </p>
 
-                  <a href="#" className="text-cyan-400 text-sm hover:underline">
+                  <a
+                    href="#"
+                    className="text-yellow-400/100 text-sm hover:underline"
+                  >
                     Other sellers
                   </a>
                 </div>

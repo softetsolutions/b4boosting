@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect } from "react";
@@ -11,6 +10,7 @@ import Cookies from "js-cookie";
 import { useRouter, usePathname } from "next/navigation";
 import Marquee from "src/components/Marquee";
 import { jwtDecode } from "jwt-decode";
+import { logoutAction } from "src/utils/actions/actions";
 
 interface NavbarProps {
   activeService?: string;
@@ -31,7 +31,6 @@ const dummyNavbarOptions = [
   { label: "Items", link: "#item" },
   { label: "Boosting", link: "#boosting" },
   { label: "Gift Cards", link: "#gift-card" },
- 
 ];
 
 export default function Navbar({ activeService, dynamicdata }: NavbarProps) {
@@ -46,53 +45,55 @@ export default function Navbar({ activeService, dynamicdata }: NavbarProps) {
   const pathname = usePathname();
   const isHomePage = pathname === "/";
 
-  
-
   useEffect(() => {
-  const handleScroll = () => setIsScrolled(window.scrollY > 50);
-  handleScroll();
-  window.addEventListener("scroll", handleScroll);
+    const handleScroll = () => setIsScrolled(window.scrollY > 50);
+    handleScroll();
+    window.addEventListener("scroll", handleScroll);
 
-  const token = Cookies.get("token");
+    const token = Cookies.get("token");
 
-  if (token && typeof token == "string") {
-    try {
-      const decoded = jwtDecode<AuthTokenPayload>(token);
-      setIsLoggedIn(true);
-      setUserRole(decoded.role);
-    } catch (error) {
-      console.error("Invalid token:", error);
-      Cookies.remove("token");
+    if (token && typeof token == "string") {
+      try {
+        const decoded = jwtDecode<AuthTokenPayload>(token);
+        setIsLoggedIn(true);
+        setUserRole(decoded.role);
+      } catch (error) {
+        console.error("Invalid token:", error);
+        Cookies.remove("token");
+        setIsLoggedIn(false);
+        setUserRole("");
+      }
+    } else {
       setIsLoggedIn(false);
       setUserRole("");
     }
-  } else {
-    setIsLoggedIn(false);
-    setUserRole("");
-  }
 
-  return () => window.removeEventListener("scroll", handleScroll);
-}, []);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
+  const handleLogout = async() => {
+    try {
+     await logoutAction();
 
-  const handleLogout = () => {
-    Cookies.remove("token");
-    setIsLoggedIn(false);
-    router.push("/login");
+      setIsLoggedIn(false);
+      router.push("/login");
+    } catch (error) {
+      console.error("Error decoding token:", error);
+    }
   };
 
   return (
     <>
-      <Marquee
-        text={SettingsData?.marqueeText}
-        link={SettingsData?.marqueeLink}
-        speed={150}
-        className="fixed top-0 left-0 right-0 z-50"
-      />
       <header className="relative w-full">
         {/* Banner */}
         {isHomePage && (
           <div className="relative w-full">
+            <Marquee
+              text={SettingsData?.marqueeText}
+              link={SettingsData?.marqueeLink}
+              speed={150}
+              className="fixed top-0 left-0 right-0 z-50"
+            />
             <Image
               src={SettingsData?.bannerImg}
               alt="Banner"
@@ -122,9 +123,11 @@ export default function Navbar({ activeService, dynamicdata }: NavbarProps) {
 
         {/* Navbar */}
         <nav
-          className={`fixed top-9 left-0 right-0 z-50 transition-all duration-300 ${
+          className={`fixed left-0 right-0 z-100 transition-all duration-300 ${
             isScrolled ? "backdrop-blur-md bg-black/60" : "bg-transparent"
-          }`}
+          }
+          ${isHomePage ? "top-9" : "top-0"}
+          `}
         >
           <div className="max-w-11xl mx-auto px-4 py-3 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-3 lg:gap-0">
             {/* Top row: Logo + Hamburger */}
@@ -182,14 +185,16 @@ export default function Navbar({ activeService, dynamicdata }: NavbarProps) {
             {/* Desktop Right Items */}
             <div className="hidden lg:flex flex-row items-center gap-4">
               {/* Search */}
-              <div className="flex items-center gap-2 p-2 rounded-lg bg-white/10  hover:bg-white/20 transition-colors">
-                <SearchIcon />
-                <input
-                  type="text"
-                  className="bg-transparent border-none outline-none"
-                  placeholder="Search ..."
-                />
-              </div>
+              {isHomePage && (
+                <div className="flex items-center gap-2 p-2 rounded-lg bg-white/10 text-white hover:bg-white/20 transition-colors w-full">
+                  <SearchIcon />
+                  <input
+                    type="text"
+                    className="bg-transparent border-none outline-none w-full text-white placeholder-white/70"
+                    placeholder="Search ..."
+                  />
+                </div>
+              )}
 
               {userRole === "user" && (
                 <Link
@@ -206,8 +211,11 @@ export default function Navbar({ activeService, dynamicdata }: NavbarProps) {
               {/* Login */}
               {!isLoggedIn && (
                 <Link href="/login">
-                  <button className="rounded-lg px-3 py-2 yellow-bg text-zinc-950 font-semibold hover:text-white-400 transition-colors duration-200">
-                    Sign In
+                  <button
+                    type="button"
+                    className="rounded-lg px-3 py-2 yellow-bg text-zinc-950 font-semibold hover:text-white-400 transition-colors duration-200"
+                  >
+                    SignIn
                   </button>
                 </Link>
               )}
@@ -237,15 +245,16 @@ export default function Navbar({ activeService, dynamicdata }: NavbarProps) {
 
                 {isSettingsOpen && (
                   <div className="absolute right-0 mt-2 w-48 bg-zinc-800 text-zinc-300 rounded-lg shadow-lg z-50">
-                    {isLoggedIn && (
-                      <button
-                        type="button"
-                        onClick={handleLogout}
-                        className="w-full text-left px-4 py-2 text-red-500 hover:bg-red-100"
-                      >
-                        Logout
-                      </button>
-                    )}
+                    {/* <div className="px-4 py-2 flex justify-between items-center hover:bg-gray-500 cursor-pointer">
+                      In
+                    </div> */}
+
+                    <Link
+                      href="/user/dashboard/affiliate"
+                      className="px-4 py-2 flex justify-between items-center hover:bg-gray-500 cursor-pointer"
+                    >
+                      Affiliate Program
+                    </Link>
                     <Link
                       href="/profile"
                       className="w-full text-left px-4 py-2 hover:bg-gray-500"
@@ -256,6 +265,15 @@ export default function Navbar({ activeService, dynamicdata }: NavbarProps) {
                     <div className="px-4 py-2 flex justify-between items-center hover:bg-gray-500 cursor-pointer">
                       <ThemeToggle />
                     </div>
+                    {isLoggedIn && (
+                      <button
+                        type="button"
+                        onClick={handleLogout}
+                        className="w-full text-left px-4 py-2 text-red-500 hover:bg-red-100"
+                      >
+                        Logout
+                      </button>
+                    )}
                   </div>
                 )}
               </div>
@@ -267,14 +285,24 @@ export default function Navbar({ activeService, dynamicdata }: NavbarProps) {
             <div className=" mt-2 pt-4 border-t border-yellow-400 bg-black/80 backdrop-blur-sm rounded-b-xl">
               <div className="flex flex-col space-y-4 px-4 pb-4">
                 {/* Search */}
-                <div className="flex items-center gap-2 p-2 rounded-lg bg-white/10 text-white hover:bg-white/20 transition-colors w-full">
+                {isHomePage && (
+                  <div className="flex items-center gap-2 p-2 rounded-lg bg-white/10 text-white hover:bg-white/20 transition-colors w-full">
+                    <SearchIcon />
+                    <input
+                      type="text"
+                      className="bg-transparent border-none outline-none w-full text-white placeholder-white/70"
+                      placeholder="Search ..."
+                    />
+                  </div>
+                )}
+                {/* <div className="flex items-center gap-2 p-2 rounded-lg bg-white/10 text-white hover:bg-white/20 transition-colors w-full">
                   <SearchIcon />
                   <input
                     type="text"
                     className="bg-transparent border-none outline-none w-full text-white placeholder-white/70"
                     placeholder="Search ..."
                   />
-                </div>
+                </div> */}
 
                 {/* Links */}
                 {dummyNavbarOptions.map((option) => (

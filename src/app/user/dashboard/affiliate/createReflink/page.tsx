@@ -22,7 +22,9 @@ export default function CreateReflinkPage() {
 
       const decoded = jwtDecode<AuthTokenPayload>(token);
     
-      if (!decoded.affiliateId) return toast.error("You are not an affiliate.");
+      // if (!decoded.affiliateId) return toast.error("You are not an affiliate.");
+      const affiliateId = getCookie("affiliateId");
+      if (!affiliateId) return toast.error("You are not an affiliate.");
 
       const link = `${window.location.origin}/?ref=AFF${decoded.username}`;
       setRefLink(link);

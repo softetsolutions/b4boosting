@@ -12,14 +12,14 @@ import Link from "next/link";
 
 interface ProductPageCompProps {
   serviceName: string;
-  productId: string;
+  productTitle: string;
   initialOffers: ApiOffer[];
   initialServices: ServiceWithCount[];
 }
 
 const ProductPageComp: React.FC<ProductPageCompProps> = ({
   serviceName,
-  productId,
+  productTitle,
   initialOffers,
   initialServices,
 }) => {
@@ -44,7 +44,7 @@ const ProductPageComp: React.FC<ProductPageCompProps> = ({
     try {
       const { offers } = await fetchOffersByProductAndService(
         newServiceName,
-        productId
+        productTitle
       );
       setOffers(offers || []);
     } catch (err: any) {
@@ -107,7 +107,7 @@ const ProductPageComp: React.FC<ProductPageCompProps> = ({
       {/* Title */}
       <div className="w-full px-3 mt-0">
         <p className="text-md font-semibold line-clamp-1 group-hover:text-yellow-300 transition-colors">
-          {offer.product.title}
+          {offer.product.title.replace(/-/g, " ").replace(/\w\S*/g, (word) => word.charAt(0).toUpperCase() + word.slice(1))}
         </p>
       </div>
 

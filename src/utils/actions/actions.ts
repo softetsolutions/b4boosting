@@ -35,7 +35,13 @@ export async function Loginaction(formData: FormData) {
       sameSite: "strict",
       path: "/",
     });
-   redirect(data.user.role === "admin" ? "/admin" : `/${data.user.role}/dashboard`);
+    cookieStore.set("affiliateId", data.user.affiliateId, {
+      httpOnly: false,
+      secure: true,
+      sameSite: "strict",
+      path: "/",
+    })
+   redirect(data.user.role === "admin" ? "/admin" : `/`);
 
   } catch (error) {
     console.error("Got error while signing in", error);
@@ -90,5 +96,7 @@ export async function logoutAction() {
   const cookieStore = await cookies();
   cookieStore.delete("token");
   cookieStore.delete("userId");
-  redirect("/");
+  cookieStore.delete("affiliateRef");
+  cookieStore.delete("affiliateId");
+  redirect("/login");
 }

@@ -96,7 +96,7 @@ export default function PopularItems({
   dynamicdata,
 }: PopularItemsProps) {
   const Items = dynamicdata?.services.find(
-    (s) => s.name === "Items"
+    (s) => s.name === "items"
   );
 
   const accounts = Items?.products;

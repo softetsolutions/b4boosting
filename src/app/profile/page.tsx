@@ -7,7 +7,8 @@ import Navbar from "src/components/Navbar/Navbar";
 import { getCookie } from "cookies-next";
 import { jwtDecode } from "jwt-decode";
 import { fetchOrdersByBuyer } from "src/api/orders";
-import {getAccountDetails} from "src/api/api";
+import { getAccountDetails } from "src/api/api";
+import { useSearchParams } from "next/navigation";
 
 interface Order {
   _id: string;
@@ -25,7 +26,10 @@ interface DecodedToken {
 }
 
 export default function ProfilePage() {
-  const [activeTab, setActiveTab] = useState("profile");
+  const searchParams = useSearchParams();
+  const defaultTabFromUrl = searchParams.get("tab") || "profile";
+
+  const [activeTab, setActiveTab] = useState(defaultTabFromUrl);
   const [orders, setOrders] = useState<Order[]>([]);
   const [accountDetails, setAccountDetails] = useState<any>(null);
   const [user, setUser] = useState<DecodedToken | null>(null);
@@ -64,7 +68,6 @@ export default function ProfilePage() {
     }
   };
 
-
   const fetchAccountDetails = async () => {
     setLoading(true);
     try {
@@ -77,6 +80,14 @@ export default function ProfilePage() {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    // if URL changes (e.g. user navigates), sync tab
+    const tab = searchParams.get("tab");
+    if (tab && tab !== activeTab) {
+      setActiveTab(tab);
+    }
+  }, [searchParams, activeTab]);
 
   return (
     <>
@@ -98,13 +109,16 @@ export default function ProfilePage() {
                   <h2 className="text-2xl font-semibold">
                     {user?.username || "User"}
                   </h2>
-                  <p className="text-sm opacity-90">Member since   {new Date(accountDetails?.createdAt).toLocaleString(
-                                  "en-IN",
-                                  {
-                                    dateStyle: "medium",
-                                    timeStyle: "short",
-                                  }
-                                )}</p>
+                  <p className="text-sm opacity-90">
+                    Member since{" "}
+                    {new Date(accountDetails?.createdAt).toLocaleString(
+                      "en-IN",
+                      {
+                        dateStyle: "medium",
+                        timeStyle: "short",
+                      }
+                    )}
+                  </p>
                 </div>
               </div>
             </div>
@@ -146,7 +160,6 @@ export default function ProfilePage() {
                         {accountDetails?.email || "abc@gmail.com"}
                       </p>
                     </div>
-                   
                   </div>
                 </div>
               )}
@@ -201,37 +214,39 @@ export default function ProfilePage() {
 
                           {/* Product & Seller Info */}
                           <div className="flex justify-between">
- <div className="mt-3 border-t border-gray-700 pt-3 text-sm text-gray-400">
-                            <p>
-                              <span className="text-gray-500">Product:</span>{" "}
-                              {order.productId?.title || "N/A"}{" "}
-                              <span className="text-xs text-gray-500">
-                                ({order.productId?.type || "Unknown Type"}){" "}
-                              </span>
-                             
-                            </p>
-                            <p>
-                              <span className="text-gray-500">
-                                PayPal Transaction ID:
-                              </span>{" "}
-                              <span className="text-gray-300 font-mono">
-                                {order.paypalTransactionId}
-                              </span>
-                            </p>
-                            <p>
-                              <span className="text-gray-500">Seller:</span>{" "}
-                              {order.sellerId?.username || "Unknown"}{" "}
-                              <span className="text-xs text-gray-500">
-                                ({order.sellerId?.email || "No Email"})
-                              </span>
-                            </p>
-                          </div>
+                            <div className="mt-3 border-t border-gray-700 pt-3 text-sm text-gray-400">
+                              <p>
+                                <span className="text-gray-500">Product:</span>{" "}
+                                {order.productId?.title || "N/A"}{" "}
+                                <span className="text-xs text-gray-500">
+                                  ({order.productId?.type || "Unknown Type"}){" "}
+                                </span>
+                              </p>
+                              <p>
+                                <span className="text-gray-500">
+                                  PayPal Transaction ID:
+                                </span>{" "}
+                                <span className="text-gray-300 font-mono">
+                                  {order.paypalTransactionId}
+                                </span>
+                              </p>
+                              <p>
+                                <span className="text-gray-500">Seller:</span>{" "}
+                                {order.sellerId?.username || "Unknown"}{" "}
+                                <span className="text-xs text-gray-500">
+                                  ({order.sellerId?.email || "No Email"})
+                                </span>
+                              </p>
+                            </div>
 
-                             <span>
-                                <img src={order.productId?.images[0] || "N/A"} alt="product image" className="w-25 h-25" />
-                              </span>
+                            <span>
+                              <img
+                                src={order.productId?.images[0] || "N/A"}
+                                alt="product image"
+                                className="w-25 h-25"
+                              />
+                            </span>
                           </div>
-                         
                         </div>
                       ))}
                     </div>
