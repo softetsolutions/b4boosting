@@ -1,25 +1,26 @@
+// app/categories/[serviceName]/page.tsx
 import Navbar from "src/components/Navbar/Navbar";
 import Footer from "src/components/Footer/Footer";
 import { Suspense } from "react";
-// import ProductPageServer from "src/components/ProductPageServer";
-import ProductPageStreamedComp from "src/components/StreamedServerComps/ProductPageStreamedComp";
+import ServiceOffersStreamedComp from "src/components/StreamedServerComps/ServiceOffersStreamedComp";
 
 interface Props {
   params: {
     serviceName: string;
-    productTitle : string;
+    serviceId: string;
   };
 }
 
-export default async function CategoryProductPage({ params }: Props) {
-  const { serviceName, productTitle  } = await params;
+export default async function ServiceOffersPage({ params }: Props) {
+
+  // ❌ no need for `await` here – params is already a plain object
+  const { serviceName } = await params;
 
   return (
     <>
       <Navbar activeService={serviceName} />
 
       <main className="min-h-[60vh] p-6">
-        {/* Suspense allows streaming while staying SSR */}
         <Suspense
           fallback={
             <div className="flex items-center justify-center p-6">
@@ -30,10 +31,7 @@ export default async function CategoryProductPage({ params }: Props) {
             </div>
           }
         >
-          <ProductPageStreamedComp
-            serviceName={serviceName}
-            productTitle ={productTitle }
-          />
+          <ServiceOffersStreamedComp serviceName={serviceName} />
         </Suspense>
       </main>
 

@@ -78,3 +78,20 @@ export const logoutUser = async (): Promise<{
   if (!res.ok) throw new Error(data.message || "Logout failed");
   return data;
 };
+
+
+export const getAccountDetails = async (): Promise<any> => {
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}/account/`,
+    {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+    }
+  );
+
+  if (res.status === 401) await handleUnauthorized();
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.message || "Logout failed");
+  return data;
+}

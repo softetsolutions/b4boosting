@@ -110,6 +110,33 @@ export const fetchProductsByService = async (
   return [];
 };
 
+export const fetchProductsByServiceName = async (
+  serviceName: string
+): Promise<Product[]> => {
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}/products/service/by-name/${serviceName}`,
+    {
+      credentials: "include",
+      headers: {
+        Accept: "application/json",
+      },
+    }
+  );
+  console.log(response,"response");
+
+  if (response.status === 401) await handleUnauthorized();
+  if (!response.ok) {
+    throw new Error("Failed to fetch products for the service");
+  }
+
+  const res = await response.json();
+  if (res.success && Array.isArray(res.data)) {
+    return res.data;
+  }
+  return [];
+};
+
+
 export const fetchProductById = async (productId: string): Promise<Product> => {
   try {
     getAuthInfo();

@@ -3,6 +3,7 @@ import { Roboto } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "react-hot-toast";
 import { ThemeProvider } from "next-themes";
+import AuthRootProvider from "src/utils/providers/AuthRootProvider";
 
 const roboto = Roboto({
   subsets: ["latin"],
@@ -33,8 +34,10 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
+          <AuthRootProvider>
           {children}
            <Toaster position="top-center" />
+           </AuthRootProvider>
         </ThemeProvider>
         
          

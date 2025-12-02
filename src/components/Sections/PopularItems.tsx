@@ -23,15 +23,29 @@ import hours from "src/assets/images/24hours.svg";
 import badge1 from "src/assets/images/badge1.svg";
 import chooseImage from "src/assets/images/chooseImage.jpg";
 
-interface Account {
-  name: string;
-  src: string;
+interface Product {
+  _id: string;
+  title: string;
+  images?: string;      
+  // description?: string;
 }
 
-const accounts = [
-  { src: popularItem1, title: "Steal a Brainrot " },
-  { src: popularItem2, title: "Grow a Garden" },
-];
+interface Service {
+  _id: string;
+  name: string;
+  icon?: string;
+  products: Product[];
+}
+
+interface HomePageData {
+  services: Service[];
+  settings: any;
+}
+
+interface PopularItemsProps {
+  dynamicdata: HomePageData;
+}
+
 
 const options = ["Currency", "Accounts", "Top Ups", "Boosting"]; 
 
@@ -78,7 +92,14 @@ const paymentImages = [
   { src: discover, title: "Discover" },
 ];
 
-export default function PopularAccounts() {
+export default function PopularItems({
+  dynamicdata,
+}: PopularItemsProps) {
+  const Items = dynamicdata?.services.find(
+    (s) => s.name === "items"
+  );
+
+  const accounts = Items?.products;
   const [visible, setVisible] = useState(5);
   const [orderVisible, setOrderVisible] = useState(4);
 
@@ -150,10 +171,11 @@ export default function PopularAccounts() {
               className="relative group overflow-hidden rounded-lg"
             >
               <Image
-                src={account.src}
-                alt={account.title}
+                src={account?.images[0]}
+                alt={account?.title}
                 className="object-cover w-full h-[10.5rem] sm:h-[10.5rem] lg:h-[17.5rem] md:h-[12.5rem] rounded-lg"
-
+                width={200}
+                height={200}
               />
               <div className="py-4 bg-black/100 opacity-100 transition-opacity flex items-center justify-center text-white font-semibold text-lg">
                 {account.title}

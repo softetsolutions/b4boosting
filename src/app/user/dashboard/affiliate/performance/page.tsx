@@ -47,11 +47,12 @@ export default function PerformancePage() {
         if (!token) return;
 
         const decoded = jwtDecode<AuthTokenPayload>(token);
-        if (!decoded.affiliateId) {
-          toast.error("You are not an affiliate.");
-          return;
-        }
-
+        // if (!decoded.affiliateId) {
+        //   toast.error("You are not an affiliate.");
+        //   return;
+        // }
+ const affiliateId = getCookie("affiliateId");
+      if (!affiliateId) return toast.error("You are not an affiliate.");
         const username = decoded.username; // e.g., "AFF123"
         const res = await fetch(`http://localhost:5005/api/affiliate/AFF${username}/stats`);
         const data = await res.json();

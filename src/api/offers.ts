@@ -276,14 +276,16 @@ export const fetchOffersBySellerId = async (): Promise<ApiOffer[]> => {
 // src/api/offers.ts
 export const fetchOffersByProductAndService = async (
   serviceName: string,
-  productTitle?: string | null // Make it optional
+  productTitle: string
 ): Promise<{ offers: ApiOffer[]; services: ServiceWithCount[] }> => {
+
+  
+  console.log(`[fetchOffersByProductAndService] serviceName: ${serviceName}, productTitle: ${productTitle}`);
   let url = `${
     process.env.NEXT_PUBLIC_BACKEND_URL
   }/offers/filter?serviceName=${encodeURIComponent(serviceName)}`;
 
   if (productTitle) {
-    // Only add productTitle to the URL if it's provided
     url += `&productTitle=${encodeURIComponent(productTitle)}`;
   }
 

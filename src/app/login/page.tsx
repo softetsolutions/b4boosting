@@ -5,10 +5,14 @@ import { ArrowLeft } from "lucide-react";
 import { EyeIcon } from "src/assets/svgComp";
 import { useState } from "react";
 import { Loginaction } from "src/utils/actions/actions";
-import toast from "react-hot-toast"; 
+import toast from "react-hot-toast";
+import { signIn } from "next-auth/react";
+
 export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
-    async function clientSafeAction(formData: FormData) {
+  const [loadingGoogle, setLoadingGoogle] = useState(false);
+
+  async function clientSafeAction(formData: FormData) {
     try {
       await Loginaction(formData);
       toast.success("Login successful!");
@@ -17,6 +21,18 @@ export default function Login() {
       toast.error(err.message || "Login failed");
     }
   }
+
+  const handleGoogleSignIn = async () => {
+    try {
+      setLoadingGoogle(true);
+      await signIn("google", {
+        callbackUrl: "/", 
+      });
+    } catch (error) {
+      toast.error("Failed to redirect to Google sign-in");
+      setLoadingGoogle(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-black text-white flex flex-col">
@@ -92,7 +108,10 @@ export default function Login() {
                     id="remember"
                     className="w-4 h-4 accent-blue-400 rounded focus:ring-cyan-500"
                   />
-                  <label htmlFor="remember" className="ml-2 text-sm text-gray-300">
+                  <label
+                    htmlFor="remember"
+                    className="ml-2 text-sm text-gray-300"
+                  >
                     Remember me
                   </label>
                 </div>
@@ -105,6 +124,31 @@ export default function Login() {
                   Sign In
                 </button>
               </form>
+
+              <div className="flex items-center my-6">
+                <div className="flex-1 h-px bg-zinc-800" />
+                <span className="px-3 text-xs text-gray-500 uppercase tracking-wide">
+                  or
+                </span>
+                <div className="flex-1 h-px bg-zinc-800" />
+              </div>
+
+              <button
+                type="button"
+                onClick={handleGoogleSignIn}
+                disabled={loadingGoogle}
+                className="w-full py-3 font-medium rounded-lg flex items-center justify-center border border-zinc-700 bg-zinc-900 hover:bg-zinc-800 text-gray-100 transition disabled:opacity-60"
+              >
+                {loadingGoogle ? (
+                  <span className="text-sm">Connecting to Google...</span>
+                ) : (
+                  <>
+                    {/* You can replace this with an actual Google icon */}
+                    <span className="mr-2 text-lg">🚀</span>
+                    <span>Sign in with Google</span>
+                  </>
+                )}
+              </button>
 
               <div className="mt-8 text-center text-sm text-gray-400">
                 Don’t have an account?{" "}

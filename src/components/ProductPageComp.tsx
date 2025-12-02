@@ -9,6 +9,7 @@ import {
 } from "src/api/offers";
 import Link from "next/link";
 
+
 interface ProductPageCompProps {
   serviceName: string;
   productTitle: string;
@@ -87,7 +88,7 @@ const ProductPageComp: React.FC<ProductPageCompProps> = ({
       <div className="relative w-full h-full overflow-hidden p-5">
         <Image
           src={
-            offer.images?.[0] ||
+            offer?.images?.[0] ||
             `https://placehold.co/300x200/1E293B/FFFFFF?text=${offer.product.title.charAt(
               0
             )}`
@@ -98,15 +99,15 @@ const ProductPageComp: React.FC<ProductPageCompProps> = ({
           className="w-80 h-40 object-cover transition-transform duration-500 group-hover:scale-110"
         />
         <div className="absolute inset-0 "></div>
-        <span className="absolute top-2 right-2 bg-green-500 text-white text-xs font-semibold px-2 py-1 rounded-full">
-          {offer.quantityAvailable} in stock
-        </span>
+      <span className={`absolute top-2 right-2 ${offer.quantityAvailable === 0 ? 'bg-red-500' : 'bg-green-500'} text-xs font-semibold px-2 py-1 rounded-full`}>
+  {offer.quantityAvailable === 0 ? 'Out of Stock' : `${offer.quantityAvailable} in stock`}
+</span>
       </div>
 
       {/* Title */}
       <div className="w-full px-3 mt-0">
         <p className="text-md font-semibold line-clamp-1 group-hover:text-yellow-300 transition-colors">
-          {offer.product.title}
+          {offer.product.title.replace(/-/g, " ").replace(/\w\S*/g, (word) => word.charAt(0).toUpperCase() + word.slice(1))}
         </p>
       </div>
 
@@ -224,7 +225,8 @@ const ProductPageComp: React.FC<ProductPageCompProps> = ({
                         `}
                     >
                       <span>
-                        <img src={service.icon} alt="icon" className="p-6" />
+                        <Image src={`${service?.icon}`} alt="icon" className="p-6"  width={300}
+          height={200}/>
                       </span>
                     </li>
                     <span   className={`font-medium ${
