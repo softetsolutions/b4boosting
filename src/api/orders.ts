@@ -107,14 +107,26 @@ export const capturePayPalOrder = async (
 export const fetchAllOrders = async (
   page?: number,
   limit?: number,
-  status?: string
+  from?: string,
+  to?: string,
+  status?: string,
+  search?: string,
+  productId?: string,
+  buyerId?: string,
+  sellerId?: string
 ): Promise<{ success: boolean; data: ApiOrder[] }> => {
   const { token } = getAuthInfo();
-
   const params = new URLSearchParams();
+
   if (page) params.append("page", page.toString());
   if (limit) params.append("limit", limit.toString());
+  if (from) params.append("from", from);
+  if (to) params.append("to", to);
   if (status) params.append("status", status);
+  if (search) params.append("search", search.trim());
+  if (productId) params.append("productId", productId);
+  if (buyerId) params.append("buyerId", buyerId);
+  if (sellerId) params.append("sellerId", sellerId);
 
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_BACKEND_URL}/orders?${params.toString()}`,
@@ -129,11 +141,60 @@ export const fetchAllOrders = async (
 
   if (!response.ok) {
     const error = await response.json().catch(() => ({}));
-    throw new Error(error.message || "Failed to fetch all orders");
+    throw new Error(error.message || "Failed to fetch orders");
   }
 
   return response.json();
 };
+
+
+export const updateOrderStatus = async (id: string, status: string) => {
+   const { token } = getAuthInfo();
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}/orders/admin/${id}`,
+    {
+      method: "PATCH",
+      
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: token ? `Bearer ${token}` : "",
+      },
+      credentials: "include",
+      body: JSON.stringify({ status }),
+    }
+  );
+
+  if (!res.ok) {
+    const error = await res.json().catch(() => ({}));
+    throw new Error(error.message || "Failed to fetch all orders");
+  }
+
+  return res.json();
+}
+
+export const updateOrderStatusBySeller = async (id: string, status: string) => {
+   const { token } = getAuthInfo();
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}/orders/seller/${id}`,
+    {
+      method: "PATCH",
+      
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: token ? `Bearer ${token}` : "",
+      },
+      credentials: "include",
+      body: JSON.stringify({ status }),
+    }
+  );
+
+  if (!res.ok) {
+    const error = await res.json().catch(() => ({}));
+    throw new Error(error.message || "Failed to fetch all orders");
+  }
+
+  return res.json();
+}
 
 /* ------------------  Get Orders by Buyer  ------------------ */
 export const fetchOrdersByBuyer = async (
@@ -164,14 +225,34 @@ export const fetchOrdersByBuyer = async (
 
 /* ------------------  Get Orders by Seller  ------------------ */
 export const fetchOrdersBySeller = async (
-  status?: string
-): Promise<{ success: boolean; data: ApiOrder[] }> => {
-  const { token } = getAuthInfo();
+  page: number,
+  limit: number,
+  from?: string,
+  to?: string,
+  status?: string,
+  search?: string
+): Promise<{
+  success: boolean;
+  data: ApiOrder[];
+  totalPages?: number;
+  currentPage?: number;
+}> => {
+  const { token,userId } = getAuthInfo();
 
-  const query = status ? `?status=${status}` : "";
+  const query = new URLSearchParams();
+
+  if (page) query.append("page", String(page));
+  if (limit) query.append("limit", String(limit));
+  if (status) query.append("status", status);
+  if (search) query.append("search", search);
+  if (from) query.append("from", from);
+  if (to) query.append("to", to);
+
+  // const userId = cookieStore.get("userId");
+  console.log("userId", userId);
 
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_BACKEND_URL}/orders/seller${query}`,
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}/orders/seller/${userId}?${query.toString()}`,
     {
       headers: {
         "Content-Type": "application/json",
@@ -188,6 +269,7 @@ export const fetchOrdersBySeller = async (
 
   return response.json();
 };
+
 
 /* ------------------  Get Single Order ------------------ */
 export const fetchOrderById = async (

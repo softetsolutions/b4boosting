@@ -9,7 +9,7 @@ import {
   FileText,
   List,
   Package,
-    BarChart, // for performance icon
+  BarChart, // for performance icon
   Link as LinkIcon, // for createReflink icon
 } from "lucide-react";
 
@@ -20,6 +20,9 @@ export const routeMapping: { [key: string]: string } = {
   manageProducts: "Manage Products",
   createServices: "Create Services",
   manageServices: "Manage Services",
+  manageOrders: "Manage Orders",
+  offersList: "Offers List",
+  transactionHistory: "Transaction History",
   sellerRequests: "Seller Requests",
   systemSettings:"System Settings",
 
@@ -33,6 +36,8 @@ export const routeMapping: { [key: string]: string } = {
   // Seller routes
   createOffer: "Create Offers",
   manageOffers: "Manage Offers",
+  manageOrder: "Manage Orders",
+  transactionHistorys: "Transaction History",
 
     // Affiliate routes
   createReflink: "Create Reflink",
@@ -48,6 +53,9 @@ export const iconMapping = (route: string): LucideIcon | null => {
     manageProducts: Package,
     createServices: Settings,
     manageServices: List,
+    manageOrders: ShoppingCart,
+    offersList: List,
+    transactionHistory: List,
     sellerRequests: User,
     systemSettings:Settings,
 
@@ -61,6 +69,8 @@ export const iconMapping = (route: string): LucideIcon | null => {
     // Seller routes
     createOffers: Plus,
     manageOffers: FileText,
+    manageOrder: ShoppingCart,
+    transactionHistorys: List,
 
   // Affiliate routes
     createReflink: LinkIcon,

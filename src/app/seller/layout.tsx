@@ -48,6 +48,8 @@ export default async function DashboardLayout({
          { name: "Dashboard", href: "/seller/dashboard" },
         {key:"createOffers",  name: "Create Offers", href: "/seller/dashboard/createOffers" },
         { key : "manageOffers",name: "Manage Offers", href: "/seller/dashboard/manageOffers" },
+        { key : "manageOrder",name: "Manage Orders", href: "/seller/dashboard/manageOrder" },
+        { key : "transactionHistorys",name: "Transaction History", href: "/seller/dashboard/transactionHistorys" },
       ]
     : [
         { name: "Dashboard", href: "/seller/dashboard" },

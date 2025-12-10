@@ -14,7 +14,8 @@ interface Order {
   _id: string;
   amount: number;
   quantity: number;
-  status: string;
+  paymentStatus: string;
+  orderStatus: string;
   paypalTransactionId: string;
   createdAt: string;
 }
@@ -200,15 +201,15 @@ export default function ProfilePage() {
                             </div>
                             <span
                               className={`text-sm font-semibold ${
-                                order.status === "paid"
+                                order.paymentStatus === "paid"
                                   ? "text-green-500"
                                   : order.status === "pending"
                                   ? "text-yellow-500"
                                   : "text-gray-500"
                               }`}
                             >
-                              {order.status.charAt(0).toUpperCase() +
-                                order.status.slice(1)}
+                              {order.paymentStatus.charAt(0).toUpperCase() +
+                                order.paymentStatus.slice(1)}
                             </span>
                           </div>
 
@@ -243,7 +244,7 @@ export default function ProfilePage() {
                               <img
                                 src={order.productId?.images[0] || "N/A"}
                                 alt="product image"
-                                className="w-25 h-25"
+                                className="w-75 h-15"
                               />
                             </span>
                           </div>
