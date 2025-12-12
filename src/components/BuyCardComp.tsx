@@ -3,11 +3,10 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import type { ApiOffer } from "src/api/offers";
-import { redirect } from "next/navigation";
 import toast from "react-hot-toast";
 import { createPayPalOrder, capturePayPalOrder } from "src/api/orders";
 import ShareMenu from "./ShareMenu";
-import { getAuthInfo } from "src/utils/auth";
+import {startConversation} from "src/api/conversation";
 
 interface BuyCardCompProps {
   offer: ApiOffer;
@@ -286,12 +285,12 @@ function BuyCardComp({ offer }: BuyCardCompProps) {
 
               <div
                 id="box-2"
-                className="bg-gray-400/20  p-6 w-full max-w-sm mb-6  backdrop-blur-lg rounded-2xl border border-gray-400/20"
+                className="bg-gray-400/20  p-4 w-full max-w-sm mb-6  backdrop-blur-lg rounded-2xl border border-gray-400/20"
               >
                 {/* Seller Info */}
                 {offer.seller && (
-                  <div className="mt-2 flex items-center space-x-4">
-                    <div className="flex-shrink-0 bg-cyan-700/20 rounded-full p-3 flex items-center justify-center">
+                  <div className="mt-0 flex items-center space-x-2">
+                    <div className="flex-shrink-0 bg-cyan-700/20 rounded-full p-1 flex items-center justify-center">
                       <svg
                         className="w-8 h-8 "
                         fill="none"
@@ -323,47 +322,20 @@ function BuyCardComp({ offer }: BuyCardCompProps) {
                           {offer.seller._id}
                         </span>
                       </div>
+                     
                     </div>
-                  </div>
-                )}
-              </div>
-
-              <div
-                id="box-3"
-                className="bg-gray-400/20  p-6 w-full max-w-sm mb-6  backdrop-blur-lg rounded-2xl border border-gray-400/20"
-              >
-                <div className="flex items-center justify-between mb-4">
-                  <p className="text-gray-400 text-sm">
-                    <span className="text-emerald-400 font-bold mr-1">
-                      👍 100.00%
-                    </span>
-                    <span className="text-gray-400">758 sold</span>
-                  </p>
-
-                  <a
-                    href="#"
-                    className="text-yellow-400/100 text-sm hover:underline"
-                  >
-                    Other sellers
-                  </a>
-                </div>
-
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center">
-                    <img
-                      src="https://placehold.co/40x40/4a90e2/ffffff?text=ES"
-                      alt="Etechsquad"
-                      className="w-10 h-10 rounded-full mr-3 border-2 border-cyan-500"
-                    />
-                    <div>
-                      <p className="font-semibold text-gray-200">Etechsquads</p>
-                      <p className="text-gray-400 text-sm">Level 91</p>
-                    </div>
-                  </div>
-
-                  <button
-                    className="bg-emerald-600 text-white py-2 px-4 rounded-full text-sm font-semibold hover:bg-emerald-700 transition duration-300 flex items-center shadow-md shadow-emerald-600/30"
-                    onClick={() => redirect("/chat")}
+                     <div>
+                         <button
+                         type="button"
+                    className="bg-emerald-600 text-white py-1 px-2 rounded-full text-sm font-semibold hover:bg-emerald-700 transition duration-300 flex items-center shadow-md shadow-emerald-600/30"
+                   onClick={async () => {
+    const res = await startConversation(offer.seller._id);
+    if (res.success) {
+      router.push(`/chats?q=${offer.seller._id}`);
+    } else {
+      toast.error("Failed to start chat");
+    }
+  }}
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -381,8 +353,12 @@ function BuyCardComp({ offer }: BuyCardCompProps) {
                     </svg>
                     Chat
                   </button>
-                </div>
+                      </div>
+                  </div>
+                )}
               </div>
+
+             
             </div>
           </div>
         </div>
