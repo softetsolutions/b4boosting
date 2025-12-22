@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useEffect, useState, useMemo } from "react";
@@ -30,22 +29,19 @@ export default function Chat() {
     }
   }
 
-  // SOCKET SETUP (connect + join room)
   useEffect(() => {
     if (!userInfo?.id) return;
 
-    socket.connect();
+    if (!socket.connected) {
+      socket.connect();
+    }
+
     socket.emit("join", userInfo.id);
 
     if (preselected) setReceiverId(preselected);
 
     fetchConversations(userInfo.id);
-
-    return () => socket.disconnect();
   }, [userInfo?.id]);
-
-
-  // GLOBAL SOCKET LISTENERS
 
   useEffect(() => {
     if (!userInfo?.id) return;
@@ -76,55 +72,56 @@ export default function Chat() {
     };
   }, [receiverId, userInfo?.id]);
 
-  
-  // SEND MESSAGE FUNCTION
+  const sendMessage = (
+    message: string,
+    senderId: string,
+    receiverId: string
+  ) => {
+    console.log(
+      "sendMessage function is running",
+      senderId,
+      receiverId,
+      message
+    );
+    socket.emit("sendMessage", { text: message, senderId, receiverId });
+  };
 
-  const sendMessage = (message: string, senderId: string, receiverId: string) => {
-  console.log("sendMessage function is running", senderId, receiverId, message);
-  socket.emit("sendMessage", { text: message, senderId, receiverId });
-};
+  const activeChats = useMemo(
+    () => conversationData?.filter((c) => c.chatType === 1),
+    [conversationData]
+  );
 
+  const generalChats = useMemo(
+    () => conversationData?.filter((c) => c.chatType === 0),
+    [conversationData]
+  );
 
- const activeChats = useMemo(
-  () => conversationData.filter((c) => c.chatType === 1),
-  [conversationData]
-);
-
-const generalChats = useMemo(
-  () => conversationData.filter((c) => c.chatType === 0),
-  [conversationData]
-);
-
-  // Auto-switch tab based on conversation type
   useEffect(() => {
     if (!receiverId) return;
 
-    const selected = conversationData.find((c) => c.userId === receiverId);
+    const selected = conversationData?.find((c) => c.userId === receiverId);
     if (!selected) return;
 
     setActiveTab(selected.chatType === 1 ? "active" : "general");
-
   }, [receiverId, conversationData]);
 
   const filteredChats = activeTab === "active" ? activeChats : generalChats;
 
   useEffect(() => {
-    if (preselected && conversationData.length > 0) {
-      const exists = conversationData.some(c => c.userId === preselected);
+    if (preselected && conversationData?.length > 0) {
+      const exists = conversationData.some((c) => c.userId === preselected);
       if (!exists) setReceiverId(preselected);
     }
   }, [conversationData, preselected]);
 
-
   return (
     <div className="flex flex-col md:flex-row px-12 py-5 bg-black h-screen gap-4">
-      
       {/* SIDEBAR */}
       <div className="w-full md:w-[340px] border-r border-gray-400/20 gray-bg rounded-2xl">
-
         {/* TABS */}
         <div className="flex border-b border-gray-700">
           <button
+            type="button"
             onClick={() => setActiveTab("active")}
             className={`px-4 py-3 flex-1 text-center ${
               activeTab === "active"
@@ -136,6 +133,7 @@ const generalChats = useMemo(
           </button>
 
           <button
+            type="button"
             onClick={() => setActiveTab("general")}
             className={`px-4 py-3 flex-1 text-center ${
               activeTab === "general"
@@ -149,8 +147,8 @@ const generalChats = useMemo(
 
         {/* CHAT LIST */}
         <div className="flex flex-col gap-2 p-2 overflow-y-auto h-[calc(100%-48px)]">
-          {filteredChats.length ? (
-            filteredChats.map((value, index) => (
+          {filteredChats?.length ? (
+            filteredChats?.map((value, index) => (
               <InboxTab
                 key={index}
                 imgSrc={null}

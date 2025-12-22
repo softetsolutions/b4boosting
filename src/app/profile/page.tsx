@@ -9,6 +9,8 @@ import { jwtDecode } from "jwt-decode";
 import { fetchOrdersByBuyer } from "src/api/orders";
 import { getAccountDetails } from "src/api/api";
 import { useSearchParams } from "next/navigation";
+import RateReviewModal from "src/components/Reviews/RateReviewModal";
+import StarRating from "src/components/Reviews/StarRating";
 
 interface Order {
   _id: string;
@@ -35,7 +37,10 @@ export default function ProfilePage() {
   const [accountDetails, setAccountDetails] = useState<any>(null);
   const [user, setUser] = useState<DecodedToken | null>(null);
   const [loading, setLoading] = useState(false);
-
+  const [openReviewOrderId, setOpenReviewOrderId] = useState<string | null>(
+    null
+  );
+  const [reviewToEdit, setReviewToEdit] = useState<any>(null);
   const tabs = [
     { key: "profile", label: "My Profile" },
     { key: "orders", label: "My Orders" },
@@ -128,6 +133,7 @@ export default function ProfilePage() {
             <div className="mt-10 py-5 px-6 border-b border-gray-400/20 flex space-x-4">
               {tabs.map((tab) => (
                 <button
+                  type="button"
                   key={tab.key}
                   onClick={() => setActiveTab(tab.key)}
                   className={`py-2 px-5 text-sm font-medium rounded-full transition-all ${
@@ -174,12 +180,11 @@ export default function ProfilePage() {
                     <p className="text-gray-500">No orders found.</p>
                   ) : (
                     <div className="space-y-4">
-                      {orders.map((order) => (
+                      {orders?.map((order) => (
                         <div
                           key={order._id}
                           className="border border-gray-400/20 bg-black rounded-lg p-4 hover:shadow-sm transition"
                         >
-                          {/* Header Row */}
                           <div className="flex justify-between items-center">
                             <div>
                               <p className="font-medium text-gray-300">
@@ -199,29 +204,46 @@ export default function ProfilePage() {
                                 )}
                               </p>
                             </div>
-                            <span
-                              className={`text-sm font-semibold ${
-                                order.paymentStatus === "paid"
-                                  ? "text-green-500"
-                                  : order.status === "pending"
-                                  ? "text-yellow-500"
-                                  : "text-gray-500"
-                              }`}
-                            >
-                              {order.paymentStatus.charAt(0).toUpperCase() +
-                                order.paymentStatus.slice(1)}
-                            </span>
+                            <div>
+                              <span className="text-gray-500"> Order : </span>
+                              <span
+                                className={`text-sm font-semibold ${
+                                  order.orderStatus === "accepted"
+                                    ? "text-green-500"
+                                    : order.orderStatus === "pending"
+                                    ? "text-yellow-500"
+                                    : "text-gray-500"
+                                }`}
+                              >
+                                {order.orderStatus.charAt(0).toUpperCase() +
+                                  order.orderStatus.slice(1)}
+                              </span>
+                              <br />
+                              <span className="text-gray-500"> Payment : </span>
+                              <span
+                                className={`text-sm font-semibold ${
+                                  order.paymentStatus === "paid"
+                                    ? "text-green-500"
+                                    : order.paymentStatus === "pending"
+                                    ? "text-yellow-500"
+                                    : "text-gray-500"
+                                }`}
+                              >
+                                {order.paymentStatus.charAt(0).toUpperCase() +
+                                  order.paymentStatus.slice(1)}
+                              </span>
+                            </div>
                           </div>
 
-                          {/* Product & Seller Info */}
                           <div className="flex justify-between">
                             <div className="mt-3 border-t border-gray-700 pt-3 text-sm text-gray-400">
                               <p>
                                 <span className="text-gray-500">Product:</span>{" "}
-                                {order.productId?.title || "N/A"}{" "}
-                                <span className="text-xs text-gray-500">
-                                  ({order.productId?.type || "Unknown Type"}){" "}
-                                </span>
+                                {order.product?.title || "N/A"}{" "}
+                              </p>
+                              <p>
+                                <span className="text-gray-500">Offer:</span>{" "}
+                                {order.offer?._id || "N/A"}{" "}
                               </p>
                               <p>
                                 <span className="text-gray-500">
@@ -233,19 +255,77 @@ export default function ProfilePage() {
                               </p>
                               <p>
                                 <span className="text-gray-500">Seller:</span>{" "}
-                                {order.sellerId?.username || "Unknown"}{" "}
+                                {order.seller?.username || "Unknown"}{" "}
                                 <span className="text-xs text-gray-500">
-                                  ({order.sellerId?.email || "No Email"})
+                                  ({order.seller?.email || "No Email"})
                                 </span>
                               </p>
                             </div>
 
                             <span>
                               <img
-                                src={order.productId?.images[0] || "N/A"}
+                                src={order.product?.images[0] || "N/A"}
                                 alt="product image"
-                                className="w-75 h-15"
+                                className="w-35 h-15"
                               />
+
+                              {order.orderStatus === "delivered" &&
+                                !order?.review && (
+                                  <>
+                                    <p
+                                      onClick={() => {
+                                        setOpenReviewOrderId(order._id);
+                                        setReviewToEdit(null);
+                                      }}
+                                      className="text-yellow-400 cursor-pointer hover:underline mt-2"
+                                    >
+                                      Rate & Review
+                                    </p>
+                                  </>
+                                )}
+
+                              {order?.review &&
+                                order.orderStatus === "delivered" &&  (
+                                  <>
+                                    <div className="mt-3 text-sm">
+                                      <StarRating
+                                        value={order.review.rating}
+                                        disabled
+                                        readOnly
+                                      />
+
+                                      {order.review.reviewText && (
+                                        <p className="text-gray-400 mt-1 line-clamp-2">
+                                          {order.review.reviewText}
+                                        </p>
+                                      )}
+                                    </div>
+                                  </>
+                                )}
+                              {/* UPDATE ONLY ONCE */}
+                              {order.review &&
+                                order?.orderStatus === "delivered" && !order.review.isEdited && (
+                                  <span
+                                    onClick={() => {
+                                      setReviewToEdit(order.review);
+                                      setOpenReviewOrderId(order._id);
+                                    }}
+                                    className="text-yellow-400 cursor-pointer text-xs hover:underline mt-1 inline-block"
+                                  >
+                                    Update
+                                  </span>
+                                )}
+
+                              {openReviewOrderId === order._id && (
+                                <RateReviewModal
+                                  orderId={order._id}
+                                  existingReview={reviewToEdit}
+                                  onClose={() => {
+                                    setOpenReviewOrderId(null);
+                                    setReviewToEdit(null);
+                                  }}
+                                />
+                              )}
                             </span>
                           </div>
                         </div>

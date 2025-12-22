@@ -1,10 +1,16 @@
-
 "use client";
 
 import toast from "react-hot-toast";
 import { updateOrderStatusBySeller } from "src/api/orders";
+import StarRating from "src/components/Reviews/StarRating";
 
-export default function OrderTable({ orders, currentPage, totalPages, onPageChange, refresh }) {
+export default function OrderTable({
+  orders,
+  currentPage,
+  totalPages,
+  onPageChange,
+  refresh,
+}) {
   const handleStatusChange = async (id: string, status: string) => {
     try {
       const res = await updateOrderStatusBySeller(id, status);
@@ -34,6 +40,7 @@ export default function OrderTable({ orders, currentPage, totalPages, onPageChan
             <th className="p-3">Order Status</th>
             <th className="p-3">Order Date</th>
             <th className="p-3">Actions</th>
+            <th className="p-3">Ratings/Reviews</th>
           </tr>
         </thead>
 
@@ -46,7 +53,11 @@ export default function OrderTable({ orders, currentPage, totalPages, onPageChan
 
               <td className="p-3">
                 <div className="flex items-center">
-                  <img alt="buyerId" src={order.buyerId?.profilePic} className="w-5 h-5 rounded-full mr-2" />
+                  <img
+                    alt="buyerId"
+                    src={order.buyerId?.profilePic}
+                    className="w-5 h-5 rounded-full mr-2"
+                  />
                   {order.buyerId?.username}
                 </div>
                 {order.buyerId?.email}
@@ -60,7 +71,9 @@ export default function OrderTable({ orders, currentPage, totalPages, onPageChan
               <td className="p-3">
                 <select
                   className="bg-gray-900 border border-gray-700 px-2 py-1 rounded"
-                  onChange={(e) => handleStatusChange(order._id, e.target.value)}
+                  onChange={(e) =>
+                    handleStatusChange(order._id, e.target.value)
+                  }
                   defaultValue={order.orderStatus}
                 >
                   <option value="pending">Pending</option>
@@ -68,6 +81,38 @@ export default function OrderTable({ orders, currentPage, totalPages, onPageChan
                   <option value="delivered">Delivered</option>
                   <option value="cancelled">Cancelled</option>
                 </select>
+              </td>
+
+              <td className="px-4 py-3 max-w-sm">
+                {order.review ? (
+                  <div className="space-y-2">
+                    {/* Rating */}
+                    <StarRating value={order.review.rating} disabled readOnly/>
+
+                    {/* Review text */}
+                    <p className="text-sm text-gray-500 italic">
+                      “{order.review.reviewText}”
+                    </p>
+
+                    {/* Created date */}
+                    <p className="text-xs text-gray-400">
+                      {new Date(order.review.createdAt).toLocaleDateString("en-IN", {
+                        day: "2-digit",
+                        month: "short",
+                        year: "numeric",
+                      })}
+                    </p>
+
+                    {/* Edited badge */}
+                    {order.review.isEdited && (
+                      <span className="inline-block text-xs text-blue-600 bg-blue-50 px-2 py-0.5 rounded">
+                        Edited
+                      </span>
+                    )}
+                  </div>
+                ) : (
+                  <span className="text-gray-400 text-sm">No Review</span>
+                )}
               </td>
             </tr>
           ))}
@@ -77,7 +122,7 @@ export default function OrderTable({ orders, currentPage, totalPages, onPageChan
       {/* Pagination */}
       <div className="flex justify-end-safe gap-3 m-4">
         <button
-        type="button"
+          type="button"
           disabled={currentPage === 1}
           className="px-4 py-2 bg-gray-800 text-white rounded disabled:opacity-50"
           onClick={() => onPageChange(currentPage - 1)}
@@ -86,7 +131,7 @@ export default function OrderTable({ orders, currentPage, totalPages, onPageChan
         </button>
 
         <button
-         type="button"
+          type="button"
           disabled={currentPage === totalPages}
           className="px-4 py-2 bg-gray-800 text-white rounded disabled:opacity-50"
           onClick={() => onPageChange(currentPage + 1)}

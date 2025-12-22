@@ -24,8 +24,8 @@ export const routeMapping: { [key: string]: string } = {
   offersList: "Offers List",
   transactionHistory: "Transaction History",
   sellerRequests: "Seller Requests",
-  systemSettings:"System Settings",
-
+  systemSettings: "System Settings",
+  ratingsReviews: "Ratings & Reviews",
   // User routes
   home: "Home",
   productDetails: "Product Details",
@@ -39,10 +39,9 @@ export const routeMapping: { [key: string]: string } = {
   manageOrder: "Manage Orders",
   transactionHistorys: "Transaction History",
 
-    // Affiliate routes
+  // Affiliate routes
   createReflink: "Create Reflink",
   performance: "Performance",
-
 };
 
 export const iconMapping = (route: string): LucideIcon | null => {
@@ -57,7 +56,8 @@ export const iconMapping = (route: string): LucideIcon | null => {
     offersList: List,
     transactionHistory: List,
     sellerRequests: User,
-    systemSettings:Settings,
+    systemSettings: Settings,
+    ratingsReviews: List,
 
     // User routes
     home: Home,
@@ -72,7 +72,7 @@ export const iconMapping = (route: string): LucideIcon | null => {
     manageOrder: ShoppingCart,
     transactionHistorys: List,
 
-  // Affiliate routes
+    // Affiliate routes
     createReflink: LinkIcon,
     performance: BarChart,
   };
