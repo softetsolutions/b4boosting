@@ -16,7 +16,7 @@ import americanExpress from "src/assets/images/americanExpress.svg";
 import gpay from "src/assets/images/gpay.svg";
 import paypal from "src/assets/images/paypal.png";
 import amex from "src/assets/images/amex.svg";
-import applePay from "src/assets/images/applePay.svg";
+import applepay from "src/assets/images/applepay.svg";
 import discover from "src/assets/images/discover.jpg";
 import { ArrowRightIcon } from "lucide-react";
 import hours from "src/assets/images/24hours.svg";
@@ -26,7 +26,7 @@ import chooseImage from "src/assets/images/chooseImage.jpg";
 interface Product {
   _id: string;
   title: string;
-  images?: string;      
+  images?: string;
   // description?: string;
 }
 
@@ -46,8 +46,7 @@ interface PopularItemsProps {
   dynamicdata: HomePageData;
 }
 
-
-const options = ["Currency", "Accounts", "Top Ups", "Boosting"]; 
+const options = ["Currency", "Accounts", "Top Ups", "Boosting"];
 
 const orderEasily = [
   {
@@ -88,16 +87,12 @@ const paymentImages = [
   { src: mastercard, title: "mastercard" },
   { src: americanExpress, title: "American Express" },
   { src: gpay, title: "Gpay" },
-  { src: applePay, title: "Apple Pay" },
+  { src: applepay, title: "Apple Pay" },
   { src: discover, title: "Discover" },
 ];
 
-export default function PopularItems({
-  dynamicdata,
-}: PopularItemsProps) {
-  const Items = dynamicdata?.services.find(
-    (s) => s.name === "items"
-  );
+export default function PopularItems({ dynamicdata }: PopularItemsProps) {
+  const Items = dynamicdata?.services.find((s) => s.name === "items");
 
   const accounts = Items?.products;
   const [visible, setVisible] = useState(5);
@@ -141,11 +136,10 @@ export default function PopularItems({
         <h2 className="text-3xl mb-4 font-semibold text-foreground text-center lg:block md:block sm:hidden hidden ">
           POPULAR ITEMS
         </h2>
-          <h2 className="text-xl mb-2 font-semibold text-foreground text-center sm:block lg:hidden md:hidden">
-            POPULAR ITEMS
-          </h2>
+        <h2 className="text-xl mb-2 font-semibold text-foreground text-center sm:block lg:hidden md:hidden">
+          POPULAR ITEMS
+        </h2>
         <div className="flex items-center justify-end-safe mb-1">
-        
           {isMobile && (
             <button
               type="button"
@@ -208,9 +202,9 @@ export default function PopularItems({
         <h2 className="text-3xl mb-6 font-semibold text-foreground text-center lg:block md:block sm:hidden hidden ">
           ORDER EASILY
         </h2>
-         <h2 className="text-xl font-semibold text-foreground sm:block lg:hidden md:hidden text-center mb-6">
-            ORDER EASILY
-          </h2>
+        <h2 className="text-xl font-semibold text-foreground sm:block lg:hidden md:hidden text-center mb-6">
+          ORDER EASILY
+        </h2>
         {/* <div className="flex items-center justify-between mb-6 flex-wrap">      
           {isMobile && (
             <button
@@ -252,78 +246,77 @@ export default function PopularItems({
         </div>
       </section>
 
-       <section className="flex justify-center items-center my-10 px-4 md:px-8">
-      <div className="relative w-200 h-200 rounded-xl overflow-hidden">
-        {/* Background Image */}
-        <Image
-          src={chooseImage}
-          alt="Choose Background"
-          fill
-          className="object-cover w-full h-full"
-          priority
-        />
+      <section className="flex justify-center items-center my-10 px-4 md:px-8">
+        <div className="relative w-200 h-200 rounded-xl overflow-hidden">
+          {/* Background Image */}
+          <Image
+            src={chooseImage}
+            alt="Choose Background"
+            fill
+            className="object-cover w-full h-full"
+            priority
+          />
 
-        {/* Overlay content */}
-        <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 md:gap-6 px-4">
-          {/* Top text */}
-          <h2 className="text-3xl md:text-4xl font-bold text-white text-center drop-shadow-lg">
-            CHOOSE FROM
-          </h2>
+          {/* Overlay content */}
+          <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 md:gap-6 px-4">
+            {/* Top text */}
+            <h2 className="text-3xl md:text-4xl font-bold text-white text-center drop-shadow-lg">
+              CHOOSE FROM
+            </h2>
 
-          {/* Stacked grey blocks */}
-          <div className="flex flex-col gap-3 md:gap-4 w-full max-w-2xl py-5">
-            {options.map((opt, idx) => (
-              <div
-                key={idx}
-                className="bg-zinc-700 opacity-80 text-white text-center py-10 rounded-lg font-semibold text-lg md:text-xl shadow-md"
-              >
-                {opt}
-              </div>
-            ))}
+            {/* Stacked grey blocks */}
+            <div className="flex flex-col gap-3 md:gap-4 w-full max-w-2xl py-5">
+              {options.map((opt, idx) => (
+                <div
+                  key={idx}
+                  className="bg-zinc-700 opacity-80 text-white text-center py-10 rounded-lg font-semibold text-lg md:text-xl shadow-md"
+                >
+                  {opt}
+                </div>
+              ))}
+            </div>
+
+            {/* Bottom text */}
+            <h2 className="text-3xl md:text-4xl font-bold text-white text-center drop-shadow-lg mt-4">
+              SELLERS
+            </h2>
           </div>
-
-          {/* Bottom text */}
-          <h2 className="text-3xl md:text-4xl font-bold text-white text-center drop-shadow-lg mt-4">
-            SELLERS
-          </h2>
         </div>
-      </div>
-    </section>
+      </section>
 
       <section className="px-4 py-10 md:px-8 mt-10 lg:mx-24 ">
-  <div
-    className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4
+        <div
+          className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4
     justify-self-center
     overflow-x-auto scrollbar-hide
     "
-  >
-    {support.map((support, index) => (
-      <div
-        key={index}
-        className="mb-10 border-zinc-600 border-2 relative group overflow-hidden rounded-lg bg-black/100 px-5 
+        >
+          {support.map((support, index) => (
+            <div
+              key={index}
+              className="mb-10 border-zinc-600 border-2 relative group overflow-hidden rounded-lg bg-black/100 px-5 
         flex flex-col lg:flex-row items-center justify-between py-10"
-      >
-        <Image
-          src={support.src}
-          alt={support.title}
-          className="object-fit w-55 h-35 mb-4 md:mb-2"
-        />
+            >
+              <Image
+                src={support.src}
+                alt={support.title}
+                className="object-fit w-55 h-35 mb-4 md:mb-2"
+              />
 
-        <div className="flex items-center justify-center text-white font-semibold text-lg flex-col mx-4 text-center">
-          <p>{support.title}</p>
-          <p className="text-md flex items-center justify-center text-center py-5 text-zinc-500 ">
-            {support.desc}
-          </p>
-          <p className="flex items-center justify-center text-xl">
-            Learn More{" "}
-            <ArrowRightIcon className="w-4 h-4 mx-2 yellow-text" />
-          </p>
+              <div className="flex items-center justify-center text-white font-semibold text-lg flex-col mx-4 text-center">
+                <p>{support.title}</p>
+                <p className="text-md flex items-center justify-center text-center py-5 text-zinc-500 ">
+                  {support.desc}
+                </p>
+                <p className="flex items-center justify-center text-xl">
+                  Learn More{" "}
+                  <ArrowRightIcon className="w-4 h-4 mx-2 yellow-text" />
+                </p>
+              </div>
+            </div>
+          ))}
         </div>
-      </div>
-    ))}
-  </div>
-</section>
-
+      </section>
 
       <section className="bg-white py-3.5 px-4 flex items-center justify-center">
         <div className="flex flex-wrap items-center gap-2 justify-center">
