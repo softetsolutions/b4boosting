@@ -4,7 +4,7 @@ import { Search, X } from "lucide-react";
 
 export default function ReviewFilters({ filters, setFilters }) {
   return (
-    <div className="flex flex-wrap gap-4 bg-gray-900 p-4 rounded-lg mb-4 justify-between">
+    <div className="flex flex-wrap gap-4 bg-gray-900 rounded-lg mb-4 justify-between">
 
       {/* ⭐ NEW: Rating Filter (1–5) */}
       <select

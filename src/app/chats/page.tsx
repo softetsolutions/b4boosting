@@ -8,6 +8,7 @@ import InboxTab from "../../components/ChatComps/InboxTab";
 import MessageContainer from "../../components/ChatComps/MessageContainer";
 import { getConversationsByUser } from "src/api/conversation";
 import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
 
 export const socket = io("http://localhost:5005", { autoConnect: false });
 
@@ -18,7 +19,14 @@ export default function Chat() {
   const searchParams = useSearchParams();
   const preselected = searchParams.get("q");
   const userInfo = useAuth();
+const router = useRouter();
 
+  console.log("userInfo", userInfo);
+
+  const asUser = searchParams.get("asUser");
+const isAdmin = userInfo?.role === "admin"; 
+
+ const chatOwnerId = isAdmin && asUser ? asUser : userInfo?.id;
   async function fetchConversations(userId: string) {
     try {
       const res = await getConversationsByUser(userId);
@@ -30,25 +38,25 @@ export default function Chat() {
   }
 
   useEffect(() => {
-    if (!userInfo?.id) return;
+    if (!chatOwnerId) return;
 
     if (!socket.connected) {
       socket.connect();
     }
 
-    socket.emit("join", userInfo.id);
+   socket.emit("join", chatOwnerId);
 
     if (preselected) setReceiverId(preselected);
 
-    fetchConversations(userInfo.id);
-  }, [userInfo?.id]);
+    fetchConversations(chatOwnerId);
+  }, [chatOwnerId]);
 
   useEffect(() => {
-    if (!userInfo?.id) return;
+     if (!chatOwnerId) return;
 
     // Any new message
     socket.on("receiveMessage", ({ conversationId }) => {
-      fetchConversations(userInfo.id);
+      fetchConversations(chatOwnerId);
 
       // If user is viewing this chat, force MessageContainer to refresh messages
       if (conversationId === receiverId) {
@@ -58,11 +66,11 @@ export default function Chat() {
 
     // Messages read
     socket.on("messagesMarkedRead", () => {
-      fetchConversations(userInfo.id);
+      fetchConversations(chatOwnerId);
     });
 
     socket.on("conversationUpdated", () => {
-      fetchConversations(userInfo.id);
+      fetchConversations(chatOwnerId);
     });
 
     return () => {
@@ -70,7 +78,7 @@ export default function Chat() {
       socket.off("messagesMarkedRead");
       socket.off("conversationUpdated");
     };
-  }, [receiverId, userInfo?.id]);
+  }, [receiverId, chatOwnerId]);
 
   const sendMessage = (
     message: string,
@@ -83,7 +91,7 @@ export default function Chat() {
       receiverId,
       message
     );
-    socket.emit("sendMessage", { text: message, senderId, receiverId });
+    socket.emit("sendMessage", { text: message, senderId: chatOwnerId, receiverId });
   };
 
   const activeChats = useMemo(
@@ -116,6 +124,15 @@ export default function Chat() {
 
   return (
     <div className="flex flex-col md:flex-row px-12 py-5 bg-black h-screen gap-4">
+
+      <button
+  type="button"
+  onClick={() => router.back()} // ✅ goes to previous page
+  className="absolute top-4 right-6 text-gray-400 hover:text-white text-2xl font-semibold z-50"
+  aria-label="Close chat"
+>
+  ×
+</button>
       {/* SIDEBAR */}
       <div className="w-full md:w-[340px] border-r border-gray-400/20 gray-bg rounded-2xl">
         {/* TABS */}
@@ -172,8 +189,9 @@ export default function Chat() {
         {receiverId ? (
           <MessageContainer
             sendMessage={sendMessage}
-            senderId={userInfo?.id}
+            senderId={chatOwnerId}
             receiverId={receiverId}
+            isAdmin={isAdmin}
           />
         ) : (
           <div className="flex justify-center items-center h-full text-gray-400">

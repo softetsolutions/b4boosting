@@ -17,10 +17,10 @@ export const getConversationsByUser = async (userId: string) => {
   return res.json();
 };
 
-
 export const getConversationBetween = async (userId1: string, userId2: string) => {
   const { token } = getAuthInfo();
 
+  console.log(userId1, userId2, "userId1, userId2");
   try {
     const res = await fetch(`${BASE_URL}/conversations/between/${userId1}/${userId2}`, {
       headers: {
@@ -94,43 +94,6 @@ export const uploadChatFile = async (file: File) => {
   return data; 
 };
 
-
-export const markDelivered = async (payload: {
-  senderId: string;
-  orderId: string;
-}) => {
-  const { token } = getAuthInfo();
-
-  const res = await fetch(`${BASE_URL}/conversations/mark-delivered`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: token ? `Bearer ${token}` : "",
-    },
-    body: JSON.stringify(payload),
-  });
-
-  return res.json();
-};
-
-export const markOrderComplete = async (payload: {
-  senderId: string;
-  orderId: string;
-}) => {
-  const { token } = getAuthInfo();
-
-  const res = await fetch(`${BASE_URL}/conversations/complete-order`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: token ? `Bearer ${token}` : "",
-    },
-    body: JSON.stringify(payload),
-  });
-
-  return res.json();
-};
-
 export async function startConversation(sellerId: string) {
   const { token } = getAuthInfo();
   const res = await fetch(
@@ -147,3 +110,17 @@ export async function startConversation(sellerId: string) {
 
   return res.json();
 }
+
+
+export const getAdminUserChatList = async () => {
+  const { token } = getAuthInfo();
+  const res = await fetch(
+   `${BASE_URL}/conversations/users/chat-list`,{
+     headers: {
+      Authorization: token ? `Bearer ${token}` : "",
+    },
+  }
+  );
+
+  return res.json();
+};

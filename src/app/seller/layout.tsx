@@ -65,7 +65,10 @@ export default async function DashboardLayout({
       title={titleName} />
 
       {/* Main Content */}
-      <main className="flex-1 h-screen overflow-hidden ml-64">
+      <main className={`flex-1 h-screen overflow-hidden transition-all duration-300 mt-10
+          lg:ml-64
+          md:ml-5
+          ml-0`}>
         <div className="h-full overflow-auto p-6 md:p-8">{children}</div>
       </main>
     </div>

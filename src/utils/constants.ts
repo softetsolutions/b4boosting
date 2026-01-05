@@ -26,6 +26,7 @@ export const routeMapping: { [key: string]: string } = {
   sellerRequests: "Seller Requests",
   systemSettings: "System Settings",
   ratingsReviews: "Ratings & Reviews",
+  userList: "User List",
   // User routes
   home: "Home",
   productDetails: "Product Details",
@@ -58,6 +59,7 @@ export const iconMapping = (route: string): LucideIcon | null => {
     sellerRequests: User,
     systemSettings: Settings,
     ratingsReviews: List,
+    userList: User,
 
     // User routes
     home: Home,

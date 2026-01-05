@@ -78,7 +78,7 @@ export default function AdminReviewsTable() {
   }
 
   return (
-    <div className="min-h-screen px-4 py-8">
+    <div className="min-h-screen px-2 py-8">
       <h1 className="text-2xl md:text-3xl font-semibold mb-6">
         Ratings & Reviews
       </h1>
@@ -101,7 +101,7 @@ export default function AdminReviewsTable() {
           </thead>
 
           <tbody className="divide-y divide-gray-800 bg-gray-950/60">
-            {reviews.map((review) => (
+            {reviews?.map((review) => (
               <tr key={review._id} className="hover:bg-gray-900/60">
                 {/* Buyer */}
                 <td className="px-4 py-3">

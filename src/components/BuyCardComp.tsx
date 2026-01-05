@@ -6,7 +6,7 @@ import type { ApiOffer } from "src/api/offers";
 import toast from "react-hot-toast";
 import { createPayPalOrder, capturePayPalOrder } from "src/api/orders";
 import ShareMenu from "./ShareMenu";
-import {startConversation} from "src/api/conversation";
+import { startConversation } from "src/api/conversation";
 
 interface BuyCardCompProps {
   offer: ApiOffer;
@@ -210,7 +210,7 @@ function BuyCardComp({ offer }: BuyCardCompProps) {
           </div>
 
           {/* Right Sidebar */}
-          <div className="lg:w-96 lg:flex-shrink-0 lg:sticky lg:top-8 lg:self-start mt-6 lg:mt-0 ">
+          <div className="lg:w-100 lg:flex-shrink-0 lg:sticky lg:top-8 lg:self-start mt-6 lg:mt-0 ">
             <div className="flex flex-col items-center p-4 min-h-screen ">
               <div
                 id="box-1"
@@ -234,6 +234,7 @@ function BuyCardComp({ offer }: BuyCardCompProps) {
 
                 <div className="flex items-center justify-center rounded-full mb-6 shadow-gray-700/30 p-2 border-1 border-gray-400/20">
                   <button
+                    type="button"
                     onClick={handleDec}
                     disabled={count <= 1}
                     className={`
@@ -252,6 +253,7 @@ function BuyCardComp({ offer }: BuyCardCompProps) {
                     {count}
                   </p>
                   <button
+                    type="button"
                     onClick={handleInc}
                     className="
                     flex items-center justify-center w-8 h-8 rounded-full border
@@ -289,7 +291,7 @@ function BuyCardComp({ offer }: BuyCardCompProps) {
               >
                 {/* Seller Info */}
                 {offer.seller && (
-                  <div className="mt-0 flex items-center space-x-2">
+                  <div className="mt-0 flex items-center space-x-2 flex-wrap">
                     <div className="flex-shrink-0 bg-cyan-700/20 rounded-full p-1 flex items-center justify-center">
                       <svg
                         className="w-8 h-8 "
@@ -308,7 +310,7 @@ function BuyCardComp({ offer }: BuyCardCompProps) {
                     <div className="flex flex-col space-y-1">
                       <div className="flex items-center">
                         <span className="text-gray-400 text-sm mr-2">
-                          Seller Name:
+                          Seller:
                         </span>
                         <span className="text-yellow-400/100 font-semibold text-base">
                           {offer.seller.displayName ||
@@ -322,43 +324,40 @@ function BuyCardComp({ offer }: BuyCardCompProps) {
                           {offer.seller._id}
                         </span>
                       </div>
-                     
                     </div>
-                     <div>
-                         <button
-                         type="button"
-                    className="bg-emerald-600 text-white py-1 px-2 rounded-full text-sm font-semibold hover:bg-emerald-700 transition duration-300 flex items-center shadow-md shadow-emerald-600/30"
-                   onClick={async () => {
-    const res = await startConversation(offer.seller._id);
-    if (res.success) {
-      router.push(`/chats?q=${offer.seller._id}`);
-    } else {
-      toast.error("Failed to start chat");
-    }
-  }}
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-4 w-4 mr-1"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"
-                      />
-                    </svg>
-                    Chat
-                  </button>
-                      </div>
+                    <div>
+                      <button
+                        type="button"
+                        className=" mt-2 bg-emerald-600 text-white py-1 px-2 rounded-full text-sm font-semibold hover:bg-emerald-700 transition duration-300 flex items-center shadow-md shadow-emerald-600/30"
+                        onClick={async () => {
+                          const res = await startConversation(offer.seller._id);
+                          if (res.success) {
+                            router.push(`/chats?q=${offer.seller._id}`);
+                          } else {
+                            toast.error("Failed to start chat");
+                          }
+                        }}
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-4 w-4 mr-1"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"
+                          />
+                        </svg>
+                        Chat
+                      </button>
+                    </div>
                   </div>
                 )}
               </div>
-
-             
             </div>
           </div>
         </div>

@@ -9,10 +9,12 @@ export default function MessageContainer({
   sendMessage,
   senderId,
   receiverId,
+  isAdmin,
 }: {
   sendMessage: (message: string, senderId: string, receiverId: string) => void;
   senderId: string;
   receiverId: string;
+  isAdmin: boolean;
 }) {
   const [message, setMessage] = useState("");
   const [messageList, setMessageList] = useState<any[]>([]);
@@ -28,6 +30,7 @@ export default function MessageContainer({
     try {
       if (!senderId || !receiverId) return;
 
+      console.log(senderId, receiverId, "senderId, receiverId");
       const res = await getConversationBetween(senderId, receiverId);
       if (!res.success || !res.data) return;
 
@@ -117,62 +120,62 @@ export default function MessageContainer({
   };
 
   const handleDeliverOrder = async (btn: any, msg: any) => {
-  console.log("btn", btn, "btn.payload", btn.payload, "msg", msg);
+    console.log("btn", btn, "btn.payload", btn.payload, "msg", msg);
 
-   if (!btn.payload.orderId) {
-    toast.error("Order ID missing");
-    return;
-  }
+    if (!btn.payload.orderId) {
+      toast.error("Order ID missing");
+      return;
+    }
 
-  if (!selectedFile) {
-    toast.error("Please attach a file");
-    return;
-  }
+    if (!selectedFile) {
+      toast.error("Please attach a file");
+      return;
+    }
 
-  if (!conversationsId) {
-    toast.error("Conversation not ready yet");
-    return;
-  }
+    if (!conversationsId) {
+      toast.error("Conversation not ready yet");
+      return;
+    }
 
-  try {
-    setUploading(true);
+    try {
+      setUploading(true);
 
-    const uploadRes = await uploadChatFile(selectedFile);
+      const uploadRes = await uploadChatFile(selectedFile);
 
-    const filePayload = {
-      url: uploadRes.fileUrl,
-      name: uploadRes.fileName,
-      mimeType: uploadRes.mimeType,
-      size: uploadRes.size,
-    };
+      const filePayload = {
+        url: uploadRes.fileUrl,
+        name: uploadRes.fileName,
+        mimeType: uploadRes.mimeType,
+        size: uploadRes.size,
+      };
 
-    console.log("📤 Emitting DELIVER_ORDER", {
-      action: "DELIVER_ORDER",
-      // orderId: msg.orderId,
-      orderId: btn.payload.orderId,
-      actorId: senderId,
-      conversationId: conversationsId,
-      file: filePayload,
-    });
+      console.log("📤 Emitting DELIVER_ORDER", {
+        action: "DELIVER_ORDER",
+        // orderId: msg.orderId,
+        orderId: btn.payload.orderId,
+        actorId: senderId,
+        conversationId: conversationsId,
+        file: filePayload,
+      });
 
-    socket.emit("orderAction", {
-      action: "DELIVER_ORDER",
-      // orderId: msg.orderId,
-      orderId: btn.payload.orderId,
-      actorId: senderId,
-      conversationId: conversationsId,
-      file: filePayload,
-    });
+      socket.emit("orderAction", {
+        action: "DELIVER_ORDER",
+        // orderId: msg.orderId,
+        orderId: btn.payload.orderId,
+        actorId: senderId,
+        conversationId: conversationsId,
+        file: filePayload,
+      });
 
-    setSelectedFile(null);
-    toast.success("File delivered successfully");
-  } catch (err) {
-    console.error(err);
-    toast.error("File upload failed");
-  } finally {
-    setUploading(false);
-  }
-};
+      setSelectedFile(null);
+      toast.success("File delivered successfully");
+    } catch (err) {
+      console.error(err);
+      toast.error("File upload failed");
+    } finally {
+      setUploading(false);
+    }
+  };
 
   const handleCompleteOrder = (btn: any, msg: any) => {
     socket.emit("orderAction", {
@@ -248,14 +251,12 @@ export default function MessageContainer({
                   {/* MESSAGE TEXT */}
                   <p className="whitespace-pre-line">{msg.text}</p>
 
-              
                   {/* FILE DOWNLOAD */}
                   {msg.file && (
-  <a href={msg.file.url} download>
-    Download {msg.file.name}
-  </a>
-)}
-
+                    <a href={msg.file.url} download>
+                      Download {msg.file.name}
+                    </a>
+                  )}
 
                   {/* FILE INPUT (Seller Deliver) */}
                   {msg.type === "action" &&
@@ -318,18 +319,20 @@ export default function MessageContainer({
       </main>
 
       {/* INPUT */}
-      <footer className="border-t border-gray-700 gray-bg px-4 py-3 flex items-center gap-3 rounded-2xl">
+      <footer className="border-t border-gray-700 gray-bg px-2 py-3 flex items-center gap-3 rounded-2xl justify-between">
         <input
           type="text"
           value={message}
           onChange={handleMessageChange}
           placeholder="Type your message..."
-          className="flex-1 px-4 py-2 bg-black-800 border border-gray-700 rounded-lg text-sm text-white focus:outline-none focus:ring-2 focus:ring-amber-400"
+          className="flex-1 px-2 py-2 bg-black-800 border border-gray-700 rounded-lg text-sm text-white focus:outline-none focus:ring-2 focus:ring-amber-400"
         />
         <button
+        disabled={isAdmin}
           type="button"
           onClick={handleSend}
-          className="bg-amber-400 text-black px-5 py-2 rounded-lg font-semibold hover:bg-amber-300 transition"
+          className={`bg-amber-400 text-black px-2 py-2 rounded-lg font-semibold
+             hover:bg-amber-300 transition ${isAdmin ? "cursor-not-allowed bg-gray-500" : ""}`}
         >
           Send
         </button>
