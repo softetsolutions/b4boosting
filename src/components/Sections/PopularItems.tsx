@@ -109,7 +109,7 @@ export default function PopularItems({ dynamicdata }: PopularItemsProps) {
         setVisible(2);
       } else {
         setIsMobile(false);
-        setVisible(accounts.length);
+        setVisible(accounts?.length);
       }
     };
     handleResize();
@@ -159,7 +159,7 @@ export default function PopularItems({ dynamicdata }: PopularItemsProps) {
     overflow-x-auto scrollbar-hide   
         "
         >
-          {accounts.slice(0, visible).map((account, index) => (
+          {accounts?.slice(0, visible).map((account, index) => (
             <div
               key={index}
               className="relative group overflow-hidden rounded-lg"

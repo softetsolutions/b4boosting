@@ -3,6 +3,7 @@ import Footer from "src/components/Footer/Footer";
 import { Suspense } from "react";
 // import ProductPageServer from "src/components/ProductPageServer";
 import ProductPageStreamedComp from "src/components/StreamedServerComps/ProductPageStreamedComp";
+import ReviewsCarousel from "src/components/Reviews/ReviewsCarousel";
 
 interface Props {
   params: {
@@ -34,6 +35,8 @@ export default async function CategoryProductPage({ params }: Props) {
             serviceName={serviceName}
             productTitle ={productTitle }
           />
+
+          <ReviewsCarousel productSlug={productTitle} />
         </Suspense>
       </main>
 

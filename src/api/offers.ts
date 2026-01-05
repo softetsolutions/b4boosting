@@ -71,9 +71,31 @@ export const createOffer = async (formData: FormData): Promise<ApiOffer> => {
   return response.json();
 };
 
-export const fetchOffers = async (): Promise<ApiOffer[]> => {
+export const fetchOffers = async (
+  page?: number,
+  limit?: number,
+  from?: string,
+  to?: string,
+  status?: string,
+  search?: string
+): Promise<{
+  success: boolean;
+  data: ApiOffer[];
+  totalPages: number;
+  totalItems: number;
+}> => {
+  
+  const params = new URLSearchParams();
+
+  if (page) params.append("page", String(page));
+  if (limit) params.append("limit", String(limit));
+  if (from) params.append("from", from);
+  if (to) params.append("to", to);
+  if (status) params.append("status", status);
+  if (search) params.append("search", search);
+
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_BACKEND_URL}/offers`,
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}/offers?${params.toString()}`,
     {
       method: "GET",
       headers: {
@@ -90,17 +112,9 @@ export const fetchOffers = async (): Promise<ApiOffer[]> => {
     throw new Error(errorData.message || "Failed to fetch offers");
   }
 
-  const result = await response.json();
-
-  // nested response
-  if (result.success && Array.isArray(result.data)) {
-    return result.data;
-  } else if (Array.isArray(result)) {
-    return result;
-  } else {
-    throw new Error("Invalid response format from server");
-  }
+  return await response.json();
 };
+
 
 export const fetchOfferById = async (offerId: string): Promise<ApiOffer> => {
   const response = await fetch(

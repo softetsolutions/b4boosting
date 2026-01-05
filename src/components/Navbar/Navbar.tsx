@@ -71,9 +71,9 @@ export default function Navbar({ activeService, dynamicdata }: NavbarProps) {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const handleLogout = async() => {
+  const handleLogout = async () => {
     try {
-     await logoutAction();
+      await logoutAction();
 
       setIsLoggedIn(false);
       router.push("/login");
@@ -202,6 +202,14 @@ export default function Navbar({ activeService, dynamicdata }: NavbarProps) {
                   className="inline-flex items-center px-4 py-2 rounded-3xl text-sm font-medium yellow-bg text-zinc-950 "
                 >
                   Become a Seller
+                </Link>
+              )}
+              {userRole === "seller" && (
+                <Link
+                  href="/seller/dashboard"
+                  className="text-white hover:text-yellow-400 text-left"
+                >
+                  Seller Dashboard
                 </Link>
               )}
 
@@ -352,9 +360,20 @@ export default function Navbar({ activeService, dynamicdata }: NavbarProps) {
                           Logout
                         </button>
                       )}
-                      <button className="text-white hover:text-yellow-400 text-left">
+                      <Link
+                        href="/profile"
+                        className="text-white hover:text-yellow-400 text-left"
+                      >
                         Profile
-                      </button>
+                      </Link>
+                      {userRole === "seller" && (
+                        <Link
+                          href="/seller/dashboard"
+                          className="text-white hover:text-yellow-400 text-left"
+                        >
+                          Seller Dashboard
+                        </Link>
+                      )}
 
                       <ThemeToggle />
                     </div>
@@ -365,6 +384,15 @@ export default function Navbar({ activeService, dynamicdata }: NavbarProps) {
                 {/* <div>
                 <LanguageSelector />
               </div> */}
+
+                {userRole === "user" && (
+                  <Link
+                    href="/becomeSeller"
+                    className="inline-flex items-center px-4 py-2 rounded-3xl text-sm font-medium yellow-bg text-zinc-950 "
+                  >
+                    Become a Seller
+                  </Link>
+                )}
 
                 {/* Login if not logged in */}
                 {!isLoggedIn && (

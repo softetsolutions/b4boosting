@@ -92,7 +92,7 @@ export default function SellerRequests() {
 
   return (
     <>
-     <div className="min-h-screen px-4 py-8">
+     <div className="min-h-screen px-2 py-8">
      
         <h1 className="text-2xl md:text-3xl font-semibold mb-6">
           Seller Requests

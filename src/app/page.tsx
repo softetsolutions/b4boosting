@@ -4,6 +4,7 @@ import Client from "src/components/Client";
 import PopularBoostingServices from "src/components/Sections/PopularBoostingServices";
 import PopularItems from "src/components/Sections/PopularItems";
 import ReferralTracker from "src/components/ReferralTracker";
+import ChatFloatingButton from "src/components/ChatFloatingButton";
 import { fetchHomePageData } from "src/api/products";
 
 export default async function Home({
@@ -28,6 +29,8 @@ export default async function Home({
         <PopularBoostingServices  dynamicdata={homePageData}/>
         <PopularItems  dynamicdata={homePageData}/>
       </main>
+
+       <ChatFloatingButton dynamicdata={homePageData} />
       <Footer />
     </>
   );

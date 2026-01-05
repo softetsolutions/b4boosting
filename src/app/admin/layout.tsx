@@ -5,7 +5,6 @@ import type { ReactNode } from "react";
 import { routeMapping } from "src/utils/constants";
 import Sidebar from "src/components/Sidebar";
 
-
 interface AuthTokenPayload {
   id: string;
   role: string;
@@ -42,13 +41,18 @@ export default async function AdminLayout({
     Object.keys(routeMapping).includes(item)
   );
 
+
   return (
     <div className="flex h-screen bg-gray-900">
       {/* Sidebar (Client Component) */}
-      <Sidebar title="Admin Dashboard" navigation={navigation} role="admin" />
+      <Sidebar title="Admin Dashboard" navigation={navigation} role="admin"
+        />
 
       {/* Main Content */}
-      <main className="flex-1 h-screen overflow-hidden ml-64">
+      <main className={`flex-1 h-screen overflow-hidden transition-all duration-300 mt-10
+          lg:ml-64
+          md:ml-5
+          ml-0`}>
         <div className="h-full overflow-auto p-6 md:p-8">{children}</div>
       </main>
     </div>

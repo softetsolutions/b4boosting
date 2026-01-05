@@ -71,8 +71,9 @@ export default function PopularBoostingServices({
 
       {/* Carousel */}
       <div className="relative flex justify-center items-center gap-4 md:gap-8 z-10">
-        {visibleCards.map((index, i) => {
-          const service = services[index];
+        {visibleCards?.map((index, i) => {
+          const service = services?.[index];
+          if (!service) return null;
           const isCenter = index === currentIndex;
           return (
             <div
@@ -105,7 +106,7 @@ export default function PopularBoostingServices({
 
       {/* Indicators */}
       <div className="flex justify-center mt-8 gap-2 z-10">
-        {services.map((_, i) => (
+        {services?.map((_, i) => (
           <button
             type="button"
             key={i}
