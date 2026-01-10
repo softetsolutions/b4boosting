@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
-import OrderTable from "src/components/seller/orders/OrderTable";
-import OrderFilters from "src/components/seller/orders/OrderFilters";
+import OrderTable from "src/components/Seller/orders/OrderTable";
+import OrderFilters from "src/components/Seller/orders/OrderFilters";
 import { fetchOrdersBySeller } from "src/api/orders";
 
 export default function ManageOrder() {
