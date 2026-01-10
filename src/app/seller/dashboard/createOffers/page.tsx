@@ -1,5 +1,3 @@
-
-
 "use client";
 
 import { useState, useEffect } from "react";
@@ -9,11 +7,46 @@ import ImageUpload from "src/components/ui/ImageUpload";
 import { fetchAllServices } from "src/api/services";
 import { fetchProductsByService } from "src/api/products";
 import { createOffer, updateOffer, fetchOfferById } from "src/api/offers";
-import type { Service, Product, ProductField } from "src/api/types";
+import type { ProductField } from "src/api/types";
 
 interface OfferDetail {
   fieldName: string;
   value: string;
+}
+
+interface Product {
+  _id: string;
+  title: string;
+  type: string;
+   images:(File | string)[];
+}
+
+// interface Offerproduct {
+//   _id: string;
+//   title: string;
+//   service: string;
+//   images:(File | string)[];
+//   description?: string;
+// }
+
+interface Product {
+  _id: string;
+  title: string;
+  type: string;
+  service: string;              // ✅ ADD THIS
+  images: (File | string)[];
+  description?: string;
+  productRequiredFields?: ProductField[];
+  additionalFields?: ProductField[];
+}
+
+
+export interface Service {
+  _id: string;
+  name: string;
+  icon: string;
+  showOnHome?: boolean;
+  createdAt: string;
 }
 
 export default function CreateOfferPage() {
@@ -24,11 +57,13 @@ export default function CreateOfferPage() {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string>("");
- const [services, setServices] = useState<Service[]>([]);
-const [products, setProducts] = useState<Product[]>([]);
+  const [services, setServices] = useState<Service[]>([]);
+  const [products, setProducts] = useState<Product[]>([]);
   const [selectedService, setSelectedService] = useState<string>("");
-  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
-  const [productDetails, setProductDetails] = useState<Record<string, string>>({});
+  const [selectedProduct, setSelectedProduct] =  useState<Product | null>(null);
+  const [productDetails, setProductDetails] = useState<Record<string, string>>(
+    {}
+  );
   const [offerImages, setOfferImages] = useState<(File | string)[]>([]);
 
   const [formData, setFormData] = useState({
@@ -45,25 +80,34 @@ const [products, setProducts] = useState<Product[]>([]);
     const loadOffer = async () => {
       if (!offerId) return;
       try {
-        const res = await fetchOfferById(offerId);
-        console.log(res,"res");
-        const data = res;
-       
-        setSelectedService(data.product?.service || "");
-        setSelectedProduct(data.product || null);
-       setProductDetails(
-  data.offerDetails?.reduce<Record<string, string>>(
-    (acc, item: OfferDetail) => {
-      acc[item.fieldName] = item.value;
-      return acc;
-    },
-    {}
-  ) || {}
-);
+        // const res = await fetchOfferById(offerId);
+        const data = await fetchOfferById(offerId);
+
+        setSelectedService(data.product.service);
+        // setSelectedProduct(data.product);
+        setSelectedProduct({
+        _id: data.product._id,
+        title: data.product.title,
+        service: data.product.service,
+        type: "Account", // 👈 REQUIRED (or backend-provided)
+        images: data.product.images || [],
+        description: data.product.description,
+        productRequiredFields: [], // filled after product fetch
+        additionalFields: [],
+      });
+        setProductDetails(
+          data.offerDetails?.reduce<Record<string, string>>(
+            (acc, item: OfferDetail) => {
+              acc[item.fieldName] = item.value;
+              return acc;
+            },
+            {}
+          ) || {}
+        );
 
         setFormData({
-          price: data.price || "",
-          quantityAvailable: data.quantityAvailable || "",
+         price: String(data.price),
+  quantityAvailable: String(data.quantityAvailable),
           deliveryTime: data.deliveryTime || "",
           currency: data.currency || "INR",
           offerDesc: data.offerDesc || "",
@@ -155,7 +199,6 @@ const [products, setProducts] = useState<Product[]>([]);
       const data = new FormData();
       data.append("product", selectedProduct._id);
 
-    
       Object.entries(formData).forEach(([key, value]) => {
         if (key !== "offerDetails") {
           data.append(key, String(value));
@@ -187,7 +230,7 @@ const [products, setProducts] = useState<Product[]>([]);
     } catch (err) {
       console.error(err);
       toast.error(isEditMode ? "Error updating offer" : "Error creating offer");
-      setError(err.message || "Unexpected error");
+      setError(err instanceof Error ? err.message : "Unexpected error");
     } finally {
       setIsSubmitting(false);
     }
@@ -344,21 +387,26 @@ const [products, setProducts] = useState<Product[]>([]);
               <h3 className="text-gray-200 text-sm font-medium">
                 Additional Fields
               </h3>
-              {selectedProduct.additionalFields?.map((field: ProductField, i: number) => (
-                <div key={i}>
-                  <label className="block text-sm text-gray-300 mb-1">
-                    {field.fieldName}
-                  </label>
-                  <input
-                    type="text"
-                    value={productDetails[field.fieldName] || ""}
-                    onChange={(e) =>
-                      handleProductDetailChange(field.fieldName, e.target.value)
-                    }
-                    className="w-full bg-gray-700/50 border border-gray-600 rounded-lg py-2 px-3 text-sm text-white focus:ring-2 focus:ring-cyan-500"
-                  />
-                </div>
-              ))}
+              {selectedProduct.additionalFields?.map(
+                (field: ProductField, i: number) => (
+                  <div key={i}>
+                    <label className="block text-sm text-gray-300 mb-1">
+                      {field.fieldName}
+                    </label>
+                    <input
+                      type="text"
+                      value={productDetails[field.fieldName] || ""}
+                      onChange={(e) =>
+                        handleProductDetailChange(
+                          field.fieldName,
+                          e.target.value
+                        )
+                      }
+                      className="w-full bg-gray-700/50 border border-gray-600 rounded-lg py-2 px-3 text-sm text-white focus:ring-2 focus:ring-cyan-500"
+                    />
+                  </div>
+                )
+              )}
             </div>
           )}
 
@@ -456,7 +504,7 @@ const [products, setProducts] = useState<Product[]>([]);
           {/* Actions */}
           <div className="flex justify-end space-x-3 pt-4">
             <button
-             aria-label="cancel "
+              aria-label="cancel "
               type="button"
               onClick={handleCancel}
               className="px-4 py-2 border border-gray-600 text-sm text-gray-300 hover:bg-gray-800 hover:text-white rounded-lg transition-all duration-200 cursor-pointer hover:border-gray-500"
@@ -485,6 +533,4 @@ const [products, setProducts] = useState<Product[]>([]);
       </div>
     </div>
   );
-
-
 }

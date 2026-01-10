@@ -4,6 +4,7 @@
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { approveSellerRequest, rejectSellerRequest, fetchAllSellerRequests,SellerRequest } from "src/api/seller";
+import { getFileUrl } from "src/utils/imageUtils"; 
 
 interface SellerRequests {
   _id: string;
@@ -15,7 +16,7 @@ interface SellerRequests {
   city: string;
   state: string;
   pincode: string;
-  idProofImages: string[];
+  idProofImages: (string | File)[];
   status: "pending" | "approved" | "rejected";
   createdAt: string;
   adminNote?: string;
@@ -171,10 +172,10 @@ export default function SellerRequests() {
               <td className="px-4 py-3 align-top text-xs text-blue-400">
                 {req.idProofImages?.length ? (
                   <div className="flex flex-wrap gap-2">
-                    {req.idProofImages.map((url, idx) => (
+                    {req.idProofImages.map((img, idx) => (
                       <a
                         key={idx}
-                        href={url}
+                       href={getFileUrl(img)}
                         target="_blank"
                         rel="noreferrer"
                         className="underline hover:no-underline"

@@ -38,7 +38,7 @@ export interface ApiProduct {
   productRequiredFields: ProductRequiredField[];
   additionalFields: unknown[];
 
-  images: string[];
+  images:(File | string)[];
 
   createdAt: string;
   updatedAt: string;
@@ -65,7 +65,6 @@ export interface ApiOrder {
   orderStatus: "pending" | "accepted" | "rejected" | "completed" | "cancelled";
 
   paypalTransactionId: string;
-
   createdAt: string;
   updatedAt: string;
 }
@@ -87,6 +86,50 @@ export interface CapturePayPalOrderResponse {
   success: boolean;
   data?: ApiOrder;
   message?: string;
+}
+export interface BuyerOrder {
+  _id: string;
+  buyerId: string;
+
+  orderStatus: "pending" | "accepted" | "rejected" | "delivered" | string;
+  paymentStatus: "pending" | "paid" | "failed" | string;
+
+  amount: number;
+  quantity: number;
+
+  deliveryDate?: string;
+  createdAt: string;
+  paypalTransactionId?: string;
+
+  product?: OrderProduct;
+  seller?: OrderSeller;
+  offer?: OrderOffer;
+  review?: OrderReview;
+}
+export interface OrderProduct {
+  _id: string;
+  title: string;
+  images:(File | string)[];
+}
+export interface OrderSeller {
+  _id: string;
+  username: string;
+  email: string;
+}
+export interface OrderOffer {
+  _id: string;
+  title: string;
+  price: number;
+  discount?: number;
+}
+export interface OrderReview {
+  _id: string;
+  rating: number;
+  reviewText?: string;
+  images?: string[];
+  status?: string;
+  isEdited: boolean;
+  createdAt: string;
 }
 
 
@@ -257,7 +300,7 @@ export const updateOrderStatusBySeller = async (id: string, status: string) => {
 /* ------------------  Get Orders by Buyer  ------------------ */
 export const fetchOrdersByBuyer = async (
   buyerId?: string
-): Promise<{ success: boolean; data: ApiOrder[] }> => {
+): Promise<{ success: boolean; data: BuyerOrder[] }> => {
   const { token } = getAuthInfo();
 
   const response = await fetch(

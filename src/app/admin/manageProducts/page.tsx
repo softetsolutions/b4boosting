@@ -8,6 +8,7 @@ import ConfirmationModal from "src/components/ui/ConfirmationModal";
 import { fetchAllProducts, deleteProduct } from "src/api/products";
 import type { Product } from "src/api/products";
 import Image from "next/image";
+import {getImageSrc} from "src/utils/imageUtils";
 
 interface ServiceGroup {
   serviceName: string;
@@ -104,7 +105,7 @@ export default function ManageProducts() {
     });
   };
 
-  const renderProductImage = (images?: string[]) => {
+  const renderProductImage = (images: (string | File)[]) => {
     if (!images || images.length === 0) {
       return null;
     }
@@ -113,8 +114,9 @@ export default function ManageProducts() {
     return (
       <div className="w-16 h-16 rounded-lg overflow-hidden bg-gray-700/50 flex items-center justify-center">
         {/* Static file URL is safe in Next.js */}
+          {firstImage && (
         <Image
-          src={firstImage}
+           src={getImageSrc(firstImage)}
           alt="Product image"
           fill
           className="object-cover"
@@ -123,6 +125,7 @@ export default function ManageProducts() {
             target.style.display = "none";
           }}
         />
+      )}
       </div>
     );
   };

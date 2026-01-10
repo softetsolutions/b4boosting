@@ -6,11 +6,11 @@ import toast from "react-hot-toast";
 import StarRating from "./StarRating";
 import ImageUpload from "src/components/ui/ImageUpload";
 import { createReview, updateReview } from "src/api/reviews";
-import { Review } from "src/api/types";
+import type { OrderReview } from "src/api/orders";
 
 interface Props {
   orderId: string;
-  existingReview?: Review;
+  existingReview?: OrderReview;
   onClose: () => void;
 }
 
@@ -90,8 +90,10 @@ export default function RateReviewModal({
         />
 
         <div className="flex justify-end gap-3 mt-4">
-          <button onClick={onClose}>Cancel</button>
+          <button type="button" aria-label="cancel" onClick={onClose}>Cancel</button>
           <button
+            type="button"
+            aria-label="save"
             onClick={handleSubmit}
             disabled={loading}
             className="bg-yellow-500 px-4 py-2 rounded-lg"

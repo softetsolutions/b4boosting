@@ -20,6 +20,10 @@ export interface AuthResponse {
   };
   message?: string;
 }
+export interface ApiResponse<T> {
+  success: boolean;
+  data: T;
+}
 
 export interface AccountUser {
   _id: string;
@@ -30,7 +34,7 @@ export interface AccountUser {
   walletBalance: number;
   role: string;
   email: string;
-  createdAt: string;
+  createdAt?: string;
   isEmailVerified: boolean;
   isPhoneVerified: boolean;
   twoFactorEnabled: boolean;
@@ -96,7 +100,7 @@ export const logoutUser = async (): Promise<{
 };
 
 
-export const getAccountDetails = async (): Promise<AccountUser> => {
+export const getAccountDetails = async (): Promise<ApiResponse<AccountUser>> => {
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_BACKEND_URL}/account/`,
     {

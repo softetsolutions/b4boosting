@@ -53,3 +53,13 @@ export const processImageFiles = async (files: FileList): Promise<ImageUploadRes
 export const removeImageFromArray = (images: string[], index: number): string[] => {
   return images.filter((_, i) => i !== index);
 }; 
+
+export const getImageSrc = (img: string | File): string => {
+  if (typeof img === "string") return img;
+  return URL.createObjectURL(img);
+};
+
+export const getFileUrl = (file: string | File): string => {
+  if (typeof file === "string") return file;
+  return URL.createObjectURL(file);
+};

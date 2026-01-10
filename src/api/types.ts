@@ -71,18 +71,18 @@ export interface CreateProductResponse {
 
 
 export interface AccountDetails {
-  _id: string;
+ _id: string;
   firstName: string;
   lastName: string;
   displayName: string;
   username: string;
-  email: string;
-  role: string;
   walletBalance: number;
+  role: string;
+  email: string;
+  createdAt?: string;
   isEmailVerified: boolean;
   isPhoneVerified: boolean;
   twoFactorEnabled: boolean;
-  createdAt: string;
 }
 
 export interface Review {
@@ -93,7 +93,7 @@ export interface Review {
   sellerId: string;
   rating: number;
   reviewText: string;
-  images: string[];
+  images:(File | string)[];
   isEdited: boolean;
   createdAt?: string;
   updatedAt?: string;

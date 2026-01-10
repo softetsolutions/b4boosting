@@ -10,7 +10,7 @@ interface Review {
   _id: string;
   rating: number;
   reviewText: string;
-  images: string[];
+  images: (string | File)[];
   buyerId: { username: string };
   createdAt: string;
 }

@@ -31,7 +31,7 @@ export interface Product {
     options: string[];
     isrequired: boolean;
   }>;
-  images?: string[];
+  images:(File | string)[];
   createdAt: string;
   updatedAt: string;
 }
