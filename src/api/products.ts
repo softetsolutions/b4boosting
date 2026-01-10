@@ -1,20 +1,20 @@
 import { getAuthInfo, handleUnauthorized } from "../utils/auth";
 
-export interface ProductFormData {
-  title: string;
-  type: string;
-  description: string;
-  service: string;
-  serviceName: string;
-  productRequiredFields: Array<{
-    fieldName: string;
-    fieldType: string;
-    options: string[];
-    isrequired: boolean;
-  }>;
-  additionalFields?: any[];
-  images?: (File | string)[];
-}
+// export interface ProductFormData {
+//   title: string;
+//   type: string;
+//   description: string;
+//   service: string;
+//   serviceName: string;
+//   productRequiredFields: Array<{
+//     fieldName: string;
+//     fieldType: string;
+//     options: string[];
+//     isrequired: boolean;
+//   }>;
+//   additionalFields?: any[];
+//   images?: (File | string)[];
+// }
 
 export interface Product {
   _id: string;
@@ -39,7 +39,7 @@ export interface Product {
 export interface HomePageProduct {
   _id: string;
   title: string;
-  images: string[];
+  images: (File | string)[];
   offerCount: number;
 }
 
@@ -49,6 +49,19 @@ export interface HomePageService {
   icon: string;
   products: HomePageProduct[];
 }
+export interface HomePageData {
+  services: HomePageService[];
+  settings: {
+     _id: string;
+    bannerImg: (string | File);
+    bannerTitle: string;
+    bannerSubtitle: string;
+    bannerRedirectionLink: string;
+    marqueeText: string;
+    marqueeLink: string;
+  };
+}
+
 
 export interface ServiceAndProductResponse {
   success: boolean;
@@ -160,7 +173,7 @@ export const fetchProductById = async (productId: string): Promise<Product> => {
   return response.json();
 };
 
-export const fetchHomePageData = async (): Promise<HomePageService[]> => {
+export const fetchHomePageData = async (): Promise<HomePageData> => {
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_BACKEND_URL}/products/home`,
     {

@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import { getReviewsByProductSlug } from "src/api/reviews";
 import StarRating from "./StarRating";
 
+import Image from "next/image";
+
 interface Review {
   _id: string;
   rating: number;
@@ -23,7 +25,7 @@ export default function ReviewsCarousel({
 
   useEffect(() => {
     if (!productSlug) return;
-    
+
     getReviewsByProductSlug(productSlug).then((res) => {
       if (res?.data) setReviews(res.data);
     });
@@ -76,12 +78,14 @@ export default function ReviewsCarousel({
             {review.images?.length > 0 && (
               <div className="flex space-x-2 mt-3">
                 {review.images.map((img, i) => (
-                  <img
-                    key={i}
-                    src={img}
-                    alt="review"
-                    className="w-14 h-14 object-cover rounded-lg"
-                  />
+                <div key={i} className="relative w-14 h-14">
+        <Image
+          src={img || "/fallback-imgjpg.jpg"}
+          alt="review"
+          fill
+          className="object-cover rounded-lg"
+        />
+      </div>
                 ))}
               </div>
             )}

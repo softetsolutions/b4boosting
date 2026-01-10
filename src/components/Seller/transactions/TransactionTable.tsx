@@ -1,5 +1,7 @@
 "use client";
 
+import Image from "next/image";
+
 export default function TransactionTable({ transactions }) {
   const getStatusStyle = (status: string) => {
     switch (status) {
@@ -38,10 +40,11 @@ export default function TransactionTable({ transactions }) {
 
               <td className="p-3">
                 <div className="flex items-center">
-                  <img
+                  <Image
                     src={tx.buyerId?.profilePic}
                     className="w-5 h-5 rounded-full mr-2"
                     alt="buyer"
+                    fill
                   />
                   {tx.buyerId?.username}
                 </div>

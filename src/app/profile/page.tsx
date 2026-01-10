@@ -11,6 +11,7 @@ import { getAccountDetails } from "src/api/api";
 import { useSearchParams } from "next/navigation";
 import RateReviewModal from "src/components/Reviews/RateReviewModal";
 import StarRating from "src/components/Reviews/StarRating";
+import type {Review, AccountDetails } from "src/api/types";
 
 interface Order {
   _id: string;
@@ -34,13 +35,13 @@ export default function ProfilePage() {
 
   const [activeTab, setActiveTab] = useState(defaultTabFromUrl);
   const [orders, setOrders] = useState<Order[]>([]);
-  const [accountDetails, setAccountDetails] = useState<any>(null);
+  const [accountDetails, setAccountDetails] =  useState<AccountDetails | null>(null);
   const [user, setUser] = useState<DecodedToken | null>(null);
   const [loading, setLoading] = useState(false);
   const [openReviewOrderId, setOpenReviewOrderId] = useState<string | null>(
     null
   );
-  const [reviewToEdit, setReviewToEdit] = useState<any>(null);
+  const [reviewToEdit, setReviewToEdit] =  useState<Review | null>(null);
   const tabs = [
     { key: "profile", label: "My Profile" },
     { key: "orders", label: "My Orders" },
@@ -131,8 +132,9 @@ export default function ProfilePage() {
 
             {/* Tab Navigation */}
             <div className="mt-10 py-5 px-6 border-b border-gray-400/20 flex space-x-4">
-              {tabs.map((tab) => (
+              {tabs?.map((tab) => (
                 <button
+                  aria-label="active tab"
                   type="button"
                   key={tab.key}
                   onClick={() => setActiveTab(tab.key)}
@@ -263,12 +265,17 @@ export default function ProfilePage() {
                             </div>
 
                             <span>
-                              <img
-                                src={order.product?.images[0] || "N/A"}
+                              <Image
+                                src={
+                                  order.product?.images?.[0] ||
+                                  "/placeholder.png"
+                                }
                                 alt="product image"
+                                width={140}
+                                height={60}
                                 className="w-35 h-15"
+                                priority={false}
                               />
-
                               {order.orderStatus === "delivered" &&
                                 !order?.review && (
                                   <>
@@ -285,7 +292,7 @@ export default function ProfilePage() {
                                 )}
 
                               {order?.review &&
-                                order.orderStatus === "delivered" &&  (
+                                order.orderStatus === "delivered" && (
                                   <>
                                     <div className="mt-3 text-sm">
                                       <StarRating
@@ -304,7 +311,8 @@ export default function ProfilePage() {
                                 )}
                               {/* UPDATE ONLY ONCE */}
                               {order.review &&
-                                order?.orderStatus === "delivered" && !order.review.isEdited && (
+                                order?.orderStatus === "delivered" &&
+                                !order.review.isEdited && (
                                   <span
                                     onClick={() => {
                                       setReviewToEdit(order.review);

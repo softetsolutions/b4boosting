@@ -1,29 +1,81 @@
 import { getAuthInfo } from "../utils/auth";
 
-export interface ApiOrder {
+export interface ApiUser {
   _id: string;
-  buyerId: {
-    _id: string;
-    username?: string;
-    email?: string;
-  };
-  sellerId: {
-    _id: string;
-    username?: string;
-    email?: string;
-  };
-  productId: {
-    _id: string;
-    title?: string;
-    type?: string;
-    images?: string[];
-  };
-  amount: number;
-  quantity: number;
-  status: string;
-  paypalTransactionId?: string;
+  username: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  role: "user" | "seller" | "admin";
+
+  displayName: string;
+  walletBalance: number;
+
+  isEmailVerified: boolean;
+  isPhoneVerified: boolean;
+  isGoogleSignUp: boolean;
+  twoFactorEnabled: boolean;
+
+  socialAccounts: SocialAccounts;
+
   createdAt: string;
   updatedAt: string;
+}
+export interface SocialAccounts {
+  facebook: string;
+  google: string;
+  paypal: string;
+  twitter: string;
+}
+export interface ApiProduct {
+  _id: string;
+  title: string;
+  type: "Account" | "Item" | "Currency" | "Service";
+
+  description: string;
+  service: string;
+
+  productRequiredFields: ProductRequiredField[];
+  additionalFields: unknown[];
+
+  images: string[];
+
+  createdAt: string;
+  updatedAt: string;
+}
+export interface ProductRequiredField {
+  fieldName: string;
+  fieldType: "custom" | "range" | "text";
+  options: string[];
+  isrequired: boolean;
+}
+
+export interface ApiOrder {
+  _id: string;
+
+  buyerId: ApiUser;
+  sellerId: ApiUser;
+  productId: ApiProduct;
+
+  offerId: string;
+  amount: number;
+  quantity: number;
+
+  paymentStatus: "paid" | "pending" | "failed";
+  orderStatus: "pending" | "accepted" | "rejected" | "completed" | "cancelled";
+
+  paypalTransactionId: string;
+
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface ApiOrdersResponse {
+  success: boolean;
+  currentPage: number;
+  totalOrders: number;
+  totalPages: number;
+  data: ApiOrder[];
 }
 
 export interface CreatePayPalOrderResponse {
@@ -63,15 +115,21 @@ export const createPayPalOrder = async (
   }
 
   return response.json();
-  } catch (err: any) {
-    console.error("PayPal order error:", err);
-    if (err.message.includes("authentication") || err.message.includes("token")) {
-      window.location.href = "/login";
-      return;
-    }
+ } catch (err: unknown) {
+  console.error("PayPal order error:", err);
 
-    throw err;
+  if (err instanceof Error) {
+    const msg = err.message.toLowerCase();
+
+    if (msg.includes("authentication") || msg.includes("token")) {
+      window.location.href = "/login";
+      throw err;
+    }
   }
+
+  throw err;
+}
+
 };
 
 
@@ -114,7 +172,7 @@ export const fetchAllOrders = async (
   productId?: string,
   buyerId?: string,
   sellerId?: string
-): Promise<{ success: boolean; data: ApiOrder[] }> => {
+): Promise< ApiOrdersResponse> => {
   const { token } = getAuthInfo();
   const params = new URLSearchParams();
 
@@ -323,7 +381,7 @@ export const deleteOrder = async (orderId: string): Promise<{ success: boolean; 
 /* ------------------  Update Order ------------------ */
 export const updateOrder = async (
   orderId: string,
-  updates: Record<string, any>
+  updates: Record<string, string>
 ): Promise<{ success: boolean; data: ApiOrder }> => {
   const { token } = getAuthInfo();
 

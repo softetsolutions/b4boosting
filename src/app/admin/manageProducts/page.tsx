@@ -7,6 +7,7 @@ import toast from "react-hot-toast";
 import ConfirmationModal from "src/components/ui/ConfirmationModal";
 import { fetchAllProducts, deleteProduct } from "src/api/products";
 import type { Product } from "src/api/products";
+import Image from "next/image";
 
 interface ServiceGroup {
   serviceName: string;
@@ -20,8 +21,13 @@ export default function ManageProducts() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [productToDelete, setProductToDelete] = useState<{ id: string; title: string } | null>(null);
-  const [collapsedServices, setCollapsedServices] = useState<Set<string>>(new Set());
+  const [productToDelete, setProductToDelete] = useState<{
+    id: string;
+    title: string;
+  } | null>(null);
+  const [collapsedServices, setCollapsedServices] = useState<Set<string>>(
+    new Set()
+  );
 
   useEffect(() => {
     fetchProducts();
@@ -74,7 +80,9 @@ export default function ManageProducts() {
     setShowDeleteModal(false);
     try {
       await deleteProduct(productToDelete.id);
-      setProducts((prev) => prev.filter((product) => product._id !== productToDelete.id));
+      setProducts((prev) =>
+        prev.filter((product) => product._id !== productToDelete.id)
+      );
       toast.success("Product deleted successfully");
     } catch (error) {
       console.error("Error deleting product:", error);
@@ -105,10 +113,11 @@ export default function ManageProducts() {
     return (
       <div className="w-16 h-16 rounded-lg overflow-hidden bg-gray-700/50 flex items-center justify-center">
         {/* Static file URL is safe in Next.js */}
-        <img
+        <Image
           src={firstImage}
           alt="Product image"
-          className="w-full h-full object-cover"
+          fill
+          className="object-cover"
           onError={(e) => {
             const target = e.target as HTMLImageElement;
             target.style.display = "none";
@@ -130,18 +139,25 @@ export default function ManageProducts() {
     <div>
       <div className="mb-8">
         <h1 className="text-4xl font-bold text-white">Manage Products</h1>
-        <p className="mt-2 text-gray-400">View and manage all products on your platform</p>
+        <p className="mt-2 text-gray-400">
+          View and manage all products on your platform
+        </p>
       </div>
 
       {groupedProducts.length === 0 ? (
         <div className="text-center py-12">
           <div className="text-gray-400 text-lg mb-4">No products found</div>
-          <p className="text-gray-500">Create your first product to get started</p>
+          <p className="text-gray-500">
+            Create your first product to get started
+          </p>
         </div>
       ) : (
         <div className="space-y-6">
           {groupedProducts.map((serviceGroup) => (
-            <div key={serviceGroup.serviceId} className="bg-gray-800/30 border border-gray-700 rounded-xl overflow-hidden">
+            <div
+              key={serviceGroup.serviceId}
+              className="bg-gray-800/30 border border-gray-700 rounded-xl overflow-hidden"
+            >
               {/* Service Header */}
               <div
                 className="flex items-center justify-between p-4 bg-gray-800/50 border-b border-gray-700 cursor-pointer hover:bg-gray-800/70 transition-colors"
@@ -153,10 +169,14 @@ export default function ManageProducts() {
                   ) : (
                     <ChevronDown className="w-5 h-5 text-gray-400" />
                   )}
-                  <h3 className="text-xl font-semibold text-white">{serviceGroup.serviceName}</h3>
+                  <h3 className="text-xl font-semibold text-white">
+                    {serviceGroup.serviceName}
+                  </h3>
                   <span className="px-2 py-1 text-xs bg-cyan-500/20 text-cyan-400 rounded-full">
                     {serviceGroup.products.length}{" "}
-                    {serviceGroup.products.length === 1 ? "product" : "products"}
+                    {serviceGroup.products.length === 1
+                      ? "product"
+                      : "products"}
                   </span>
                 </div>
               </div>
@@ -178,7 +198,9 @@ export default function ManageProducts() {
                               <h4 className="text-base font-semibold text-white group-hover:text-cyan-400 transition-colors">
                                 {product.title}
                               </h4>
-                              <p className="text-xs text-gray-500">Type: {product.type}</p>
+                              <p className="text-xs text-gray-500">
+                                Type: {product.type}
+                              </p>
                             </div>
                           </div>
                         </div>
@@ -191,11 +213,14 @@ export default function ManageProducts() {
 
                         <div className="flex items-center justify-between">
                           <div className="text-xs text-gray-500">
-                            Created {new Date(product.createdAt).toLocaleDateString()}
+                            Created{" "}
+                            {new Date(product.createdAt).toLocaleDateString()}
                           </div>
 
                           <div className="flex items-center space-x-2">
                             <button
+                              aria-label="Edit Product"
+                              type="button"
                               onClick={(e) => {
                                 e.stopPropagation();
                                 handleProductClick(product._id);
@@ -207,6 +232,8 @@ export default function ManageProducts() {
                             </button>
 
                             <button
+                              aria-label="Delete Product"
+                              type="button"
                               onClick={(e) => {
                                 e.stopPropagation();
                                 handleDeleteClick(product._id, product.title);

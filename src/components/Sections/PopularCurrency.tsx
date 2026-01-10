@@ -1,10 +1,11 @@
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import { redirect, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
+import { Product } from "src/api/types";
 
 interface PopularClientsProps {
   service?: {
-    products: any[];
+    products: Product[];
   };
 }
 

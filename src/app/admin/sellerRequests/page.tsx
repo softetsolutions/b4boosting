@@ -3,11 +3,11 @@
 
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import { approveSellerRequest, rejectSellerRequest, fetchAllSellerRequests, } from "src/api/seller";
+import { approveSellerRequest, rejectSellerRequest, fetchAllSellerRequests,SellerRequest } from "src/api/seller";
 
 interface SellerRequests {
   _id: string;
-  user: { _id: string; name?: string; email?: string };
+  user: { _id: string; name?: string; email?: string, displayName?: string };
   dob: string;
   aadharId: string;
   panId: string;
@@ -19,7 +19,29 @@ interface SellerRequests {
   status: "pending" | "approved" | "rejected";
   createdAt: string;
   adminNote?: string;
+   Nationalidentitynumber?: string;
+  Taxregistrationnumber?: string;
 }
+
+const mapSellerRequestToUI = (r: SellerRequest): SellerRequests => ({
+  _id: r._id,
+  user: {
+    _id: r.user._id,
+    name: `${r.user.firstName} ${r.user.lastName}`,
+    email: r.user.email,
+  },
+  dob: r.dob,
+  aadharId: r.Nationalidentitynumber || "",
+  panId: r.Taxregistrationnumber || "",
+  address: r.Address,
+  city: r.City,
+  state: "", // backend not sending → keep empty or update API
+  pincode: r.Postalcode,
+  idProofImages: [], // backend not sending → keep empty or update API
+  status: r.status,
+  createdAt: r.createdAt,
+});
+
 
 export default function SellerRequests() {
   const [requests, setRequests] = useState<SellerRequests[]>([]);
@@ -32,16 +54,14 @@ export default function SellerRequests() {
 
     const res = await fetchAllSellerRequests(); // res is SellerRequest[]
 
-    if (!res || res.length === 0) {
-      // If you want a toast when there's no data
-      // toast.error("No seller requests found");
-      setRequests([]); // or keep previous, up to you
-    } else {
-      setRequests(res); // res *is* the array
-    }
-  } catch (error: any) {
+   if (!res || res.length === 0) {
+  setRequests([]);
+} else {
+  setRequests(res.map(mapSellerRequestToUI));
+}
+  } catch (error) {
     console.error(error);
-    toast.error(error?.message || "Something went wrong");
+    toast.error(error instanceof Error ? error.message : "Something went wrong");
   } finally {
     setLoading(false);
   }
@@ -73,9 +93,9 @@ export default function SellerRequests() {
 
       toast.success(`Request ${status}`);       
       await fetchRequests();                   
-    } catch (error: any) {
+    } catch (error) {
       console.error(error);
-      toast.error(error?.message || "Something went wrong"); 
+      toast.error(error instanceof Error ? error.message : "Something went wrong"); 
     } finally {
       setUpdatingId(null);
     }
@@ -184,6 +204,8 @@ export default function SellerRequests() {
                 {req.status === "pending" && (
                   <>
                     <button
+                      aria-label="Approve"
+                      type="button"
                       className="inline-flex items-center px-3 py-1.5 rounded-lg text-xs font-medium bg-green-600 hover:bg-green-500 disabled:opacity-50"
                       onClick={() => updateStatus(req._id, "approved")}
                       disabled={!!updatingId}
@@ -192,6 +214,8 @@ export default function SellerRequests() {
                       {updatingId !== req._id && "Approve"}
                     </button>
                     <button
+                      aria-label="Reject"
+                      type="button"
                       className="inline-flex items-center px-3 py-1.5 rounded-lg text-xs font-medium bg-red-600 hover:bg-red-500 disabled:opacity-50"
                       onClick={() => updateStatus(req._id, "rejected")}
                       disabled={!!updatingId}

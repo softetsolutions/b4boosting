@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import toast from "react-hot-toast";
 import { getAllReviewsForAdmin, adminDeleteReview } from "src/api/reviews";
 import { Trash2 } from "lucide-react";
@@ -25,31 +25,38 @@ export default function AdminReviewsTable() {
   const [filters, setFilters] = useState({
     page: 1,
     limit: 10,
-    rating: "",
+    rating: undefined as number | undefined,
     search: "",
     from: "",
     to: "",
   });
 
-  const fetchReviews = async () => {
-    try {
-      setLoading(true);
+ const fetchReviews = useCallback(async () => {
+  try {
+    setLoading(true);
 
-      const res = await getAllReviewsForAdmin(filters);
+    const res = await getAllReviewsForAdmin({
+      ...filters,
+      rating: filters.rating ? Number(filters.rating) : undefined,
+    });
 
-      setReviews(res.data || []);
-    } catch (error: any) {
-      console.error(error);
-      toast.error(error?.message || "Failed to load reviews");
-    } finally {
-      setLoading(false);
+    setReviews(res.data || []);
+  } catch (error) {
+    console.error(error);
+
+    if (error instanceof Error) {
+      toast.error(error.message);
+    } else {
+      toast.error("Failed to load reviews");
     }
-  };
+  } finally {
+    setLoading(false);
+  }
+}, [filters]);
 
-  // ⭐ UPDATED: refetch when filters change
-  useEffect(() => {
-    fetchReviews();
-  }, [filters]);
+useEffect(() => {
+  fetchReviews();
+}, [fetchReviews]);
 
   const handleDelete = async (reviewId: string) => {
     const confirmed = window.confirm(
@@ -65,9 +72,9 @@ export default function AdminReviewsTable() {
       toast.success("Review deleted successfully");
 
       await fetchReviews(); // ⭐ refresh list
-    } catch (error: any) {
+    } catch (error) {
       console.error(error);
-      toast.error(error?.message || "Failed to delete review");
+      toast.error(error instanceof Error ? error.message : "Failed to delete review");
     } finally {
       setDeletingId(null);
     }
@@ -143,6 +150,7 @@ export default function AdminReviewsTable() {
 
                 <td className="px-4 py-3 text-right">
                   <button
+                    aria-label="delete review"
                     type="button"
                     onClick={() => handleDelete(review._id)}
                     disabled={deletingId === review._id}

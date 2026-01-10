@@ -13,8 +13,9 @@ const FormActions: React.FC<FormActionsProps> = ({ isSubmitting, onCancel }) => 
       {/* Cancel Button */}
       <button
         type="button"
-        onClick={onCancel}
+        onClick={onCancel}     
         className="px-4 py-2 border border-gray-600 text-sm text-gray-300 hover:bg-gray-800 hover:text-white rounded-lg transition-all duration-200 cursor-pointer hover:border-gray-500"
+        aria-label="Cancel"
       >
         Cancel
       </button>
@@ -22,6 +23,7 @@ const FormActions: React.FC<FormActionsProps> = ({ isSubmitting, onCancel }) => 
       {/* Submit Button */}
       <button
         type="submit"
+        aria-label="Submit"
         disabled={isSubmitting}
         className="px-4 py-2 bg-gradient-to-r from-cyan-500 to-blue-700 hover:from-cyan-600 hover:to-blue-800 text-white text-sm font-medium rounded-lg shadow-lg hover:shadow-cyan-500/25 transition-all duration-200 cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed hover:shadow-lg flex items-center"
       >

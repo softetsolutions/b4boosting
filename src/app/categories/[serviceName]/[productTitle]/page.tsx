@@ -5,14 +5,15 @@ import { Suspense } from "react";
 import ProductPageStreamedComp from "src/components/StreamedServerComps/ProductPageStreamedComp";
 import ReviewsCarousel from "src/components/Reviews/ReviewsCarousel";
 
-interface Props {
-  params: {
+type PageProps = {
+  params: Promise<{
     serviceName: string;
-    productTitle : string;
-  };
-}
+    productTitle: string;
+  }>;
+};
 
-export default async function CategoryProductPage({ params }: Props) {
+
+export default async function CategoryProductPage({ params }: PageProps) {
   const { serviceName, productTitle  } = await params;
 
   return (

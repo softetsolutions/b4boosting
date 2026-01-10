@@ -35,13 +35,6 @@ export default function ShareMenu({ shareUrl, title = "Check this out!" }: Share
   const openModal = () => setIsOpen(true);
   const closeModal = () => setIsOpen(false);
 
-   const baseUrl =
-    typeof window !== "undefined"
-      ? window.location.origin
-      : "https://your-domain.com";
-
- 
-
   const handleCopy = async () => {
     try {
       setIsCopying(true);
@@ -94,6 +87,7 @@ export default function ShareMenu({ shareUrl, title = "Check this out!" }: Share
     <>
       {/* Trigger Button */}
       <button
+        type="button"
         onClick={openModal}
         className="flex items-center px-4 py-2 border border-gray-700 rounded-md text-gray-400 text-sm hover:bg-gray-600 hover:text-yellow-400/100 transition duration-150"
       >
@@ -161,6 +155,7 @@ export default function ShareMenu({ shareUrl, title = "Check this out!" }: Share
                   className="flex-1 bg-black/40 border border-gray-700 rounded-md px-3 py-2 text-xs text-gray-300 overflow-hidden text-ellipsis"
                 />
                 <button
+                  type="button"
                   onClick={handleCopy}
                   disabled={isCopying}
                   className="px-3 py-2 text-xs border border-gray-700 rounded-md text-gray-300 hover:bg-gray-800 disabled:opacity-60"

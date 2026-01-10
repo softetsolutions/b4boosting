@@ -3,8 +3,11 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { MessageCircleQuestion } from "lucide-react";
-
-export default function ChatFloatingButton({ dynamicdata }: any) {
+import { HomePageData } from "src/api/types";
+interface ChatFloatingButtonProps {
+  dynamicdata: HomePageData;
+}
+export default function ChatFloatingButton({ dynamicdata }: ChatFloatingButtonProps) {
   const router = useRouter();
   const [hasActiveChat, setHasActiveChat] = useState(false);
 

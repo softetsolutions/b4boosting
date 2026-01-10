@@ -16,9 +16,14 @@ export default function Login() {
     try {
       await Loginaction(formData);
       toast.success("Login successful!");
-    } catch (err: any) {
-      if (err?.message?.includes("NEXT_REDIRECT")) return;
-      toast.error(err.message || "Login failed");
+    } catch (err:unknown) {
+       if (err instanceof Error) {
+      if (err.message.includes("NEXT_REDIRECT")) return;
+
+      toast.error(err.message);
+    } else {
+      toast.error("Login failed");
+    }
     }
   }
 
@@ -29,6 +34,7 @@ export default function Login() {
         callbackUrl: "/", 
       });
     } catch (error) {
+      console.error("Failed to redirect to Google sign-in", error);
       toast.error("Failed to redirect to Google sign-in");
       setLoadingGoogle(false);
     }
@@ -92,7 +98,8 @@ export default function Login() {
                       className="w-full p-3 bg-zinc-800 border border-zinc-700 placeholder-gray-400 rounded-lg pr-10 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     />
                     <button
-                      type="button"
+                      aria-label="Toggle password visibility"
+                       type="button"
                       className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-cyan-400"
                       onClick={() => setShowPassword(!showPassword)}
                     >
@@ -118,6 +125,7 @@ export default function Login() {
 
                 {/* Submit */}
                 <button
+                  aria-label="Submit"
                   type="submit"
                   className="w-full py-3 font-medium rounded-lg flex items-center justify-center bg-cyan-400 hover:bg-cyan-300 text-black transition"
                 >

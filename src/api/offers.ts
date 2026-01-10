@@ -54,7 +54,7 @@ export type ServiceWithCount = {
 
 
 export const createOffer = async (formData: FormData): Promise<ApiOffer> => {
-  const { userId} = getAuthInfo();
+ 
   const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/offers`, {
     method: "POST",
     body: formData,

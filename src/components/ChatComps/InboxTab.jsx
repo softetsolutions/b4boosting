@@ -15,19 +15,21 @@ export default function InboxTab({
   return (
     <div
       onClick={onClick}
-      className={`flex items-center justify-between px-4 py-3  cursor-pointer transition-all duration-200 rounded-2xl ${
-        hasUnread
+      className={`flex items-center justify-between px-4 py-3  cursor-pointer transition-all duration-200 rounded-2xl ${hasUnread
           ? "gray-bg  hover:bg-gray-400/20"
           : "hover:bg-gray-100 dark:hover:bg-gray-800"
-      } shadow-sm border border-b  border-gray-400/20 dark:border-gray-700`}
+        } shadow-sm border border-b  border-gray-400/20 dark:border-gray-700`}
     >
-     
+
       <div className="flex items-center gap-3">
         <div className="relative w-[48px] h-[48px]">
-          <img
+        
+          <Image
             src={imgSrc}
             alt={name}
-            className="w-full h-full object-cover rounded-full border border-gray-400/20"
+            fill
+            className="object-cover rounded-full border border-gray-400/20"
+
           />
           {hasUnread && (
             <span className="absolute bottom-0 right-0 w-3.5 h-3.5 bg-amber-400 border-2 border-white rounded-full"></span>
@@ -37,9 +39,8 @@ export default function InboxTab({
         {/* Middle: Name + Message */}
         <div className="flex flex-col">
           <span
-            className={`font-semibold text-sm md:text-base ${
-              hasUnread ? "text-gray-900 dark:text-white" : "text-gray-700"
-            }`}
+            className={`font-semibold text-sm md:text-base ${hasUnread ? "text-gray-900 dark:text-white" : "text-gray-700"
+              }`}
           >
             {name}
           </span>

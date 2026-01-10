@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { getCookie } from "cookies-next";
 import { jwtDecode } from "jwt-decode";
 import toast from "react-hot-toast";
@@ -9,6 +9,7 @@ interface AuthTokenPayload {
   id: string;
   username: string;
   affiliateId?: string;
+  
 }
 
 export default function CreateReflinkPage() {
@@ -52,7 +53,7 @@ export default function CreateReflinkPage() {
           type="button"
           onClick={handleGenerateLink}
           className="px-4 py-2 bg-gradient-to-r from-cyan-500 to-blue-700 hover:from-cyan-600 hover:to-blue-800 text-white text-sm font-medium rounded-lg shadow-lg hover:shadow-cyan-500/25 transition-all duration-200 cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed hover:shadow-lg flex items-center"
-
+          aria-label="Generate Referral Link"
         >
           Generate Referral Link
         </button>
@@ -69,7 +70,7 @@ export default function CreateReflinkPage() {
             type="button"
             onClick={handleCopy}
             className="px-4 py-2 bg-gradient-to-r from-cyan-500 to-blue-700 hover:from-cyan-600 hover:to-blue-800 text-white text-sm font-medium rounded-lg shadow-lg hover:shadow-cyan-500/25 transition-all duration-200 cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed hover:shadow-lg flex items-center"
-
+            aria-label="Copy Referral Link"
           >
             Copy
           </button>

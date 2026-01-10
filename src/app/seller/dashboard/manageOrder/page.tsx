@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import OrderTable from "src/components/seller/orders/OrderTable";
 import OrderFilters from "src/components/seller/orders/OrderFilters";
 import { fetchOrdersBySeller } from "src/api/orders";
@@ -20,36 +20,43 @@ export default function ManageOrder() {
     limit: 10,
   });
 
-  const fetchOrders = async () => {
-    try {
-      setLoading(true);
+  const fetchOrders = useCallback(async () => {
+  try {
+    setLoading(true);
 
-      const res = await fetchOrdersBySeller(
-        filters.page,
-        filters.limit,
-        filters.from,
-        filters.to,
-        filters.status,
-        filters.search
-      );
+    const res = await fetchOrdersBySeller(
+      filters.page,
+      filters.limit,
+      filters.from,
+      filters.to,
+      filters.status,
+      filters.search
+    );
 
-      if (res.success) {
-        setOrders(res.data || []);
-        setTotalPages(res.totalPages || 1);
-      } else {
-        setOrders([]);
-      }
-    } catch (err) {
-      console.error("Error fetching orders:", err);
+    if (res.success) {
+      setOrders(res.data || []);
+      setTotalPages(res.totalPages || 1);
+    } else {
       setOrders([]);
-    } finally {
-      setLoading(false);
     }
-  };
+  } catch (err) {
+    console.error("Error fetching orders:", err);
+    setOrders([]);
+  } finally {
+    setLoading(false);
+  }
+}, [
+  filters.page,
+  filters.limit,
+  filters.from,
+  filters.to,
+  filters.status,
+  filters.search,
+]);
 
-  useEffect(() => {
-    fetchOrders();
-  }, [filters]); // refresh whenever filters change
+useEffect(() => {
+  fetchOrders();
+}, [fetchOrders]);
 
   return (
     <div className="text-white">

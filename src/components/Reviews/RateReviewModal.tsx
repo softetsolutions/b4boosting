@@ -6,10 +6,11 @@ import toast from "react-hot-toast";
 import StarRating from "./StarRating";
 import ImageUpload from "src/components/ui/ImageUpload";
 import { createReview, updateReview } from "src/api/reviews";
+import { Review } from "src/api/types";
 
 interface Props {
   orderId: string;
-  existingReview?: any;
+  existingReview?: Review;
   onClose: () => void;
 }
 
@@ -58,8 +59,9 @@ export default function RateReviewModal({
       } else {
         toast.error(res.message);
       }
-    } catch (err: any) {
+    } catch (err) {
       toast.error("Something went wrong");
+      console.error(err);
     } finally {
       setLoading(false);
     }

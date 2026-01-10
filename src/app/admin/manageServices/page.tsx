@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Edit, Trash2 } from "lucide-react";
 import toast from "react-hot-toast";
 import ConfirmationModal from "src/components/ui/ConfirmationModal";
@@ -10,12 +10,14 @@ import {
   updateServiceVisibility,
 } from "src/api/services";
 import type { Service } from "src/api/services";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
 
-interface ManageServicesProps {
-  onEditService?: (serviceId: string) => void;
-}
 
-export default function ManageServices({ onEditService }: ManageServicesProps) {
+export default function ManageServices() {
+  // const searchParams = useSearchParams();
+  const router = useRouter();
+  // const serviceId = searchParams.get("serviceId");
   const [services, setServices] = useState<Service[]>([]);
   const [loading, setLoading] = useState(true);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -24,12 +26,9 @@ export default function ManageServices({ onEditService }: ManageServicesProps) {
     name: string;
   } | null>(null);
 
-  useEffect(() => {
-    fetchServices();
-  }, []);
-
-  const fetchServices = async () => {
+ const fetchServices = useCallback(async () => {
     try {
+      setLoading(true);
       const services = await fetchAllServices();
       setServices(services);
     } catch (error) {
@@ -38,12 +37,14 @@ export default function ManageServices({ onEditService }: ManageServicesProps) {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
-  const handleServiceClick = (serviceId: string) => {
-    if (onEditService) {
-      onEditService(serviceId);
-    }
+  /* ✅ FIX 3: correct dependency */
+  useEffect(() => {
+    fetchServices();
+  }, [fetchServices]);
+ const handleServiceClick = (serviceId: string) => {
+    router.push(`/admin/manageServices?serviceId=${serviceId}`);
   };
 
   const handleDeleteClick = (serviceId: string, serviceName: string) => {
@@ -65,9 +66,13 @@ export default function ManageServices({ onEditService }: ManageServicesProps) {
         )
       );
       toast.success("Visibility updated!");
-    } catch (error: any) {
-      toast.error(error.message || "Failed to update visibility");
-    }
+    } catch (error: unknown) {
+  if (error instanceof Error) {
+    toast.error(error.message);
+  } else {
+    toast.error("Failed to update visibility");
+  }
+}
   };
 
   const handleConfirmDelete = async () => {
@@ -98,12 +103,13 @@ export default function ManageServices({ onEditService }: ManageServicesProps) {
 
     return (
       <div className="w-10 h-10 rounded-lg overflow-hidden bg-gray-700/50 flex items-center justify-center">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src={icon}
-          alt="Service icon"
-          className="w-full h-full object-cover"
-          onError={(e) => {
+      
+         <Image
+      src={icon}
+      alt="Service icon"
+      fill
+      className="object-cover"
+        onError={(e) => {
             const target = e.target as HTMLImageElement;
             target.style.display = "none";
             const parent = target.parentElement;
@@ -112,7 +118,8 @@ export default function ManageServices({ onEditService }: ManageServicesProps) {
                 '<span class="text-gray-400 text-lg">?</span>';
             }
           }}
-        />
+    />
+      
       </div>
     );
   };
@@ -143,7 +150,7 @@ export default function ManageServices({ onEditService }: ManageServicesProps) {
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {services.map((service) => (
+          {services?.map((service) => (
             <div
               key={service._id}
               onClick={() => handleServiceClick(service._id)}
@@ -165,6 +172,8 @@ export default function ManageServices({ onEditService }: ManageServicesProps) {
 
               <div className="flex items-center justify-end space-x-2">
                 <button
+                  aria-label="Edit Service"
+                  type="button"
                   onClick={(e) => {
                     e.stopPropagation();
                     handleServiceClick(service._id);
@@ -176,6 +185,8 @@ export default function ManageServices({ onEditService }: ManageServicesProps) {
                 </button>
 
                 <button
+                  aria-label="Delete Service"
+                  type="button"
                   onClick={(e) => {
                     e.stopPropagation();
                     handleDeleteClick(service._id, service.name);

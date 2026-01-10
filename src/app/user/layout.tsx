@@ -4,7 +4,6 @@ import { jwtDecode } from "jwt-decode";
 import { redirect } from "next/navigation";
 import Sidebar from "src/components/Sidebar"; // or a new UserSidebar
 import type { ReactNode } from "react";
-import { Key } from "lucide-react";
 
 interface AuthTokenPayload {
   id: string;

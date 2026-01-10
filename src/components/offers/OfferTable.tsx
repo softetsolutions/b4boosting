@@ -1,15 +1,14 @@
 "use client";
 
 import Image from "next/image";
-import toast from "react-hot-toast";
-import { updateOrderStatus } from "src/api/orders";
 
 export default function OfferTable({
   offers,
   currentPage,
   totalPages,
   onPageChange,
-  refresh,
+  // refresh
+ 
 }) {
   const statusColors = {
     active: "bg-green-600/20 text-green-400",
@@ -45,10 +44,13 @@ export default function OfferTable({
               {/* Product Info */}
               <td className="p-3">
                 <div className="flex items-center gap-3">
-                  <img
-                    src={offer.images?.[0]}
-                    className="w-12 h-12 object-cover rounded"
-                  />
+               <Image
+  src={offer.images?.[0] || "/fallback-img.jpg"} // fallback if image is missing
+  alt={offer.product?.title || "Offer"}
+  width={48}  // match w-12 (12 * 4px)
+  height={48} // match h-12
+  className="object-cover rounded"
+/>
                   <div>
                     <div className="font-semibold">{offer.product?.title}</div>
                     <div className="text-xs text-gray-400">{offer.product?.type}</div>
@@ -59,10 +61,13 @@ export default function OfferTable({
               {/* Seller Info */}
               <td className="p-3">
                 <div className="flex items-center gap-3">
-                  <img
-                    src={offer.seller?.profilePic}
-                    className="w-8 h-8 rounded-full object-cover"
-                  />
+                <Image
+  src={offer.seller?.profilePic || "/fallback-profile.png"} // fallback if profile pic is missing
+  alt={offer.seller?.name || "Seller"}
+  width={32}  // corresponds to w-8 (8 * 4px)
+  height={32} // corresponds to h-8
+  className="rounded-full object-cover"
+/>
                   <div>
                     <div className="font-medium">{offer.seller?.username}</div>
                     <div className="text-xs text-gray-400">{offer.seller?.email}</div>

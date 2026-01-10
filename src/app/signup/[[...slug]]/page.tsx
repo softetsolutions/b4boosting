@@ -15,7 +15,7 @@ export default function SignupPage() {
     try {
       await registerAction(formData);
       toast.success("Signup successful!");
-    } catch (err: any) {
+    } catch (err) {
       if (err?.message?.includes("NEXT_REDIRECT")) return;
       setError(err.message || "Something went wrong");
       toast.error(err.message || "Something went wrong");
@@ -104,6 +104,7 @@ export default function SignupPage() {
                       className="w-full p-3 bg-zinc-800 border border-zinc-700 rounded-lg pr-10 focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
                     />
                     <button
+                      aria-label="Toggle password visibility"
                       type="button"
                       onClick={() => setShowPassword((prev) => !prev)}
                       className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-cyan-400"
@@ -139,6 +140,7 @@ export default function SignupPage() {
                 </div>
 
                 <button
+                  aria-label="Sign Up"
                   type="submit"
                   className="w-full py-3 font-medium rounded-lg transition flex items-center justify-center bg-cyan-400 hover:bg-cyan-300 text-black"
                 >

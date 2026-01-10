@@ -2,11 +2,9 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import type {
-  Service,
-  ProductFormData,
-  CreateProductResponse,
-} from "src/api/types";
+import type { Service } from "src/api/services";
+import type { CreateProductResponse, ProductFormData } from "src/api/types";
+
 import { fetchServices } from "src/api/services";
 import { createProduct } from "src/api/products";
 import ProductForm from "./ProductForm";
@@ -28,15 +26,22 @@ interface Field {
 // Product types
 const PRODUCT_TYPES = ["Account", "Item", "Currency", "Service"];
 
-interface LocalProductFormState {
-  title: string;
-  type: string;
-  description: string;
-  service: string;
-  serviceName: string;
-  productRequiredFields: any[];
-  images: File[];
+export interface ProductRequiredField {
+  fieldName: string;
+  fieldType: "custom" | "range" | "text";
+  options: string[];
+  required: boolean;
 }
+
+// export interface ProductFormDataLocal {
+//   title: string;
+//   type: string;
+//   description: string;
+//   service: string;
+//   serviceName: string;
+//   productRequiredFields: ProductRequiredField[];
+//   images: (File | string)[];
+// }
 
 export default function CreateProduct() {
   const router = useRouter();
@@ -44,7 +49,7 @@ export default function CreateProduct() {
   const [error, setError] = useState("");
   const [services, setServices] = useState<Service[]>([]);
 
-  const [formData, setFormData] = useState<LocalProductFormState>({
+  const [formData, setFormData] = useState<ProductFormData>({
     title: "",
     type: "",
     description: "",
@@ -71,13 +76,14 @@ export default function CreateProduct() {
   useEffect(() => {
     const loadServices = async () => {
       try {
-        const data = await fetchServices();
-        setServices(
-          data.map((service: any) => ({
-            ...service,
-            type: service.type ?? "",
-          }))
-        );
+        const data: Service[] = await fetchServices();
+        // setServices(
+        //   data?.map((service) => ({
+        //     ...service,
+        //     // type: service.type ?? "",
+        //   }))
+        // );
+        setServices(data);
       } catch (error) {
         console.error("Error loading services:", error);
         setError("Failed to load services");
@@ -119,11 +125,18 @@ export default function CreateProduct() {
       data.append("description", formData.description);
       data.append("service", formData.service);
       data.append("serviceName", formData.serviceName);
-      data.append("productRequiredFields", JSON.stringify(productRequiredFields));
-      formData.images.forEach((file) => {
-        data.append("images", file);
+      data.append(
+        "productRequiredFields",
+        JSON.stringify(productRequiredFields)
+      );
+      // formData.images.forEach((file) => {
+      //   data.append("images", file);
+      // });
+      formData?.images.forEach((img) => {
+        if (img instanceof File) {
+          data.append("images", img);
+        }
       });
-
       const response = (await createProduct(data)) as CreateProductResponse;
 
       if (response.success) {

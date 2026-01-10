@@ -9,6 +9,12 @@ import ImageUpload from "src/components/ui/ImageUpload";
 import { fetchAllServices } from "src/api/services";
 import { fetchProductsByService } from "src/api/products";
 import { createOffer, updateOffer, fetchOfferById } from "src/api/offers";
+import type { Service, Product, ProductField } from "src/api/types";
+
+interface OfferDetail {
+  fieldName: string;
+  value: string;
+}
 
 export default function CreateOfferPage() {
   const router = useRouter();
@@ -17,14 +23,13 @@ export default function CreateOfferPage() {
   const isEditMode = !!offerId;
 
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [error, setError] = useState("");
-  const [services, setServices] = useState<any[]>([]);
-  const [products, setProducts] = useState<any[]>([]);
-  const [selectedService, setSelectedService] = useState("");
-  const [selectedProduct, setSelectedProduct] = useState<any>(null);
-  const [productDetails, setProductDetails] = useState<any>({});
+  const [error, setError] = useState<string>("");
+ const [services, setServices] = useState<Service[]>([]);
+const [products, setProducts] = useState<Product[]>([]);
+  const [selectedService, setSelectedService] = useState<string>("");
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [productDetails, setProductDetails] = useState<Record<string, string>>({});
   const [offerImages, setOfferImages] = useState<(File | string)[]>([]);
-  const [offerData, setOfferData] = useState<any>(null);
 
   const [formData, setFormData] = useState({
     price: "",
@@ -43,15 +48,19 @@ export default function CreateOfferPage() {
         const res = await fetchOfferById(offerId);
         console.log(res,"res");
         const data = res;
-        setOfferData(data);
+       
         setSelectedService(data.product?.service || "");
         setSelectedProduct(data.product || null);
-        setProductDetails(
-          data.offerDetails?.reduce(
-            (acc: any, item: any) => ({ ...acc, [item.fieldName]: item.value }),
-            {}
-          ) || {}
-        );
+       setProductDetails(
+  data.offerDetails?.reduce<Record<string, string>>(
+    (acc, item: OfferDetail) => {
+      acc[item.fieldName] = item.value;
+      return acc;
+    },
+    {}
+  ) || {}
+);
+
         setFormData({
           price: data.price || "",
           quantityAvailable: data.quantityAvailable || "",
@@ -114,7 +123,7 @@ export default function CreateOfferPage() {
   };
 
   const handleProductDetailChange = (fieldName: string, value: string) => {
-    setProductDetails((prev: any) => ({
+    setProductDetails((prev: Record<string, string>) => ({
       ...prev,
       [fieldName]: value,
     }));
@@ -175,7 +184,7 @@ export default function CreateOfferPage() {
       }
 
       router.push("/seller/dashboard/manageOffers");
-    } catch (err: any) {
+    } catch (err) {
       console.error(err);
       toast.error(isEditMode ? "Error updating offer" : "Error creating offer");
       setError(err.message || "Unexpected error");
@@ -222,7 +231,7 @@ export default function CreateOfferPage() {
               className="w-full bg-gray-700/50 border border-gray-600 rounded-lg py-2 px-3 text-sm text-white focus:outline-none focus:ring-2 focus:ring-cyan-500"
             >
               <option value="">-- Select Service --</option>
-              {services.map((s) => (
+              {services?.map((s) => (
                 <option key={s._id} value={s._id}>
                   {s.name}
                 </option>
@@ -242,7 +251,7 @@ export default function CreateOfferPage() {
               className="w-full bg-gray-700/50 border border-gray-600 rounded-lg py-2 px-3 text-sm text-white focus:outline-none focus:ring-2 focus:ring-cyan-500 disabled:opacity-50"
             >
               <option value="">-- Select Product --</option>
-              {products.map((p) => (
+              {products?.map((p) => (
                 <option key={p._id} value={p._id}>
                   {p.title}
                 </option>
@@ -257,8 +266,8 @@ export default function CreateOfferPage() {
                 <h3 className="text-gray-200 text-sm font-medium">
                   Product Details
                 </h3>
-                {selectedProduct.productRequiredFields.map(
-                  (field: any, i: number) => (
+                {selectedProduct.productRequiredFields?.map(
+                  (field: ProductField, i: number) => (
                     <div key={i}>
                       <label className="block text-sm text-gray-300 mb-1">
                         {field.fieldName}{" "}
@@ -335,7 +344,7 @@ export default function CreateOfferPage() {
               <h3 className="text-gray-200 text-sm font-medium">
                 Additional Fields
               </h3>
-              {selectedProduct.additionalFields.map((field: any, i: number) => (
+              {selectedProduct.additionalFields?.map((field: ProductField, i: number) => (
                 <div key={i}>
                   <label className="block text-sm text-gray-300 mb-1">
                     {field.fieldName}
@@ -447,6 +456,7 @@ export default function CreateOfferPage() {
           {/* Actions */}
           <div className="flex justify-end space-x-3 pt-4">
             <button
+             aria-label="cancel "
               type="button"
               onClick={handleCancel}
               className="px-4 py-2 border border-gray-600 text-sm text-gray-300 hover:bg-gray-800 hover:text-white rounded-lg transition-all duration-200 cursor-pointer hover:border-gray-500"
@@ -454,6 +464,7 @@ export default function CreateOfferPage() {
               Cancel
             </button>
             <button
+              aria-label="submit"
               type="submit"
               disabled={isSubmitting}
               className={`px-6 py-2 bg-gradient-to-r from-cyan-500 to-blue-700 

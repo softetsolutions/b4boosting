@@ -58,7 +58,7 @@ const handler = NextAuth({
         return false;
       }
 
-        const cookieStore = cookies();
+        const cookieStore = await cookies();
 
         cookieStore.set("token", data.token, {
           httpOnly: false,

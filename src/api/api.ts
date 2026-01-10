@@ -21,6 +21,22 @@ export interface AuthResponse {
   message?: string;
 }
 
+export interface AccountUser {
+  _id: string;
+  firstName: string;
+  lastName: string;
+  displayName: string;
+  username: string;
+  walletBalance: number;
+  role: string;
+  email: string;
+  createdAt: string;
+  isEmailVerified: boolean;
+  isPhoneVerified: boolean;
+  twoFactorEnabled: boolean;
+}
+
+
 export const signupUser = async (userData: UserData): Promise<AuthResponse> => {
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_NEXT_PUBLIC_BACKEND_URL}/auth/register`,
@@ -80,7 +96,7 @@ export const logoutUser = async (): Promise<{
 };
 
 
-export const getAccountDetails = async (): Promise<any> => {
+export const getAccountDetails = async (): Promise<AccountUser> => {
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_BACKEND_URL}/account/`,
     {

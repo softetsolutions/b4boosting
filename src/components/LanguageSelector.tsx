@@ -38,12 +38,17 @@ const LanguageSelector: React.FC<LanguageSelectorProps> = ({ onClose }) => {
           </div>
         </div>
         <div className=" p-3 grid grid-cols-2 gap-4 border-gray-300 justify-center space-y-2">
-          <button className="absolute  bg-red-600 text-white p-2 rounded-lg hover:bg-red-400 transition w-18 h-11">
+          <button 
+          aria-label="save"
+          type="button"
+          className="absolute  bg-red-600 text-white p-2 rounded-lg hover:bg-red-400 transition w-18 h-11">
             Save
           </button>
         </div>
 
         <button
+          type="button"
+          aria-label="Close"
           onClick={onClose}
           className="absolute top-2 right-3 text-gray-300 hover:text-gray-400 text-xl"
         >

@@ -5,6 +5,19 @@ type Props = {
   serviceName: string;
 };
 
+type Offer = {
+  _id: string;
+  title: string;
+  type: string;
+  productRequiredFields: {
+    fieldName: string;
+    fieldType: string;
+    isrequired: boolean;
+    options: string[];
+  }[];
+  additionalFields: unknown[]; // or type properly if known
+};
+
 export default async function ServiceOffersStreamedComp({ serviceName }: Props) {
  
    const products = await fetchProductsByServiceName(serviceName);
@@ -17,7 +30,7 @@ export default async function ServiceOffersStreamedComp({ serviceName }: Props) 
       </h1>
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {products?.map((offer: any) => (
+        {products?.map((offer: Offer) => (
           <Link
             key={offer.title}
             href={`/categories/${serviceName}/${offer.title}`}

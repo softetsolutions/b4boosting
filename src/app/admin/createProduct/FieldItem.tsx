@@ -45,6 +45,7 @@ export default function FieldItem({
           onClick={() => onRemove(field.id)}
           className="text-red-400 hover:text-red-300 disabled:opacity-40 disabled:cursor-not-allowed"
           disabled={!canRemove}
+          aria-label="Remove field"
         >
           <svg
             className="w-3.5 h-3.5"
@@ -179,6 +180,7 @@ export default function FieldItem({
                     type="button"
                     onClick={() => onRemoveCustomValue(field.id, valueIndex)}
                     className="ml-1 text-gray-400 hover:text-gray-200"
+                    aria-label="Remove value"
                   >
                     <svg
                       className="w-2.5 h-2.5"

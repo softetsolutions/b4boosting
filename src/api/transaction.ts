@@ -5,7 +5,7 @@ export const fetchSellerTransactions = async (
   query: string = ""
 ) => {
 
-  const { token, userId } = getAuthInfo();
+  const { userId } = getAuthInfo();
 
   const url = `${process.env.NEXT_PUBLIC_BACKEND_URL}/transactions/seller/${userId}${query}`;
 
