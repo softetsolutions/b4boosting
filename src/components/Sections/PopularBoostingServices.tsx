@@ -4,25 +4,7 @@ import Image from "next/image";
 import { useState, useEffect } from "react";
 import backgroundImg from "src/assets/images/boostingServices.svg";
 import { useRouter } from "next/navigation";
-
-interface Product {
-  _id: string;
-  title: string;
-  images?: string;      
-  // description?: string;
-}
-
-interface Service {
-  _id: string;
-  name: string;
-  icon?: string;
-  products: Product[];
-}
-
-interface HomePageData {
-  services: Service[];
-  settings: any;
-}
+import type { HomePageData } from "src/api/types";
 
 interface PopularBoostingServicesProps {
   dynamicdata: HomePageData;
@@ -45,7 +27,7 @@ export default function PopularBoostingServices({
       setCurrentIndex((prev) => (prev + 1) % services?.length);
     }, 4000);
     return () => clearInterval(interval);
-  }, []);
+  }, [ services?.length]);
 
   // Get visible cards (previous, current, next)
   const getVisibleCards = () => {
@@ -71,7 +53,7 @@ export default function PopularBoostingServices({
 
       {/* Carousel */}
       <div className="relative flex justify-center items-center gap-4 md:gap-8 z-10">
-        {visibleCards?.map((index, i) => {
+        {visibleCards?.map((index) => {
           const service = services?.[index];
           if (!service) return null;
           const isCenter = index === currentIndex;

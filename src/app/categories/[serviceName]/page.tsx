@@ -4,14 +4,21 @@ import Footer from "src/components/Footer/Footer";
 import { Suspense } from "react";
 import ServiceOffersStreamedComp from "src/components/StreamedServerComps/ServiceOffersStreamedComp";
 
-interface Props {
-  params: {
+// interface Props {
+//   params: {
+//     serviceName: string;
+//     serviceId: string;
+//   };
+// }
+
+type PageProps = {
+  params: Promise<{
     serviceName: string;
     serviceId: string;
-  };
-}
+  }>;
+};
 
-export default async function ServiceOffersPage({ params }: Props) {
+export default async function ServiceOffersPage({ params }: PageProps) {
 
   // ❌ no need for `await` here – params is already a plain object
   const { serviceName } = await params;

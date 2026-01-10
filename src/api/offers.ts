@@ -8,21 +8,41 @@ export interface OfferFormData {
   quantityAvailable: string;
   deliveryTime: string;
   instantDelivery: boolean;
-  images: string[];
+  images:(File | string)[];
+}
+export interface OfferDetails {
+  _id: string;
+  price: number;
+  currency: string;
+  quantityAvailable: number;
+  deliveryTime: string;
+  instantDelivery: boolean;
+  offerDesc?: string;
+  images:(File | string)[];
+
+  offerDetails: {
+    fieldName: string;
+    value: string;
+  }[];
+
+  product: {
+    _id: string;
+    title: string;
+    service: string;
+    images: (File | string)[];
+    description?: string;
+  };
+
+  seller: {
+    _id: string;
+    displayName: string;
+    completedOrderCount: number;
+  };
+
+  createdAt: string;
+  updatedAt: string;
 }
 
-// export type ApiOffer = {
-//   _id: string;
-//   price: number;
-//   currency: string;
-//   quantityAvailable: number;
-//   images?: string[];
-//   product: {
-//     _id: string;
-//     title: string;
-//     service: string;
-//   };
-// };
 export type ApiOffer = {
   _id: string;
   price: number;
@@ -31,7 +51,7 @@ export type ApiOffer = {
     _id: string;
     title: string;
     type: string;
-    images: string[];
+    images:(File | string)[];
   };
   seller: {
     _id: string;
@@ -42,7 +62,7 @@ export type ApiOffer = {
   quantityAvailable: number;
   deliveryTime: string;
   instantDelivery: boolean;
-  images: string[];
+  images:(File | string)[];
 };
 
 export type ServiceWithCount = {
@@ -54,7 +74,7 @@ export type ServiceWithCount = {
 
 
 export const createOffer = async (formData: FormData): Promise<ApiOffer> => {
-  const { userId} = getAuthInfo();
+ 
   const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/offers`, {
     method: "POST",
     body: formData,
@@ -116,7 +136,7 @@ export const fetchOffers = async (
 };
 
 
-export const fetchOfferById = async (offerId: string): Promise<ApiOffer> => {
+export const fetchOfferById = async (offerId: string): Promise<OfferDetails> => {
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_BACKEND_URL}/offers/${offerId}`,
     {
@@ -137,7 +157,7 @@ export const fetchOfferById = async (offerId: string): Promise<ApiOffer> => {
 
   const result = await response.json();
   if (result.success && result.data) {
-    return result.data as ApiOffer;
+    return result.data as OfferDetails;
   }
   throw new Error("Invalid response format for fetching an offer.");
 };

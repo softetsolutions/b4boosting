@@ -1,12 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import OfferTable from "src/components/offers/OfferTable";
 import OfferFilters from "src/components/offers/OfferFilters";
 import { fetchOffers } from "src/api/offers";
-
+import type { ApiOffer } from "src/api/offers";
 export default function Offers() {
-  const [offers, setOffers] = useState([]);
+  const [offers, setOffers] = useState<ApiOffer[]>([]);
   const [loading, setLoading] = useState(true);
   const [totalPages, setTotalPages] = useState(1);
 
@@ -20,36 +20,42 @@ export default function Offers() {
     limit: 10,
   });
 
-  const fetchAllOffers = async () => {
-    try {
-      setLoading(true);
+ 
+const fetchAllOffers = useCallback(async () => {
+  try {
+    setLoading(true);
 
-      const res = await fetchOffers(
-        filters.page,
-        filters.limit,
-        filters.from,
-        filters.to,
-        filters.status,
-        filters.search
-      );
+    const res = await fetchOffers(
+      filters.page,
+      filters.limit,
+      filters.from,
+      filters.to,
+      filters.status,
+      filters.search
+    );
 
-      if (res.success) {
-        setOffers(res.data || []);
-        setTotalPages(res.totalPages || 1);
-      } else {
-        setOffers([]);
-      }
-    } catch (err) {
-      console.error("Error fetching orders:", err);
+    if (res.success) {
+      setOffers(res.data || []);
+      setTotalPages(res.totalPages || 1);
+    } else {
       setOffers([]);
-    } finally {
-      setLoading(false);
     }
-  };
+  } catch (err) {
+    console.error("Error fetching orders:", err);
+    setOffers([]);
+  } finally {
+    setLoading(false);
+  }
+}, [ filters.page,
+  filters.limit,
+  filters.from,
+  filters.to,
+  filters.status,
+  filters.search,]);
 
-  useEffect(() => {
-    fetchAllOffers();
-  }, [filters]); // refresh whenever filters change
+useEffect(() => {
+  fetchAllOffers();
+}, [fetchAllOffers]);
 
   return (
     <div className="text-white">
@@ -66,8 +72,8 @@ export default function Offers() {
           offers={offers}
           currentPage={filters.page}
           totalPages={totalPages}
-          onPageChange={(p) => setFilters({ ...filters, page: p })}
-          refresh={fetchAllOffers}
+          onPageChange={(p: number) => setFilters({ ...filters, page: p })}
+          // refresh={fetchAllOffers}
         />
       )}
     </div>

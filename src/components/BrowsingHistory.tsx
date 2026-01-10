@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 
 // Define your API type
 export interface ApiOffer {
@@ -51,6 +52,8 @@ function BrowsingHistory() {
               setHistory([]);
             }}
             className="text-sm text-blue-500 hover:underline"
+            type="button"
+            aria-label="Remove all"
           >
             Remove all
           </button>
@@ -65,11 +68,18 @@ function BrowsingHistory() {
             >
               {/* Remove single item */}
               <button
+                type="button"
+                aria-label="Remove"
                 onClick={() => {
-                  const updated = history.filter((item) => item._id !== offer._id);
+                  const updated = history.filter(
+                    (item) => item._id !== offer._id
+                  );
                   setHistory(updated);
                   if (typeof window !== "undefined") {
-                    localStorage.setItem("browsing_history", JSON.stringify(updated));
+                    localStorage.setItem(
+                      "browsing_history",
+                      JSON.stringify(updated)
+                    );
                   }
                 }}
                 className="absolute top-2 right-2 text-gray-400 hover:text-blue-500 text-xl font-bold"
@@ -77,10 +87,12 @@ function BrowsingHistory() {
                 ×
               </button>
 
-              <img
-                src={offer.images?.[0] || "/fallback-imgjpg.jpg"} // put this file inside /public
+              <Image
+                src={offer.images?.[0] || "/fallback-imgjpg.jpg"}
                 alt={offer.product?.title || "Offer"}
-                className="w-full h-24 object-cover rounded-t-lg text-white"
+                width={400}
+                height={96}
+                className="w-full h-24 object-cover rounded-t-lg"
               />
 
               <div className="p-2 inset-0 bg-gradient-to-b from-transparent to-black/30 text-white">
@@ -92,10 +104,12 @@ function BrowsingHistory() {
                 </div>
 
                 <div className="flex items-center mt-2">
-                  <img
+                  <Image
                     src="/default-avatar.png"
                     alt="Seller"
-                    className="w-5 h-5 rounded-full object-cover mr-2"
+                    width={20}
+                    height={20}
+                    className="rounded-full object-cover mr-2"
                   />
                   <p className="text-xs truncate">
                     {offer.seller?.displayName || offer.seller?.username}

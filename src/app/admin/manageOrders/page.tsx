@@ -1,12 +1,38 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import OrderTable from "src/components/orders/OrderTable";
 import OrderFilters from "src/components/orders/OrderFilters";
-import { fetchAllOrders } from "src/api/orders";
+import { fetchAllOrders, ApiOrder } from "src/api/orders";
+
+export interface OrderUI {
+  _id: string;
+  orderStatus: string;
+  paymentStatus: string;
+  amount: number;
+  quantity: number;
+
+  buyerName: string;
+  sellerName: string;
+  productTitle: string;
+
+  createdAt: string;
+}
+
+const mapApiOrderToUI = (o: ApiOrder): OrderUI => ({
+  _id: o._id,
+  orderStatus: o.orderStatus,
+  paymentStatus: o.paymentStatus,
+  amount: o.amount,
+  quantity: o.quantity,
+  buyerName: o.buyerId.displayName,
+  sellerName: o.sellerId.displayName,
+  productTitle: o.productId.title,
+  createdAt: o.createdAt,
+});
 
 export default function ManageOrders() {
-  const [orders, setOrders] = useState([]);
+  const [orders, setOrders] = useState<OrderUI[]>([]);
   const [loading, setLoading] = useState(true);
   const [totalPages, setTotalPages] = useState(1);
 
@@ -20,7 +46,7 @@ export default function ManageOrders() {
     limit: 10,
   });
 
-  const fetchOrders = async () => {
+  const fetchOrders = useCallback(async () => {
     try {
       setLoading(true);
 
@@ -34,7 +60,7 @@ export default function ManageOrders() {
       );
 
       if (res.success) {
-        setOrders(res.data || []);
+        setOrders(res.data.map(mapApiOrderToUI));
         setTotalPages(res.totalPages || 1);
       } else {
         setOrders([]);
@@ -45,11 +71,18 @@ export default function ManageOrders() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [
+    filters.page,
+    filters.limit,
+    filters.from,
+    filters.to,
+    filters.status,
+    filters.search,
+  ]);
 
   useEffect(() => {
     fetchOrders();
-  }, [filters]); // refresh whenever filters change
+  }, [fetchOrders]);
 
   return (
     <div className="text-white">
@@ -66,7 +99,7 @@ export default function ManageOrders() {
           orders={orders}
           currentPage={filters.page}
           totalPages={totalPages}
-          onPageChange={(p) => setFilters({ ...filters, page: p })}
+          onPageChange={(p:number) => setFilters({ ...filters, page: p })}
           refresh={fetchOrders}
         />
       )}

@@ -85,6 +85,7 @@ export default function ProductFields({ fields, setFields }: ProductFieldsProps)
       <div className="flex justify-between items-center">
         <h4 className="text-sm font-medium text-white">Product Fields</h4>
         <button
+          aria-label="Add field"
           type="button"
           onClick={addField}
           className="flex items-center text-xs px-2 py-0.5 bg-cyan-600 hover:bg-cyan-700 text-white rounded transition-all duration-200 cursor-pointer hover:shadow-lg hover:shadow-cyan-500/25"

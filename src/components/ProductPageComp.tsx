@@ -28,8 +28,8 @@ const ProductPageComp: React.FC<ProductPageCompProps> = ({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
-  const [servicesWithCounts, setServicesWithCounts] =
-    useState<ServiceWithCount[]>(initialServices);
+ const servicesWithCounts: ServiceWithCount[] = initialServices;
+
   const [selectedServiceName, setSelectedServiceName] =
     useState<string>(serviceName);
 
@@ -47,7 +47,7 @@ const ProductPageComp: React.FC<ProductPageCompProps> = ({
         productTitle
       );
       setOffers(offers || []);
-    } catch (err: any) {
+    } catch (err) {
       setError(err.message || "Failed to fetch offers.");
     } finally {
       setLoading(false);
@@ -63,7 +63,7 @@ const ProductPageComp: React.FC<ProductPageCompProps> = ({
   const handleSort = (type: "low" | "high" | "recent") => {
     setSortBy(type);
 
-    let sortedOffers = [...offers];
+    const sortedOffers = [...offers];
 
     if (type === "low") {
       sortedOffers.sort((a, b) => a.price - b.price);
@@ -214,6 +214,7 @@ const ProductPageComp: React.FC<ProductPageCompProps> = ({
                     key={service._id}
                     className="flex flex-col"
                     onClick={() => handleServiceClick(service.name)}
+                    aria-label="service"
                   >
                     <li
                       className={`border-0 flex flex-row mt-6 w-25 h-25 justify-center relative rounded-4xl hover:text-black transition-shadow duration-300 overflow-hidden m-2 items-center border border-gray-600 ease-in-out hover:translate-y-1 cursor-pointer 

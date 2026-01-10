@@ -6,6 +6,7 @@ import { Edit, Trash2, ChevronDown, ChevronRight } from "lucide-react";
 import toast from "react-hot-toast";
 import ConfirmationModal from "src/components/ui/ConfirmationModal";
 import { fetchOffersBySellerId, deleteOffer } from "src/api/offers";
+import Image from "next/image";
 
 /** Local Offer type (adjust if your ApiOffer differs) */
 type OfferDetail = { fieldName: string; value: string };
@@ -47,7 +48,6 @@ export default function ManageOffers() {
 
   useEffect(() => {
     fetchOffers();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const fetchOffers = async () => {
@@ -124,15 +124,18 @@ export default function ManageOffers() {
     const firstImage = images[0];
     return (
       <div className="w-16 h-16 rounded-lg overflow-hidden bg-gray-700/50 flex items-center justify-center">
-        <img
-          src={firstImage}
-          alt="Offer image"
-          className="w-full h-full object-cover"
-          onError={(e) => {
-            const t = e.target as HTMLImageElement;
-            t.style.display = "none";
-          }}
-        />
+        <div className="relative w-full h-full">
+          <Image
+            src={firstImage}
+            alt="Offer image"
+            fill
+            className="object-cover"
+            onError={(e) => {
+              const img = e.currentTarget;
+              img.style.display = "none";
+            }}
+          />
+        </div>
       </div>
     );
   };
@@ -292,6 +295,7 @@ export default function ManageOffers() {
 
                           <div className="flex items-center space-x-2">
                             <button
+                              type="button"
                               onClick={() => handleEditOffer(offer._id)}
                               className="p-1.5 text-gray-400 hover:text-blue-400 hover:bg-gray-700/50 rounded transition-colors"
                               title="Edit offer"
@@ -301,6 +305,7 @@ export default function ManageOffers() {
                             </button>
 
                             <button
+                              type="button"
                               onClick={() =>
                                 handleDeleteClick(
                                   offer._id,

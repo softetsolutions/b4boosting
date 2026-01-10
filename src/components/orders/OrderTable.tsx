@@ -3,6 +3,7 @@
 
 import toast from "react-hot-toast";
 import { updateOrderStatus } from "src/api/orders";
+import Image from "next/image";
 
 export default function OrderTable({ orders, currentPage, totalPages, onPageChange, refresh }) {
   const handleStatusChange = async (id: string, status: string) => {
@@ -47,7 +48,14 @@ export default function OrderTable({ orders, currentPage, totalPages, onPageChan
 
               <td className="p-3">
                 <div className="flex items-center">
-                  <img alt="buyerId" src={order.buyerId?.profilePic} className="w-5 h-5 rounded-full mr-2" />
+                 <div className="relative w-5 h-5 mr-2">
+  <Image
+    src={order.buyerId?.profilePic || "/default-avatar.png"}
+    alt="buyerId"
+    fill
+    className="rounded-full object-cover"
+  />
+</div>
                   {order.buyerId?.username}
                 </div>
                 {order.buyerId?.email}
@@ -55,7 +63,16 @@ export default function OrderTable({ orders, currentPage, totalPages, onPageChan
 
               <td className="p-3">
                 <div className="flex items-center">
-                  <img src={order.sellerId?.profilePic} className="w-5 h-5 rounded-full mr-2" alt="sellerId" />
+                  {/* <img src={order.sellerId?.profilePic}
+                   className="w-5 h-5 rounded-full mr-2" 
+                   alt="sellerId" /> */}
+                   <Image
+  src={order.sellerId?.profilePic || "/avatar-placeholder.png"}
+  alt="seller profile"
+  width={20}
+  height={20}
+  className="rounded-full mr-2 object-cover"
+/>
                   {order.sellerId?.username}
                 </div>
                 {order.sellerId?.email}
@@ -86,6 +103,8 @@ export default function OrderTable({ orders, currentPage, totalPages, onPageChan
       {/* Pagination */}
       <div className="flex justify-end-safe gap-3 m-4">
         <button
+          type="button"
+          aria-label="prev button"
           disabled={currentPage === 1}
           className="px-4 py-2 bg-gray-800 text-white rounded disabled:opacity-50"
           onClick={() => onPageChange(currentPage - 1)}
@@ -94,6 +113,8 @@ export default function OrderTable({ orders, currentPage, totalPages, onPageChan
         </button>
 
         <button
+          type="button"
+          aria-label="next button"
           disabled={currentPage === totalPages}
           className="px-4 py-2 bg-gray-800 text-white rounded disabled:opacity-50"
           onClick={() => onPageChange(currentPage + 1)}

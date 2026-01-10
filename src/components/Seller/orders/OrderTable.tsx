@@ -3,6 +3,7 @@
 import toast from "react-hot-toast";
 import { updateOrderStatusBySeller } from "src/api/orders";
 import StarRating from "src/components/Reviews/StarRating";
+import Image from "next/image";
 
 export default function OrderTable({
   orders,
@@ -53,11 +54,14 @@ export default function OrderTable({
 
               <td className="p-3">
                 <div className="flex items-center">
-                  <img
-                    alt="buyerId"
-                    src={order.buyerId?.profilePic}
-                    className="w-5 h-5 rounded-full mr-2"
-                  />
+                 <div className="relative w-5 h-5 mr-2">
+  <Image
+    src={order.buyerId?.profilePic || "/default-avatar.png"}
+    alt="buyerId"
+    fill
+    className="rounded-full object-cover"
+  />
+</div>
                   {order.buyerId?.username}
                 </div>
                 {order.buyerId?.email}

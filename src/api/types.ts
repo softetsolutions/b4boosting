@@ -1,8 +1,36 @@
 export interface Service {
   _id: string;
   name: string;
-  type: string;
   icon: string;
+  products: Product[];
+}
+export interface HomePageProduct {
+  _id: string;
+  title: string;
+  images:(File | string)[];
+  offerCount: number;
+}
+
+export interface HomePageService {
+  _id: string;
+  name: string;
+  icon: string;
+  products: HomePageProduct[];
+}
+
+export interface Settings {
+  _id: string;
+  bannerImg: (string | File);
+  bannerTitle: string;
+  bannerSubtitle: string;
+  bannerRedirectionLink: string;
+  marqueeText: string;
+  marqueeLink: string;
+}
+
+export interface HomePageData {
+  services: HomePageService[];
+  settings: Settings;
 }
 
 export interface ProductFormData {
@@ -12,7 +40,7 @@ export interface ProductFormData {
   service: string;
   serviceName: string;
   productRequiredFields: ProductField[];
-  images?: string[];
+  images: (File | string)[];
 }
 
 export interface ProductField {
@@ -30,13 +58,43 @@ export interface Product {
   service: string;
   sellerId: string;
   productRequiredFields: ProductField[];
-  images?: string[];
+  images?: (File | string)[];
   createdAt: string;
   updatedAt: string;
 }
 
 export interface CreateProductResponse {
-  success: boolean;
+  success?: boolean;
   data?: Product;
   message?: string;
+}
+
+
+export interface AccountDetails {
+ _id: string;
+  firstName: string;
+  lastName: string;
+  displayName: string;
+  username: string;
+  walletBalance: number;
+  role: string;
+  email: string;
+  createdAt?: string;
+  isEmailVerified: boolean;
+  isPhoneVerified: boolean;
+  twoFactorEnabled: boolean;
+}
+
+export interface Review {
+  _id: string;
+  orderId: string;
+  productId: string;
+  buyerId: string;
+  sellerId: string;
+  rating: number;
+  reviewText: string;
+  images:(File | string)[];
+  isEdited: boolean;
+  createdAt?: string;
+  updatedAt?: string;
 }

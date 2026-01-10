@@ -6,7 +6,6 @@ export interface Service {
   icon: string;
   showOnHome?: boolean;
   createdAt: string;
-  __v: number;
 }
 
 export interface CreateServiceRequest {

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Image from "next/image";
 
 const Footer = () => {
   const [hoverEffect, setHoverEffect] = useState(false);
@@ -97,9 +98,11 @@ const Footer = () => {
           <div className="relative">
             <div className="flex items-center space-x-3 mb-8">
               <div className="bg-gradient-to-r yellow-bg p-2 rounded-xl shadow-lg shadow-cyan-500/20">
-                <img
+                <Image
                   src="/svgIcons/LogoIcon.svg"
                   alt="Logo"
+                  width={24}
+                  height={24}
                   className="w-6 h-6"
                 />
               </div>
@@ -140,11 +143,14 @@ const Footer = () => {
                       }}
                     />
                   </div>
-                  <img
-                    src={social.icon}
-                    alt={social.label}
-                    className={`w-5 h-5 text-gray-400 transition-colors relative z-10 ${social.hoverClass}`}
-                  />
+                  <div className="relative w-5 h-5">
+                    <Image
+                      src={social.icon || "/fallback-icon.svg"}
+                      alt={social.label}
+                      fill
+                      className={`object-contain transition-colors relative z-10 ${social.hoverClass}`}
+                    />
+                  </div>
                 </a>
               ))}
             </div>
@@ -217,11 +223,14 @@ const Footer = () => {
                   className="group flex items-center p-3 rounded-lg bg-gray-800/30 border border-gray-700/30 hover:border-cyan-500/40 hover:bg-gray-800/50 transition-all duration-300"
                 >
                   <div className="w-8 h-8 rounded-md bg-gradient-to-br from-gray-700 to-gray-800 flex items-center justify-center mr-3 group-hover:from-cyan-500/20 group-hover:to-blue-600/20 transition-all duration-300">
-                    <img
-                      src={service.icon}
-                      alt=""
-                      className="w-4 h-4 text-gray-400 group-hover:text-amber-400 transition-colors"
-                    />
+                    <div className="relative w-4 h-4">
+                      <Image
+                        src={service.icon || "/fallback-icon.svg"}
+                        alt=""
+                        fill
+                        className="object-contain transition-colors"
+                      />
+                    </div>
                   </div>
                   <span className="text-gray-400 group-hover:text-amber-400 transition-colors text-sm">
                     {service.name}
@@ -232,13 +241,12 @@ const Footer = () => {
             {/* <div className="absolute -bottom-4 left-0 w-24 h-1 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-full opacity-50"></div> */}
           </div>
         </div>
-       
+
         {/* Bottom Bar  */}
         <div className="pt-8 mt-8 border-t border-gray-800/50 flex flex-col md:flex-row justify-between items-center">
           <p className="text-gray-500 text-sm mb-4 md:mb-0">
             © {new Date().getFullYear()}{" "}
-            <span className="yellow-text">GameStore</span>. All rights
-            reserved.
+            <span className="yellow-text">GameStore</span>. All rights reserved.
           </p>
           <div className="flex flex-wrap justify-center gap-6">
             {["Privacy Policy", "Terms of Service", "Cookie Policy"].map(

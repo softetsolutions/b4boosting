@@ -28,6 +28,7 @@ const CustomValueInput: React.FC<CustomValueInputProps> = ({ onAdd }) => {
         type="button"
         onClick={handleAdd}
         className="bg-cyan-600 hover:bg-cyan-700 text-white px-2 rounded-r text-xs"
+        aria-label=" Add value"
       >
         Add
       </button>

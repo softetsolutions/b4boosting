@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { createService } from "src/api/services"; // adjust path if needed
 import ImageUpload from "src/components/ui/ImageUpload";
-import SpinnerIcon from "../../../../public/svgIcons/SpinnerIcon.svg"; // adjust import
 
 export default function CreateServicePage() {
   const router = useRouter();
@@ -158,6 +157,7 @@ export default function CreateServicePage() {
           {/* Form Actions */}
           <div className="flex justify-end space-x-3 pt-4">
             <button
+              aria-label="Cancel"
               type="button"
               onClick={handleCancel}
               className="px-4 py-2 border border-gray-600 text-sm text-gray-300 hover:bg-gray-800 hover:text-white rounded-lg transition-all duration-200 cursor-pointer hover:border-gray-500"
@@ -165,6 +165,7 @@ export default function CreateServicePage() {
               Cancel
             </button>
             <button
+              aria-label="Submit"
               type="submit"
               disabled={isSubmitting}
               className="px-4 py-2 bg-gradient-to-r from-cyan-500 to-blue-700 hover:from-cyan-600 hover:to-blue-800 text-white text-sm font-medium rounded-lg shadow-lg hover:shadow-cyan-500/25 transition-all duration-200 cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed hover:shadow-lg flex items-center"

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Upload, Save } from "lucide-react";
+import { Save } from "lucide-react";
 import toast from "react-hot-toast";
 import ImageUpload from "src/components/ui/ImageUpload";
 
@@ -37,24 +37,14 @@ export default function SystemSettings() {
       const data = await res.json();
       setSettings(data);
       setBannerPreview(data.bannerImg || null);
-    } catch (error: any) {
+    } catch (error) {
       console.error("Error fetching settings:", error);
-      toast.error(error.message || "Error loading settings");
+      toast.error(error instanceof Error ? error.message : "Error loading settings");
     } finally {
       setLoading(false);
     }
   };
 
-  // 🔹 Handle banner upload preview
-  const handleBannerChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    setBannerFile(file);
-    const url = URL.createObjectURL(file);
-    setBannerPreview(url);
-  };
-
-  // 🔹 Save settings
   const handleSave = async () => {
     try {
       setSaving(true);
@@ -88,9 +78,9 @@ export default function SystemSettings() {
 
       setSettings(data.settings);
       toast.success("Settings updated successfully!");
-    } catch (error: any) {
+    } catch (error) {
       console.error("Error updating settings:", error);
-      toast.error(error.message || "Error saving settings");
+      toast.error(error instanceof Error ? error.message : "Error saving settings");
     } finally {
       setSaving(false);
     }
@@ -233,6 +223,8 @@ export default function SystemSettings() {
       {/* Save Button */}
       <div className="flex justify-end mt-8">
         <button
+          aria-label="Save Changes"
+          type="button"
           onClick={handleSave}
           disabled={saving}
           className={`flex items-center gap-2 px-6 py-3 rounded-lg font-semibold transition-all ${

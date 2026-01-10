@@ -8,7 +8,9 @@ interface AuthTokenPayload {
   id: string;
   role: string;
   allowedRoutes: string[];
-  [key: string]: any;
+   affiliateId?: string;
+  [key: string]: unknown;
+  
 }
 
 export default async function ChatLayout({

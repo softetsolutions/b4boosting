@@ -4,8 +4,22 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { getAdminUserChatList } from "src/api/conversation";
 
+interface ChatUser {
+  userId: string;
+  chatUserId: string;
+  displayName: string;
+  username: string;
+  email: string;
+  role: string;
+  walletBalance: number;
+  isEmailVerified: boolean;
+  isPhoneVerified: boolean;
+  createdAt: string;
+}
+
+
 export default function UserList() {
-  const [users, setUsers] = useState([]);
+  const [users, setUsers] = useState<ChatUser[]>([]);
   const router = useRouter();
 
   useEffect(() => {
@@ -13,7 +27,8 @@ export default function UserList() {
   }, []);
 
   const fetchUsers = async () => {
-    const res = await getAdminUserChatList();
+     const res: { success: boolean; data: ChatUser[] } =
+    await getAdminUserChatList();
     if (res.success) setUsers(res.data);
   };
 
@@ -26,7 +41,7 @@ export default function UserList() {
       <h1 className="text-xl font-semibold mb-4">Users List</h1>
 
       <div className="space-y-3">
-        {users?.map((user: any) => (
+        {users?.map((user) => (
           <div
             key={user.userId}
             onClick={() => openChat(user.chatUserId)}

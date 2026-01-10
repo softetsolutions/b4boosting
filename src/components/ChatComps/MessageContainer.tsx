@@ -1,9 +1,57 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { getConversationBetween, uploadChatFile } from "src/api/conversation";
 import { toast } from "react-hot-toast";
-import { socket } from "../../app/chats/page";
+import { socket } from "../../utils/socket";
+import Image from "next/image";
+
+type MessageFile = {
+  url: string;
+  name: string;
+  mimeType: string;
+  size: number;
+};
+
+type MessageActionBtn = {
+  action: "DELIVER_ORDER" | "COMPLETE_ORDER" | string;
+  label?: string;
+  payload: { orderId: string };
+  allowedUsers?: string[];
+  disabled?: boolean;
+};
+
+type Message = {
+  sender: string;
+  senderRole?: "system" | string;
+  text: string;
+  type?: "action" | string;
+  file?: MessageFile;
+  actions?: MessageActionBtn[];
+  visibleTo?: string[];
+};
+
+type OrderActionBtn = {
+  action: "ACCEPT_ORDER" | "DECLINE_ORDER" | "DELIVER_ORDER" | "COMPLETE_ORDER";
+  label?: string;
+  payload: {
+    orderId: string;
+    [key: string]: unknown;
+  };
+  allowedUsers?: string[];
+  disabled?: boolean;
+};
+
+type Conversation = {
+  _id: string;
+  messages: Message[];
+  participantsInfo?: {
+    _id: string;
+    username?: string;
+    name?: string;
+  }[];
+};
+
 
 export default function MessageContainer({
   sendMessage,
@@ -17,7 +65,7 @@ export default function MessageContainer({
   isAdmin: boolean;
 }) {
   const [message, setMessage] = useState("");
-  const [messageList, setMessageList] = useState<any[]>([]);
+  const [messageList, setMessageList] = useState<Message[]>([]);
   const [receiverName, setReceiverName] = useState<string>(""); // 🔥 NEW
   const [conversationsId, setConversationsId] = useState<string | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -26,8 +74,8 @@ export default function MessageContainer({
   const handleMessageChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     setMessage(e.target.value);
 
-  async function loadMessages() {
-    try {
+  const loadMessages = useCallback(async () => {
+  try {
       if (!senderId || !receiverId) return;
 
       console.log(senderId, receiverId, "senderId, receiverId");
@@ -39,7 +87,7 @@ export default function MessageContainer({
       setConversationsId(conv._id);
       setMessageList(conv.messages || []);
       const otherUser = conv.participantsInfo?.find(
-        (u: any) => u._id === receiverId
+        (u: Conversation) => u._id === receiverId
       );
 
       if (otherUser) {
@@ -53,15 +101,15 @@ export default function MessageContainer({
       toast.error("Failed to load messages");
       console.error(error);
     }
-  }
+}, [senderId, receiverId]);
+ 
+  useEffect(() => {
+  loadMessages();
+}, [loadMessages]);
 
   useEffect(() => {
-    loadMessages();
-  }, [senderId, receiverId]);
-
-  useEffect(() => {
-    const handleReceive = ({ conversationId, message }: any) => {
-      setMessageList((prev) => [...prev, message]);
+    const handleReceive = (payload: { message: Message }) => {
+       setMessageList((prev) => [...prev, payload.message]);
     };
 
     const handleRefresh = () => {
@@ -75,7 +123,7 @@ export default function MessageContainer({
       socket.off("receiveMessage", handleReceive);
       socket.off("refreshMessages", handleRefresh);
     };
-  }, [senderId, receiverId]);
+  }, [loadMessages]);
 
   const handleSend = () => {
     if (!message.trim()) return;
@@ -93,7 +141,7 @@ export default function MessageContainer({
     setMessage("");
   };
 
-  const handleOrderAction = (btn: any, msg: any) => {
+  const handleOrderAction = (btn: OrderActionBtn) => {
     if (!socket || !socket.connected) {
       console.error("❌ Socket not connected");
       toast.error("Connection issue. Please refresh.");
@@ -119,7 +167,7 @@ export default function MessageContainer({
     });
   };
 
-  const handleDeliverOrder = async (btn: any, msg: any) => {
+  const handleDeliverOrder = async (btn: MessageActionBtn, msg: Message) => {
     console.log("btn", btn, "btn.payload", btn.payload, "msg", msg);
 
     if (!btn.payload.orderId) {
@@ -177,7 +225,7 @@ export default function MessageContainer({
     }
   };
 
-  const handleCompleteOrder = (btn: any, msg: any) => {
+  const handleCompleteOrder = (btn: MessageActionBtn) => {
     socket.emit("orderAction", {
       action: "COMPLETE_ORDER",
       // orderId: msg.orderId,
@@ -187,33 +235,43 @@ export default function MessageContainer({
     });
   };
 
-  useEffect(() => {
-    socket.on("orderStatusUpdated", ({ conversationId }) => {
-      if (conversationId === conversationsId) {
-        loadMessages();
-      }
-    });
+ useEffect(() => {
+  const handleOrderStatusUpdated = ({
+    conversationId,
+  }: {
+    conversationId: string;
+  }) => {
+    if (conversationId === conversationsId) {
+      loadMessages();
+    }
+  };
 
-    socket.on("orderActionError", ({ message }) => {
-      toast.error(message);
-    });
+  const handleOrderActionError = ({ message }: { message: string }) => {
+    toast.error(message);
+  };
 
-    return () => {
-      socket.off("orderStatusUpdated");
-      socket.off("orderActionError");
-    };
-  }, [conversationsId]);
+  socket.on("orderStatusUpdated", handleOrderStatusUpdated);
+  socket.on("orderActionError", handleOrderActionError);
+
+  return () => {
+    socket.off("orderStatusUpdated", handleOrderStatusUpdated);
+    socket.off("orderActionError", handleOrderActionError);
+  };
+}, [conversationsId, loadMessages]);
+
 
   return (
     <div className="flex flex-col h-full text-white">
       {/* HEADER */}
       <header className="flex items-center justify-between px-4 py-3 border-b border-gray-700 gray-bg rounded-2xl">
         <div className="flex items-center gap-3">
-          <img
-            src="https://www.g2g.com/static/images/avatar-default.svg"
-            alt="User Avatar"
-            className="w-10 h-10 rounded-full border border-gray-600"
-          />
+         <Image
+  src="https://www.g2g.com/static/images/avatar-default.svg"
+  alt="User Avatar"
+  width={40} // 10 * 4px
+  height={40} // 10 * 4px
+  className="rounded-full border border-gray-600"
+/>
           <div>
             {/* <h2 className="text-lg font-semibold">{receiverId}</h2> */}
             <h2 className="text-lg font-semibold">
@@ -260,7 +318,7 @@ export default function MessageContainer({
 
                   {/* FILE INPUT (Seller Deliver) */}
                   {msg.type === "action" &&
-                    msg.actions?.map((btn: any, i: number) => {
+                    msg.actions?.map((btn: MessageActionBtn, i: number) => {
                       const canClick =
                         btn.allowedUsers?.includes(senderId) && !btn.disabled;
 

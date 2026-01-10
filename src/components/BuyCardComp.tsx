@@ -7,15 +7,17 @@ import toast from "react-hot-toast";
 import { createPayPalOrder, capturePayPalOrder } from "src/api/orders";
 import ShareMenu from "./ShareMenu";
 import { startConversation } from "src/api/conversation";
+import Image from "next/image";
 
 interface BuyCardCompProps {
   offer: ApiOffer;
 }
+interface PayPalApproveData {
+  orderID: string;
+}
 
 function BuyCardComp({ offer }: BuyCardCompProps) {
   const router = useRouter();
-  const [onlineSellersOnly, setOnlineSellersOnly] = useState<boolean>(false);
-  const [sortBy, setSortBy] = useState<string>("Recommended");
   const [count, setCount] = useState<number>(1);
 
   // const {userId}  = getAuthInfo();
@@ -41,12 +43,6 @@ function BuyCardComp({ offer }: BuyCardCompProps) {
 
   const totalAmount: string = (count * (offer ? offer.price : 0)).toFixed(2);
 
-  const getOfferDetail = (field: string): string | undefined => {
-    if (!offer || !offer.offerDetails) return undefined;
-    const found = offer.offerDetails.find((d) => d.fieldName === field);
-    return found ? found.value : undefined;
-  };
-
   const createOrder = async (): Promise<string> => {
     try {
       const response = await createPayPalOrder(Number(totalAmount));
@@ -58,7 +54,7 @@ function BuyCardComp({ offer }: BuyCardCompProps) {
     }
   };
 
-  const onApprove = async (data: any) => {
+  const onApprove = async (data: PayPalApproveData) => {
     try {
       const result = await capturePayPalOrder(data.orderID, offer._id, count);
       if (result.success) {
@@ -68,6 +64,7 @@ function BuyCardComp({ offer }: BuyCardCompProps) {
         toast.error(result.message || "Payment failed!");
       }
     } catch (error) {
+      console.error(error);
       toast.error("Payment error");
     }
   };
@@ -163,11 +160,13 @@ function BuyCardComp({ offer }: BuyCardCompProps) {
 
                 {/* Right: Product Image */}
                 <div className="flex-1 w-full flex justify-center">
-                  <img
-                    src={offer.product.images?.[0]}
-                    alt={offer.product.title}
-                    className="w-50 max-w-sm md:max-w-md lg:max-w-lg h-auto rounded-lg object-cover"
-                  />
+                 <Image
+  src={offer.product.images?.[0] || "/fallback-imgjpg.jpg"}
+  alt={offer.product.title || "Product image"}
+  width={500}
+  height={500}
+  className="w-50 max-w-sm md:max-w-md lg:max-w-lg h-auto rounded-lg object-cover"
+/>
                 </div>
               </div>
 
@@ -220,7 +219,10 @@ function BuyCardComp({ offer }: BuyCardCompProps) {
                   <h3 className="text-gray-400 text-sm">
                     {offer ? offer?.quantityAvailable : "Loading..."} available
                   </h3>
-                  <button className="text-yellow-400/100 text-xs font-semibold px-2 py-1 rounded-full border border-gray-400/20 hover:bg-cyan-500/10 transition-colors">
+                  <button
+                    type="button"
+                    aria-label="volume Discount"
+                   className="text-yellow-400/100 text-xs font-semibold px-2 py-1 rounded-full border border-gray-400/20 hover:bg-cyan-500/10 transition-colors">
                     Volume discount
                   </button>
                 </div>
@@ -235,6 +237,7 @@ function BuyCardComp({ offer }: BuyCardCompProps) {
                 <div className="flex items-center justify-center rounded-full mb-6 shadow-gray-700/30 p-2 border-1 border-gray-400/20">
                   <button
                     type="button"
+                    aria-label="decrement"
                     onClick={handleDec}
                     disabled={count <= 1}
                     className={`
@@ -254,6 +257,7 @@ function BuyCardComp({ offer }: BuyCardCompProps) {
                   </p>
                   <button
                     type="button"
+                    aria-label="increment"
                     onClick={handleInc}
                     className="
                     flex items-center justify-center w-8 h-8 rounded-full border
@@ -327,6 +331,7 @@ function BuyCardComp({ offer }: BuyCardCompProps) {
                     </div>
                     <div>
                       <button
+                        aria-label="start chat"
                         type="button"
                         className=" mt-2 bg-emerald-600 text-white py-1 px-2 rounded-full text-sm font-semibold hover:bg-emerald-700 transition duration-300 flex items-center shadow-md shadow-emerald-600/30"
                         onClick={async () => {

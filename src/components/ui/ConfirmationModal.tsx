@@ -28,12 +28,14 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
         <p className="text-gray-300 mb-6">{message}</p>
         <div className="flex justify-end space-x-3">
           <button
+            type="button"
             onClick={onCancel}
             className="px-4 py-2 border border-gray-600 text-sm text-gray-300 hover:bg-gray-800 hover:text-white rounded-lg transition-all duration-200 cursor-pointer hover:border-gray-500"
           >
             {cancelText}
           </button>
           <button
+            type="button"
             onClick={onConfirm}
             className="px-4 py-2 bg-gradient-to-r from-red-500 to-red-700 hover:from-red-600 hover:to-red-800 text-white text-sm font-medium rounded-lg shadow-lg hover:shadow-red-500/25 transition-all duration-200 cursor-pointer"
           >

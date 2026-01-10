@@ -1,7 +1,7 @@
 
 "use client";
 
-import AuthProvider from "./AuthProvider";
+import AuthProvider, { AuthContextType } from "./AuthProvider";
 import { getAuthInfo } from "../auth";
 
 export default function AuthRootProvider({
@@ -9,7 +9,7 @@ export default function AuthRootProvider({
 }: {
   children: React.ReactNode;
 }) {
-  let value: any;
+   let value: AuthContextType;
 
   try {
     const info = getAuthInfo();

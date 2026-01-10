@@ -2,7 +2,6 @@
 
 import { useEffect, useState, useMemo } from "react";
 import { useAuth } from "src/utils/providers/AuthProvider";
-import { io } from "socket.io-client";
 import { useSearchParams } from "next/navigation";
 import InboxTab from "../../components/ChatComps/InboxTab";
 import MessageContainer from "../../components/ChatComps/MessageContainer";
@@ -10,10 +9,22 @@ import { getConversationsByUser } from "src/api/conversation";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 
-export const socket = io("http://localhost:5005", { autoConnect: false });
+import { socket } from "src/utils/socket";
+
+interface ConversationItem {
+  conversationId: string;
+  chatType: 0 | 1;
+  userId: string;
+  displayName: string;
+  lastMessage: string;
+  timestamp?: string;
+  orderStatus?: string | null;
+  unreadCount?: number;
+}
+
 
 export default function Chat() {
-  const [conversationData, setConversationData] = useState([]);
+  const [conversationData, setConversationData] = useState<ConversationItem[]>([]);
   const [receiverId, setReceiverId] = useState("");
   const [activeTab, setActiveTab] = useState("general");
   const searchParams = useSearchParams();
@@ -49,7 +60,7 @@ const isAdmin = userInfo?.role === "admin";
     if (preselected) setReceiverId(preselected);
 
     fetchConversations(chatOwnerId);
-  }, [chatOwnerId]);
+  }, [chatOwnerId, preselected]);
 
   useEffect(() => {
      if (!chatOwnerId) return;
@@ -138,6 +149,7 @@ const isAdmin = userInfo?.role === "admin";
         {/* TABS */}
         <div className="flex border-b border-gray-700">
           <button
+            aria-label="active orders"
             type="button"
             onClick={() => setActiveTab("active")}
             className={`px-4 py-3 flex-1 text-center ${
@@ -150,6 +162,7 @@ const isAdmin = userInfo?.role === "admin";
           </button>
 
           <button
+            aria-label="general"
             type="button"
             onClick={() => setActiveTab("general")}
             className={`px-4 py-3 flex-1 text-center ${
@@ -186,7 +199,7 @@ const isAdmin = userInfo?.role === "admin";
 
       {/* RIGHT CHAT AREA */}
       <div className="flex-1 gray-bg rounded-2xl">
-        {receiverId ? (
+        {receiverId && chatOwnerId ? (
           <MessageContainer
             sendMessage={sendMessage}
             senderId={chatOwnerId}

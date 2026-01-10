@@ -4,24 +4,25 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import ThemeToggle from "../ThemeToggle";
-import LanguageSelector from "../LanguageSelector";
 import { SettingsIcon, SearchIcon, Menu, X } from "lucide-react";
 import Cookies from "js-cookie";
 import { useRouter, usePathname } from "next/navigation";
 import Marquee from "src/components/Marquee";
 import { jwtDecode } from "jwt-decode";
 import { logoutAction } from "src/utils/actions/actions";
+import { HomePageData } from "src/api/types";
 
 interface NavbarProps {
   activeService?: string;
-  dynamicdata?: any;
+  dynamicdata?: HomePageData;
 }
 
 interface AuthTokenPayload {
   id: string;
   role: string;
   allowedRoutes: string[];
-  [key: string]: any;
+   affiliateId?: string;
+  [key: string]: unknown;
 }
 
 const dummyNavbarOptions = [
@@ -134,15 +135,17 @@ export default function Navbar({ activeService, dynamicdata }: NavbarProps) {
             <div className="flex items-center justify-between w-full lg:w-auto">
               <Link href="/" className="flex items-center space-x-7">
                 <div className="bg-gradient-to-r yellow-bg p-2 rounded-xl shadow-lg">
-                  <img
+                  <Image
                     src="/svgIcons/LogoIcon.svg"
                     alt="Logo"
+                    width={24}
+                    height={24}
                     className="w-6 h-6"
                   />
                 </div>
                 <div className="hidden md:block">
                   <h1 className="text-2xl yellow-text font-bold bg-clip-text text-transparent">
-                    GameStore
+                    B4Boosting
                   </h1>
                   <p className="text-xs text-amber-100">Pro Gaming Services</p>
                 </div>
@@ -212,9 +215,6 @@ export default function Navbar({ activeService, dynamicdata }: NavbarProps) {
                   Seller Dashboard
                 </Link>
               )}
-
-              {/* Language selector */}
-              {/* <LanguageSelector /> */}
 
               {/* Login */}
               {!isLoggedIn && (

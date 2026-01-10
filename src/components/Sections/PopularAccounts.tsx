@@ -1,10 +1,11 @@
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { Product } from "src/api/types";
 
 interface PopularAccountsProps {
   service?: {
-    products: any[];
+    products: Product[];
   };
 }
 
@@ -30,14 +31,6 @@ export default function PopularAccounts({ service }: PopularAccountsProps) {
   }, []);
 
   const totalSlides = Math.ceil(accounts.length / 2);
-
-  const nextSlide = () => {
-    setCurrentSlide((prev) => (prev + 1) % totalSlides);
-  };
-
-  const prevSlide = () => {
-    setCurrentSlide((prev) => (prev - 1 + totalSlides) % totalSlides);
-  };
 
   // Slice for mobile (2 per slide)
   const displayedAccounts = isMobile

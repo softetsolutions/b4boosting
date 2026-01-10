@@ -1,11 +1,5 @@
 "use client";
 
-interface AuthTokenPayload {
-  id: string;
-  role: string;
-  allowedRoutes: string[];
-  [key: string]: any;
-}
 
 export default function AdminDashboard() {
   return (

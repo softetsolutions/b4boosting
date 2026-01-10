@@ -59,7 +59,7 @@ export default function BecomeSellerForm() {
 
     toast.success("Seller request submitted!");
     router.push("/");
-  } catch (error: any) {
+  } catch (error) {
     console.error(error);
     toast.error(error.message || "Failed to submit request");
   } finally {

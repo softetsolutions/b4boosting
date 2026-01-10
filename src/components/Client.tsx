@@ -2,12 +2,9 @@
 
 import PopularAccounts from "./Sections/PopularAccounts";
 import PopularCurrency from "./Sections/PopularCurrency";
-
+import { HomePageData } from "src/api/types";
 interface ClientProps {
-  dynamicdata: {
-    services: any[];
-    settings: any;
-  };
+  dynamicdata: HomePageData;
 }
 
 export default function Client({ dynamicdata }: ClientProps) {

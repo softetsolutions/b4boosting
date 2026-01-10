@@ -2,9 +2,6 @@
 
 import Image from "next/image";
 import { useState, useEffect } from "react";
-import popularItem1 from "src/assets/images/popularItem1.jpg";
-import popularItem2 from "src/assets/images/popularItem2.jpg";
-
 import searchIcon from "src/assets/svgIcons/search.svg";
 import back2game from "src/assets/svgIcons/back2game.svg";
 import dollar from "src/assets/svgIcons/dollar.svg";
@@ -22,25 +19,7 @@ import { ArrowRightIcon } from "lucide-react";
 import hours from "src/assets/images/24hours.svg";
 import badge1 from "src/assets/images/badge1.svg";
 import chooseImage from "src/assets/images/chooseImage.jpg";
-
-interface Product {
-  _id: string;
-  title: string;
-  images?: string;
-  // description?: string;
-}
-
-interface Service {
-  _id: string;
-  name: string;
-  icon?: string;
-  products: Product[];
-}
-
-interface HomePageData {
-  services: Service[];
-  settings: any;
-}
+import type {HomePageData } from "src/api/types";
 
 interface PopularItemsProps {
   dynamicdata: HomePageData;
@@ -96,7 +75,7 @@ export default function PopularItems({ dynamicdata }: PopularItemsProps) {
 
   const accounts = Items?.products;
   const [visible, setVisible] = useState(5);
-  const [orderVisible, setOrderVisible] = useState(4);
+  const orderVisible = 4;
 
   const [isMobile, setIsMobile] = useState(false);
   const maxVisible = 6;
@@ -115,17 +94,11 @@ export default function PopularItems({ dynamicdata }: PopularItemsProps) {
     handleResize();
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
-  }, []);
+  }, [accounts?.length]);
 
   const handleToggle = () => {
     if (isMobile) {
-      setVisible((prev) => (prev === 2 ? accounts.length : 2));
-    }
-  };
-
-  const handleToggleOrder = () => {
-    if (isMobile) {
-      setOrderVisible((prev) => (prev === 2 ? orderEasily.length : 2));
+      setVisible((prev) => (prev === 2 ? accounts?.length : 2));
     }
   };
 
@@ -189,7 +162,7 @@ export default function PopularItems({ dynamicdata }: PopularItemsProps) {
           keeps you safe from scammers.
         </p>
         <p className="text-[20px] font-medium text-foreground text-center">
-          It's quick and easy - find the best product for your favorite game,
+          It&apos;s quick and easy - find the best product for your favorite game,
           make a payment, receive your order, and get back to playing.
         </p>
         <p className="text-[20px] font-medium text-foreground text-center">
