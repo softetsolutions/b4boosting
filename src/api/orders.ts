@@ -137,7 +137,7 @@ export const createPayPalOrder = async (
   amount: number
 ): Promise<CreatePayPalOrderResponse> => {
     try {
-  const { token } = getAuthInfo();
+  // const { token } = getAuthInfo();
 
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_BACKEND_URL}/orders/paypal/create-order`,
@@ -145,7 +145,7 @@ export const createPayPalOrder = async (
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: token ? `Bearer ${token}` : "",
+        // Authorization: token ? `Bearer ${token}` : "",
       },
       body: JSON.stringify({ amount }),
       credentials: "include",
@@ -181,7 +181,7 @@ export const capturePayPalOrder = async (
   offerId: string,
   quantity: number = 1
 ): Promise<CapturePayPalOrderResponse> => {
-  const { token } = getAuthInfo();
+  // const { token } = getAuthInfo();
 
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_BACKEND_URL}/orders/paypal/capture-order`,
@@ -189,7 +189,7 @@ export const capturePayPalOrder = async (
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: token ? `Bearer ${token}` : "",
+        // Authorization: token ? `Bearer ${token}` : "",
       },
       body: JSON.stringify({ orderId, offerId, quantity }),
       credentials: "include",
@@ -216,7 +216,7 @@ export const fetchAllOrders = async (
   buyerId?: string,
   sellerId?: string
 ): Promise< ApiOrdersResponse> => {
-  const { token } = getAuthInfo();
+  // const { token } = getAuthInfo();
   const params = new URLSearchParams();
 
   if (page) params.append("page", page.toString());
@@ -234,7 +234,7 @@ export const fetchAllOrders = async (
     {
       headers: {
         "Content-Type": "application/json",
-        Authorization: token ? `Bearer ${token}` : "",
+        // Authorization: token ? `Bearer ${token}` : "",
       },
       credentials: "include",
     }
@@ -250,7 +250,7 @@ export const fetchAllOrders = async (
 
 
 export const updateOrderStatus = async (id: string, status: string) => {
-   const { token } = getAuthInfo();
+  //  const { token } = getAuthInfo();
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_BACKEND_URL}/orders/admin/${id}`,
     {
@@ -258,7 +258,7 @@ export const updateOrderStatus = async (id: string, status: string) => {
       
       headers: {
         "Content-Type": "application/json",
-        Authorization: token ? `Bearer ${token}` : "",
+        // Authorization: token ? `Bearer ${token}` : "",
       },
       credentials: "include",
       body: JSON.stringify({ status }),
@@ -274,7 +274,7 @@ export const updateOrderStatus = async (id: string, status: string) => {
 }
 
 export const updateOrderStatusBySeller = async (id: string, status: string) => {
-   const { token } = getAuthInfo();
+  //  const { token } = getAuthInfo();
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_BACKEND_URL}/orders/seller/${id}`,
     {
@@ -282,7 +282,7 @@ export const updateOrderStatusBySeller = async (id: string, status: string) => {
       
       headers: {
         "Content-Type": "application/json",
-        Authorization: token ? `Bearer ${token}` : "",
+        // Authorization: token ? `Bearer ${token}` : "",
       },
       credentials: "include",
       body: JSON.stringify({ status }),
@@ -301,14 +301,14 @@ export const updateOrderStatusBySeller = async (id: string, status: string) => {
 export const fetchOrdersByBuyer = async (
   buyerId?: string
 ): Promise<{ success: boolean; data: BuyerOrder[] }> => {
-  const { token } = getAuthInfo();
+  // const { token } = getAuthInfo();
 
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_BACKEND_URL}/orders/buyer/${buyerId}`,
     {
       headers: {
         "Content-Type": "application/json",
-        Authorization: token ? `Bearer ${token}` : "",
+        // Authorization: token ? `Bearer ${token}` : "",
       },
       credentials: "include",
     }
@@ -338,7 +338,7 @@ export const fetchOrdersBySeller = async (
   totalPages?: number;
   currentPage?: number;
 }> => {
-  const { token,userId } = getAuthInfo();
+  const { userId } = getAuthInfo();
 
   const query = new URLSearchParams();
 
@@ -357,7 +357,7 @@ export const fetchOrdersBySeller = async (
     {
       headers: {
         "Content-Type": "application/json",
-        Authorization: token ? `Bearer ${token}` : "",
+        // Authorization: token ? `Bearer ${token}` : "",
       },
       credentials: "include",
     }
@@ -376,14 +376,14 @@ export const fetchOrdersBySeller = async (
 export const fetchOrderById = async (
   orderId: string
 ): Promise<{ success: boolean; data: ApiOrder }> => {
-  const { token } = getAuthInfo();
+  // const { token } = getAuthInfo();
 
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_BACKEND_URL}/orders/${orderId}`,
     {
       headers: {
         "Content-Type": "application/json",
-        Authorization: token ? `Bearer ${token}` : "",
+        // Authorization: token ? `Bearer ${token}` : "",
       },
       credentials: "include",
     }
@@ -399,7 +399,7 @@ export const fetchOrderById = async (
 
 /* ------------------  Delete Order ------------------ */
 export const deleteOrder = async (orderId: string): Promise<{ success: boolean; message: string }> => {
-  const { token } = getAuthInfo();
+  // const { token } = getAuthInfo();
 
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_BACKEND_URL}/orders/${orderId}`,
@@ -407,7 +407,7 @@ export const deleteOrder = async (orderId: string): Promise<{ success: boolean; 
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
-        Authorization: token ? `Bearer ${token}` : "",
+        // Authorization: token ? `Bearer ${token}` : "",
       },
       credentials: "include",
     }
@@ -426,7 +426,7 @@ export const updateOrder = async (
   orderId: string,
   updates: Record<string, string>
 ): Promise<{ success: boolean; data: ApiOrder }> => {
-  const { token } = getAuthInfo();
+  // const { token } = getAuthInfo();
 
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_BACKEND_URL}/orders/${orderId}`,
@@ -434,7 +434,7 @@ export const updateOrder = async (
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
-        Authorization: token ? `Bearer ${token}` : "",
+        // Authorization: token ? `Bearer ${token}` : "",
       },
       body: JSON.stringify(updates),
       credentials: "include",
@@ -453,7 +453,7 @@ export const updateOrder = async (
 export const fetchOrderCountByStatus = async (
   status?: string
 ): Promise<{ success: boolean; data: number }> => {
-  const { token } = getAuthInfo();
+  // const { token } = getAuthInfo();
 
   const query = status ? `?status=${status}` : "";
 
@@ -462,7 +462,7 @@ export const fetchOrderCountByStatus = async (
     {
       headers: {
         "Content-Type": "application/json",
-        Authorization: token ? `Bearer ${token}` : "",
+        // Authorization: token ? `Bearer ${token}` : "",
       },
       credentials: "include",
     }

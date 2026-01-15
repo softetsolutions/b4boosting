@@ -3,10 +3,10 @@ import { getAuthInfo } from "../utils/auth";
 const BASE_URL = process.env.NEXT_PUBLIC_BACKEND_URL + "/reviews";
 
 const getAuthHeaders = () => {
-  const {token} = getAuthInfo();
+  // const {token} = getAuthInfo();
   return {
     "Content-Type": "application/json",
-    Authorization: token ? `Bearer ${token}` : "",
+    // Authorization: token ? `Bearer ${token}` : "",
   };
 };
 
@@ -20,16 +20,17 @@ interface FetchAdminReviewsParams {
 }
 
 export const createReview = async (formData: FormData) => {
-  const { token } = getAuthInfo();
+  // const { token } = getAuthInfo();
 
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_BACKEND_URL}/reviews`,
     {
       method: "POST",
       headers: {
-        Authorization: token ? `Bearer ${token}` : "",
+        // Authorization: token ? `Bearer ${token}` : "",
       },
       body: formData,
+      credentials: "include",
     }
   );
 
@@ -40,13 +41,14 @@ export const updateReview = async (
   reviewId: string,
   formData: FormData
 ) => {
-     const { token } = getAuthInfo();
+    //  const { token } = getAuthInfo();
   const res = await fetch(`${BASE_URL}/${reviewId}`, {
     method: "PATCH",
     credentials: "include",
     headers: {
-        Authorization: token ? `Bearer ${token}` : "",
+        // Authorization: token ? `Bearer ${token}` : "",
       },
+
     body: formData,
   });
 

@@ -27,6 +27,8 @@ export const getAuthInfo = () => {
     throw new Error("No user ID found in token");
   }
 
+  console.log("token", token, "userId", userId, "role", role, "decoded", decoded);
+
   return { token, userId, role };
 };
 
