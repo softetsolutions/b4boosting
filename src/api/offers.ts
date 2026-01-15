@@ -332,7 +332,7 @@ export const fetchOffersByProductAndService = async (
   });
 
   if (!response.ok) {
-    const errorData = await response
+    let errorData = await response
       .json()
       .catch(() => ({ message: `Failed to fetch offers: ${response.status}` }));
     throw new Error(errorData.message || "Failed to fetch offers");

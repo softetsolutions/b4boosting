@@ -71,7 +71,7 @@ export default function PopularBoostingServices({
             >
               <div className="w-[240px] sm:w-[280px] md:w-[300px] lg:w-[320px]  overflow-hidden shadow-lg bg-black/100 backdrop-blur-md  text-white text-center ">
                 <Image
-                  src={service?.images[0]}
+                  src={service?.images[0] || "/images/fallback.png"}
                   alt={service?.title}
                   width={500}
                   height={500}

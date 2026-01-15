@@ -101,7 +101,7 @@ export default function ProfilePage() {
             <div className="relative h-38">
               <div className="absolute bottom-0 left-6 flex items-end space-x-4">
                 <Image
-                  src="/profile-avatar.png"
+                  src="/images/profile-avatar.png"
                   alt="Profile"
                   width={100}
                   height={100}
@@ -264,7 +264,7 @@ export default function ProfilePage() {
                                 //   order.product?.images?.[0] ||
                                 //   "/placeholder.png"
                                 // }
-                                src={getImageSrc(order.product?.images?.[0] || "/placeholder.png")}
+                                src={getImageSrc(order.product?.images?.[0] || "/images/placeholder.png")}
                                 alt="product image"
                                 width={140}
                                 height={60}

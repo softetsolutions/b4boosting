@@ -89,9 +89,7 @@ const ProductPageComp: React.FC<ProductPageCompProps> = ({
         <Image
           src={
             offer?.images?.[0] ||
-            `https://placehold.co/300x200/1E293B/FFFFFF?text=${offer.product.title.charAt(
-              0
-            )}`
+            "/images/fallback.png"
           }
           alt={offer.product.title}
           width={300}
@@ -141,9 +139,7 @@ const ProductPageComp: React.FC<ProductPageCompProps> = ({
         <div className="flex items-center gap-2">
           <div className="relative w-8 h-8">
             <Image
-              src={offer.images?.[0] || ` https://placehold.co/40x40/1E293B/FFFFFF?text=${offer.seller.displayName?.charAt(
-                0
-              )}`}
+              src={offer.images?.[0]  || "/images/fallback.png"}
               alt="Icon"
               width={40}
               height={40}
@@ -226,7 +222,7 @@ const ProductPageComp: React.FC<ProductPageCompProps> = ({
                         `}
                     >
                       <span>
-                        <Image src={`${service?.icon}`} alt="icon" className="p-6"  width={300}
+                        <Image src={service.icon || "/images/fallback.png"} alt="icon" className="p-6"  width={300}
           height={200}/>
                       </span>
                     </li>

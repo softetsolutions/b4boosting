@@ -50,7 +50,7 @@ export default function OrderTable({ orders, currentPage, totalPages, onPageChan
                 <div className="flex items-center">
                  <div className="relative w-5 h-5 mr-2">
   <Image
-    src={order.buyerId?.profilePic || "/default-avatar.png"}
+    src={order.buyerId?.profilePic || "/images/profile-avatar.png"}
     alt="buyerId"
     fill
     className="rounded-full object-cover"
@@ -67,7 +67,7 @@ export default function OrderTable({ orders, currentPage, totalPages, onPageChan
                    className="w-5 h-5 rounded-full mr-2" 
                    alt="sellerId" /> */}
                    <Image
-  src={order.sellerId?.profilePic || "/avatar-placeholder.png"}
+  src={order.sellerId?.profilePic || "/images/profile-avatar.png"}
   alt="seller profile"
   width={20}
   height={20}

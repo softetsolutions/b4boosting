@@ -116,9 +116,11 @@ export default function ManageProducts() {
         {/* Static file URL is safe in Next.js */}
           {firstImage && (
         <Image
-           src={getImageSrc(firstImage)}
+           src={getImageSrc(firstImage) || "/images/fallback.png"}
           alt="Product image"
-          fill
+          // fill
+          width={100}
+          height={100}
           className="object-cover"
           onError={(e) => {
             const target = e.target as HTMLImageElement;

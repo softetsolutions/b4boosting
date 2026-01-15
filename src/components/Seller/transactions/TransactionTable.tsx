@@ -41,10 +41,12 @@ export default function TransactionTable({ transactions }) {
               <td className="p-3">
                 <div className="flex items-center">
                   <Image
-                    src={tx.buyerId?.profilePic}
+                    src={tx.buyerId?.profilePic || "/images/fallback.png"}
                     className="w-5 h-5 rounded-full mr-2"
                     alt="buyer"
-                    fill
+                    width={20}
+                    height={20}
+                    // fill
                   />
                   {tx.buyerId?.username}
                 </div>

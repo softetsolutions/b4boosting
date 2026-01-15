@@ -88,7 +88,7 @@ function BrowsingHistory() {
               </button>
 
               <Image
-                src={offer.images?.[0] || "/fallback-imgjpg.jpg"}
+                src={offer.images?.[0] || "/images/fallback.png"}
                 alt={offer.product?.title || "Offer"}
                 width={400}
                 height={96}
@@ -105,7 +105,7 @@ function BrowsingHistory() {
 
                 <div className="flex items-center mt-2">
                   <Image
-                    src="/default-avatar.png"
+                    src="/images/profile-avatar.png"
                     alt="Seller"
                     width={20}
                     height={20}

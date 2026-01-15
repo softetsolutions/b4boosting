@@ -161,7 +161,7 @@ function BuyCardComp({ offer }: BuyCardCompProps) {
                 {/* Right: Product Image */}
                 <div className="flex-1 w-full flex justify-center">
                  <Image
-  src={offer.product.images?.[0] || "/fallback-imgjpg.jpg"}
+  src={offer.product.images?.[0] || "/images/fallback.png"}
   alt={offer.product.title || "Product image"}
   width={500}
   height={500}

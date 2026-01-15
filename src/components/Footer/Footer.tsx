@@ -145,7 +145,7 @@ const Footer = () => {
                   </div>
                   <div className="relative w-5 h-5">
                     <Image
-                      src={social.icon || "/fallback-icon.svg"}
+                      src={social.icon || "/svgIcons/facebook.svg"}
                       alt={social.label}
                       fill
                       className={`object-contain transition-colors relative z-10 ${social.hoverClass}`}
@@ -225,7 +225,7 @@ const Footer = () => {
                   <div className="w-8 h-8 rounded-md bg-gradient-to-br from-gray-700 to-gray-800 flex items-center justify-center mr-3 group-hover:from-cyan-500/20 group-hover:to-blue-600/20 transition-all duration-300">
                     <div className="relative w-4 h-4">
                       <Image
-                        src={service.icon || "/fallback-icon.svg"}
+                        src={service.icon || "/svgIcons/boostingArrow.svg"}
                         alt=""
                         fill
                         className="object-contain transition-colors"
