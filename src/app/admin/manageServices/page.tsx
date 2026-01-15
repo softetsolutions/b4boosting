@@ -105,9 +105,11 @@ export default function ManageServices() {
       <div className="w-10 h-10 rounded-lg overflow-hidden bg-gray-700/50 flex items-center justify-center">
       
          <Image
-      src={icon}
+      src={icon || "/images/fallback.png"}
       alt="Service icon"
-      fill
+      // fill
+      width={100}
+      height={100}
       className="object-cover"
         onError={(e) => {
             const target = e.target as HTMLImageElement;

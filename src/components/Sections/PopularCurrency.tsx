@@ -65,7 +65,7 @@ export default function PopularCurrency({ service }: PopularClientsProps) {
             }
           >
             <Image
-              src={account?.images[0]}
+              src={account?.images[0] || "/images/fallback.png"}
               alt={account.title}
               width={150}
               height={150}

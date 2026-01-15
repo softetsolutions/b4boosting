@@ -266,7 +266,7 @@ export default function MessageContainer({
       <header className="flex items-center justify-between px-4 py-3 border-b border-gray-700 gray-bg rounded-2xl">
         <div className="flex items-center gap-3">
          <Image
-  src="https://www.g2g.com/static/images/avatar-default.svg"
+  src="/images/profile-avatar.png"
   alt="User Avatar"
   width={40} // 10 * 4px
   height={40} // 10 * 4px

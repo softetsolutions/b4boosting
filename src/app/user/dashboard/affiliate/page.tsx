@@ -87,7 +87,8 @@ export default function AffiliateLandingPage() {
 
           <div className="flex flex-col gap-3">
             <button
-             aria-label="create Reflink"
+              aria-label="create Reflink"
+              type="button"
               onClick={() =>
                 router.push("/user/dashboard/affiliate/createReflink")
               }
@@ -97,6 +98,7 @@ export default function AffiliateLandingPage() {
             </button>
 
             <button
+              type="button"
               aria-label="View Performance"
               onClick={() =>
                 router.push("/user/dashboard/affiliate/performance")

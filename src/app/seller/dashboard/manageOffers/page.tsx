@@ -126,7 +126,7 @@ export default function ManageOffers() {
       <div className="w-16 h-16 rounded-lg overflow-hidden bg-gray-700/50 flex items-center justify-center">
         <div className="relative w-full h-full">
           <Image
-            src={firstImage}
+            src={firstImage || "/images/fallback.png"}
             alt="Offer image"
             fill
             className="object-cover"

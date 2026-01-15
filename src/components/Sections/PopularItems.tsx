@@ -138,7 +138,7 @@ export default function PopularItems({ dynamicdata }: PopularItemsProps) {
               className="relative group overflow-hidden rounded-lg"
             >
               <Image
-                src={account?.images[0]}
+                src={account?.images[0] || "/images/fallback.png"}
                 alt={account?.title}
                 className="object-cover w-full h-[10.5rem] sm:h-[10.5rem] lg:h-[17.5rem] md:h-[12.5rem] rounded-lg"
                 width={200}
@@ -204,7 +204,7 @@ export default function PopularItems({ dynamicdata }: PopularItemsProps) {
               className=" border-zinc-600 border-3 relative group overflow-hidden rounded-lg bg-black/100 px-1  lg:px-15 flex items-center flex-col py-4 lg:py-10"
             >
               <Image
-                src={order.src}
+                src={order.src || "/images/fallback.png"}
                 alt={order.title}
                 className="object-fit w-20 h-20 mb-5"
               />
@@ -223,7 +223,7 @@ export default function PopularItems({ dynamicdata }: PopularItemsProps) {
         <div className="relative w-200 h-200 rounded-xl overflow-hidden">
           {/* Background Image */}
           <Image
-            src={chooseImage}
+            src={chooseImage || "/images/fallback.png"}
             alt="Choose Background"
             fill
             className="object-cover w-full h-full"
@@ -271,7 +271,7 @@ export default function PopularItems({ dynamicdata }: PopularItemsProps) {
         flex flex-col lg:flex-row items-center justify-between py-10"
             >
               <Image
-                src={support.src}
+                src={support.src || "/images/fallback.png"}
                 alt={support.title}
                 className="object-fit w-55 h-35 mb-4 md:mb-2"
               />
@@ -299,7 +299,7 @@ export default function PopularItems({ dynamicdata }: PopularItemsProps) {
               className="w-22 h-12  overflow-hidden flex-shrink-0 px-2"
             >
               <Image
-                src={img.src}
+                src={img.src || "/images/fallback.png"}
                 alt={`img-${idx}`}
                 width={48}
                 height={48}

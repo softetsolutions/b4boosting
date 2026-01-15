@@ -80,7 +80,7 @@ export default function ReviewsCarousel({
                 {review.images.map((img, i) => (
                 <div key={i} className="relative w-14 h-14">
         <Image
-          src={img || "/fallback-imgjpg.jpg"}
+          src={img || "/images/fallback.png"}
           alt="review"
           fill
           className="object-cover rounded-lg"

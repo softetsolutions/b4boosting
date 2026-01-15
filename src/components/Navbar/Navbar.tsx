@@ -96,7 +96,7 @@ export default function Navbar({ activeService, dynamicdata }: NavbarProps) {
               className="fixed top-0 left-0 right-0 z-50"
             />
             <Image
-              src={SettingsData?.bannerImg}
+              src={SettingsData?.bannerImg || "/images/fallback.png"}
               alt="Banner"
               className="w-full h-full object-cover"
               width={1920}

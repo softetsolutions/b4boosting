@@ -73,7 +73,7 @@ export default function PopularAccounts({ service }: PopularAccountsProps) {
             }
           >
             <Image
-              src={account.images[0]}
+              src={account.images[0] || "/images/placeholder.png"}
               alt={account.title}
               width={400}
               height={200}

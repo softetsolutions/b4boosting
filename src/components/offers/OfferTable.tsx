@@ -45,7 +45,7 @@ export default function OfferTable({
               <td className="p-3">
                 <div className="flex items-center gap-3">
                <Image
-  src={offer.images?.[0] || "/fallback-img.jpg"} // fallback if image is missing
+  src={offer.images?.[0] || "/images/fallback.png"} // fallback if image is missing
   alt={offer.product?.title || "Offer"}
   width={48}  // match w-12 (12 * 4px)
   height={48} // match h-12
@@ -62,7 +62,7 @@ export default function OfferTable({
               <td className="p-3">
                 <div className="flex items-center gap-3">
                 <Image
-  src={offer.seller?.profilePic || "/fallback-profile.png"} // fallback if profile pic is missing
+  src={offer.seller?.profilePic || "/images/profile-avatar.png"} // fallback if profile pic is missing
   alt={offer.seller?.name || "Seller"}
   width={32}  // corresponds to w-8 (8 * 4px)
   height={32} // corresponds to h-8

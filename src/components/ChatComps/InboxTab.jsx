@@ -1,6 +1,7 @@
 
 "use client";
 import { formatDate } from "src/utils/clientHelperFunctions";
+import Image from "next/image";
 
 export default function InboxTab({
   imgSrc,
@@ -25,9 +26,11 @@ export default function InboxTab({
         <div className="relative w-[48px] h-[48px]">
         
           <Image
-            src={imgSrc}
+            src={imgSrc || "/images/fallback.png"}
             alt={name}
-            fill
+            // fill
+            width={100}
+            height={100}
             className="object-cover rounded-full border border-gray-400/20"
 
           />
