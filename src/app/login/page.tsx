@@ -82,12 +82,12 @@ export default function Login() {
                     <label className="text-sm font-medium text-gray-300">
                       Password
                     </label>
-                    <Link
+                    {/* <Link
                       href="/forgot-password"
                       className="text-xs text-cyan-400 hover:underline"
                     >
                       Forgot Password?
-                    </Link>
+                    </Link> */}
                   </div>
                   <div className="relative">
                     <input
