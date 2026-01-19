@@ -62,6 +62,18 @@ export interface HomePageData {
   };
 }
 
+const EMPTY_HOME_PAGE_DATA: HomePageData = {
+  services: [],
+  settings: {
+    _id: "",
+    bannerImg: "",
+    bannerTitle: "",
+    bannerSubtitle: "",
+    bannerRedirectionLink: "",
+    marqueeText: "",
+    marqueeLink: "",
+  },
+};
 
 export interface ServiceAndProductResponse {
   success: boolean;
@@ -74,7 +86,7 @@ export interface ServiceAndProductResponse {
 export const createProduct = async (
   productData: FormData
 ): Promise<Product> => {
-  const { token } = getAuthInfo();
+  // const { token } = getAuthInfo();
 
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_BACKEND_URL}/products`,
@@ -82,7 +94,7 @@ export const createProduct = async (
       method: "POST",
       headers: {
         Accept: "application/json",
-        Authorization: `Bearer ${token}`,
+        // Authorization: `Bearer ${token}`,
       },
       credentials: "include",
       body: productData,
@@ -173,29 +185,63 @@ export const fetchProductById = async (productId: string): Promise<Product> => {
   return response.json();
 };
 
-export const fetchHomePageData = async (): Promise<HomePageData> => {
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_BACKEND_URL}/products/home`,
-    {
-      headers: {
-        Accept: "application/json",
-      },
-    }
-  );
+// export const fetchHomePageData = async (): Promise<HomePageData> => {
+//   const response = await fetch(
+//     `${process.env.NEXT_PUBLIC_BACKEND_URL}/products/home`,
+//     {
+//       headers: {
+//         Accept: "application/json",
+//       },
+//     }
+//   );
 
-  if (response.status === 401) await handleUnauthorized();
-  if (!response.ok) {
-    throw new Error("Failed to fetch homepage data");
-  }
+//   if (response.status === 401) await handleUnauthorized();
+//   if (!response.ok) {
+//     throw new Error("Failed to fetch homepage data");
+//   }
 
-  const res = await response.json();
+//   const res = await response.json();
   
-  if (res.success && res.data) {
-    return res.data;
-  }
-  throw new Error("Invalid homepage data format");
-};
+//   if (res.success && res.data) {
+//     return res.data;
+//   }
+//   throw new Error("Invalid homepage data format");
+// };
+export const fetchHomePageData = async (): Promise<HomePageData> => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/products/home`,
+      {
+        headers: {
+          Accept: "application/json",
+        },
+        cache: "no-store",
+      }
+    );
 
+    if (response.status === 401) {
+      await handleUnauthorized();
+     return EMPTY_HOME_PAGE_DATA;
+    }
+
+    if (!response.ok) {
+      console.error(
+        "[fetchHomePageData] Non-OK response:",
+        response.status
+      );
+      return EMPTY_HOME_PAGE_DATA;
+    }
+    const res = await response.json();
+    if (res?.success && res?.data) {
+      return res.data as HomePageData;
+    }
+    console.error("[fetchHomePageData] Invalid API response:", res);
+   return EMPTY_HOME_PAGE_DATA;
+  } catch (error) {
+    console.error("[fetchHomePageData] Exception:", error);
+   return EMPTY_HOME_PAGE_DATA;
+  }
+};
 export const fetchAllProducts = async (): Promise<Product[]> => {
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_BACKEND_URL}/products`,

@@ -1,4 +1,4 @@
-import { getAuthInfo, handleUnauthorized } from "../utils/auth";
+import { handleUnauthorized } from "../utils/auth";
 
 
 export interface SellerRequest {
@@ -34,11 +34,11 @@ export interface CreateSellerRequestPayload {
 export const createSellerRequest = async (
   payload: CreateSellerRequestPayload
 ): Promise<SellerRequest> => {
-  const { token } = getAuthInfo();
+  // const { token } = getAuthInfo();
 
-  if (!token) {
-    throw new Error("No authentication token found");
-  }
+  // if (!token) {
+  //   throw new Error("No authentication token found");
+  // }
 
   const formData = new FormData();
   formData.append("dob", payload.dob);
@@ -67,7 +67,7 @@ export const createSellerRequest = async (
       headers: {
         Accept: "application/json",
         // ❌ Do NOT set "Content-Type" here; browser sets correct boundary.
-        Authorization: `Bearer ${token}`,
+        // Authorization: `Bearer ${token}`,
       },
       credentials: "include",
       body: formData,
@@ -86,14 +86,14 @@ export const createSellerRequest = async (
 
 
 export const fetchAllSellerRequests = async (): Promise<SellerRequest[]> => {
-  const { token } = getAuthInfo();
+  // const { token } = getAuthInfo();
 
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_BACKEND_URL}/seller`,
     {
       headers: {
         Accept: "application/json",
-        Authorization: `Bearer ${token}`,
+        // Authorization: `Bearer ${token}`,
       },
       credentials: "include",
     }
@@ -111,7 +111,7 @@ export const fetchAllSellerRequests = async (): Promise<SellerRequest[]> => {
 export const approveSellerRequest = async (
   requestId: string
 ): Promise<void> => {
-  const { token } = getAuthInfo();
+  // const { token } = getAuthInfo();
 
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_BACKEND_URL}/seller/${requestId}/approve`,
@@ -119,7 +119,7 @@ export const approveSellerRequest = async (
       method: "PATCH",
       headers: {
         Accept: "application/json",
-        Authorization: `Bearer ${token}`,
+        // Authorization: `Bearer ${token}`,
       },
       credentials: "include",
     }
@@ -132,7 +132,7 @@ export const approveSellerRequest = async (
 };
 
 export const rejectSellerRequest = async (requestId: string, adminNote: string): Promise<void> => {
-  const { token } = getAuthInfo();
+  // const { token } = getAuthInfo();
 
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_BACKEND_URL}/seller/${requestId}/reject`,
@@ -141,7 +141,7 @@ export const rejectSellerRequest = async (requestId: string, adminNote: string):
       headers: {
         Accept: "application/json",
          "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
+        // Authorization: `Bearer ${token}`,
       },
       credentials: "include",
       body: JSON.stringify({ adminNote}),

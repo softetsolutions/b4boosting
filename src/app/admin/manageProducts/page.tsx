@@ -30,9 +30,7 @@ export default function ManageProducts() {
     new Set()
   );
 
-  useEffect(() => {
-    fetchProducts();
-  }, []);
+  
 
   const fetchProducts = async () => {
     try {
@@ -45,7 +43,9 @@ export default function ManageProducts() {
       setLoading(false);
     }
   };
-
+useEffect(() => {
+    fetchProducts();
+  }, []);
   // Group products by service
   const groupedProducts = products.reduce((groups: ServiceGroup[], product) => {
     const serviceName = product.service?.name || "No Service";

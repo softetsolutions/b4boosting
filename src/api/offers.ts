@@ -354,14 +354,14 @@ export const fetchOffersByServiceId = async (
   page: number = 1,
   limit: number = 10
 ) => {
-  const { token } = getAuthInfo();
+  // const { token } = getAuthInfo();
   try {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_BACKEND_URL}/offers/service/${serviceId}?page=${page}&limit=${limit}`,
       {
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
+          // Authorization: `Bearer ${token}`,
         },
         credentials: "include",
       }

@@ -43,7 +43,7 @@ export interface AccountUser {
 
 export const signupUser = async (userData: UserData): Promise<AuthResponse> => {
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_NEXT_PUBLIC_BACKEND_URL}/auth/register`,
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/register`,
     {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -61,7 +61,7 @@ export const loginUser = async (
   credentials: LoginCredentials
 ): Promise<AuthResponse> => {
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_NEXT_PUBLIC_BACKEND_URL}/auth/login`,
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/login`,
     {
       method: "POST",
       headers: { "Content-Type": "application/json" },
