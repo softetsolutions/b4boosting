@@ -95,11 +95,15 @@ const handler = NextAuth({
     strategy: "jwt",
   },
 
-  trustHost: true,
+  // trustHost: true,
 
   callbacks: {
     async signIn({ user }) {
       const apiBaseUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
+        if (!process.env.NEXT_PUBLIC_BACKEND_URL) {
+    console.warn("Backend not configured, allowing Google sign-in locally");
+    return true;
+  }
       if (!apiBaseUrl || !user.email) return false;
 
       const res = await fetch(`${apiBaseUrl}/auth/google-login`, {
