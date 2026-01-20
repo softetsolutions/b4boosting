@@ -30,7 +30,7 @@ export default function AffiliateLandingPage() {
     try {
       setJoining(true);
 
-      const res = await fetch("http://localhost:5005/api/affiliate/create", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/affiliate/create`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
