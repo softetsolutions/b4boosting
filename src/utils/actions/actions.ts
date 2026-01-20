@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 
 export async function Loginaction(formData: FormData) {
-  try {
+  // try {
     const cookieStore = await cookies();
 
     const res = await fetch(
@@ -47,10 +47,10 @@ export async function Loginaction(formData: FormData) {
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
     redirect(data.user.role === "admin" ? "/admin" : `/`);
-  } catch (error) {
-    console.error("Got error while signing in", error);
-    throw error;
-  }
+  // } catch (error) {
+  //   console.error("Got error while signing in", error);
+  //   throw error;
+  // }
 }
 export async function registerAction(formData: FormData) {
   console.log("Backend URL:", process.env.NEXT_PUBLIC_BACKEND_URL);
