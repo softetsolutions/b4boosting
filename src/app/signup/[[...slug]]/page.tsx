@@ -123,19 +123,19 @@ export default function SignupPage() {
 
                 <div className="text-sm text-gray-400 text-center mb-4">
                   By registering, you agree to our{" "}
-                  <Link
-                    href="/terms-conditions"
+                  <p
+                    // href="/terms-conditions"
                     className="text-cyan-400 hover:underline"
                   >
                     Terms & Conditions
-                  </Link>{" "}
+                  </p>{" "}
                   and{" "}
-                  <Link
-                    href="/privacy-policy"
+                  <p
+                    // href="/privacy-policy"
                     className="text-cyan-400 hover:underline"
                   >
                     Privacy Policy
-                  </Link>
+                  </p>
                   .
                 </div>
 
