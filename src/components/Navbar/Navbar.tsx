@@ -53,6 +53,8 @@ export default function Navbar({ activeService, dynamicdata }: NavbarProps) {
 
     const token = Cookies.get("token");
 
+    console.log(token, "token navbar");
+
     if (token && typeof token == "string") {
       try {
         const decoded = jwtDecode<AuthTokenPayload>(token);

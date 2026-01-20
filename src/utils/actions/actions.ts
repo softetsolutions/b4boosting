@@ -21,9 +21,9 @@ export async function Loginaction(formData: FormData) {
     if (!res.ok) {
       throw new Error(data.message || "Login failed");
     }
-    console.log("data is", data);
+    
     cookieStore.set("token", data.token, {
-      httpOnly: true,
+      httpOnly: false,
       secure: true,
       sameSite: "none",
       domain: ".b4boosting.com", // ⭐ MOST IMPORTANT
@@ -31,7 +31,7 @@ export async function Loginaction(formData: FormData) {
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
     cookieStore.set("userId", data.user.id, {
-      httpOnly: true,
+      httpOnly: false,
       secure: true,
       sameSite: "none",
       domain: ".b4boosting.com", // ⭐ MOST IMPORTANT
@@ -39,7 +39,7 @@ export async function Loginaction(formData: FormData) {
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
     cookieStore.set("affiliateId", data.user.affiliateId, {
-      httpOnly: true,
+      httpOnly: false,
       secure: true,
       sameSite: "none",
       domain: ".b4boosting.com", // ⭐ MOST IMPORTANT
@@ -53,17 +53,10 @@ export async function Loginaction(formData: FormData) {
   // }
 }
 export async function registerAction(formData: FormData) {
-  console.log("Backend URL:", process.env.NEXT_PUBLIC_BACKEND_URL);
 
   try {
     const cookieStore = await cookies();
 
-    console.log(
-      cookieStore,
-      "cookieStore",
-      process.env.NEXT_PUBLIC_BACKEND_URL,
-      "process.env.NEXT_PUBLIC_BACKEND_URL",
-    );
     const payload = {
       firstName: formData.get("firstName"),
       lastName: formData.get("lastName"),
@@ -82,13 +75,13 @@ export async function registerAction(formData: FormData) {
         credentials: "include",
       },
     );
-    console.log("response of signup is", response);
+    
     const data = await response.json();
     if (!response.ok) {
       throw new Error(data.message || "Signup failed");
     }
     cookieStore.set("token", data.token, {
-      httpOnly: true,
+      httpOnly: false,
       secure: process.env.NODE_ENV === "production",
       sameSite: "none",
       domain: ".b4boosting.com", // ⭐ MOST IMPORTANT
