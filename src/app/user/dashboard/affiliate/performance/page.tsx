@@ -54,7 +54,7 @@ export default function PerformancePage() {
  const affiliateId = getCookie("affiliateId");
       if (!affiliateId) return toast.error("You are not an affiliate.");
         const username = decoded.username; // e.g., "AFF123"
-        const res = await fetch(`http://localhost:5005/api/affiliate/AFF${username}/stats`);
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/affiliate/AFF${username}/stats`);
         const data = await res.json();
         setStats(data);
       } catch (error) {
