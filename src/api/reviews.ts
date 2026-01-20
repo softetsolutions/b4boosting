@@ -2,13 +2,6 @@
 
 const BASE_URL = process.env.NEXT_PUBLIC_BACKEND_URL + "/reviews";
 
-const getAuthHeaders = () => {
-  // const {token} = getAuthInfo();
-  return {
-    "Content-Type": "application/json",
-    // Authorization: token ? `Bearer ${token}` : "",
-  };
-};
 
 interface FetchAdminReviewsParams {
   page?: number;
@@ -27,6 +20,7 @@ export const createReview = async (formData: FormData) => {
     {
       method: "POST",
       headers: {
+         "Content-Type": "application/json",
         // Authorization: token ? `Bearer ${token}` : "",
       },
       body: formData,
@@ -46,6 +40,7 @@ export const updateReview = async (
     method: "PATCH",
     credentials: "include",
     headers: {
+       "Content-Type": "application/json",
         // Authorization: token ? `Bearer ${token}` : "",
       },
 
@@ -58,7 +53,9 @@ export const updateReview = async (
 export const deleteReview = async (reviewId: string) => {
   const res = await fetch(`${BASE_URL}/${reviewId}`, {
     method: "DELETE",
-    headers: getAuthHeaders(),
+    headers: {
+       "Content-Type": "application/json",
+    },
     credentials: "include",
   });
 
@@ -80,7 +77,9 @@ export const getAllReviewsForAdmin = async (
     `${BASE_URL}/admin?${query.toString()}`,
     {
       method: "GET",
-      headers: getAuthHeaders(),
+      headers: {
+         "Content-Type": "application/json",
+      },
       credentials: "include",
     }
   );
@@ -101,6 +100,7 @@ export const getReviewsByProductSlug = async (slug: string) => {
       headers: {
         "Content-Type": "application/json",
       },
+      credentials: "include",
     }
   );
 
@@ -111,7 +111,9 @@ export const getReviewsByProductSlug = async (slug: string) => {
 export const adminDeleteReview = async (reviewId: string) => {
   const res = await fetch(`${BASE_URL}/admin/${reviewId}`, {
     method: "DELETE",
-    headers: getAuthHeaders(),
+    headers:{
+       "Content-Type": "application/json",
+    },
     credentials: "include",
   });
 
