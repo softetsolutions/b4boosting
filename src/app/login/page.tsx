@@ -14,16 +14,22 @@ export default function Login() {
 
   async function clientSafeAction(formData: FormData) {
     try {
-      await Loginaction(formData);
-      toast.success("Login successful!");
-    } catch (err:unknown) {
-       if (err instanceof Error) {
-      if (err.message.includes("NEXT_REDIRECT")) return;
+      const result = await Loginaction(formData);
 
-      toast.error(err.message);
-    } else {
-      toast.error("Login failed");
-    }
+      if (!result.success) {
+        toast.error(result.message);
+        return;
+      } else {
+        toast.success(result.message);
+      }
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        if (err.message.includes("NEXT_REDIRECT")) return;
+
+        toast.error(err.message);
+      } else {
+        toast.error("Login failed");
+      }
     }
   }
 
@@ -31,7 +37,7 @@ export default function Login() {
     try {
       setLoadingGoogle(true);
       await signIn("google", {
-        callbackUrl: "/", 
+        callbackUrl: "/",
       });
     } catch (error) {
       console.error("Failed to redirect to Google sign-in", error);
@@ -99,7 +105,7 @@ export default function Login() {
                     />
                     <button
                       aria-label="Toggle password visibility"
-                       type="button"
+                      type="button"
                       className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-cyan-400"
                       onClick={() => setShowPassword(!showPassword)}
                     >

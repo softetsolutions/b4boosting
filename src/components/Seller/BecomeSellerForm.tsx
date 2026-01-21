@@ -106,7 +106,7 @@ export default function BecomeSellerForm() {
           </div>
 
           <div className="flex flex-col space-y-1">
-            <label className="text-sm text-gray-300">Aadhar ID</label>
+            <label className="text-sm text-gray-300">National Identity Number</label>
             <input
               type="text"
               className="bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring focus:ring-blue-500/40"
@@ -117,7 +117,7 @@ export default function BecomeSellerForm() {
           </div>
 
           <div className="flex flex-col space-y-1">
-            <label className="text-sm text-gray-300">PAN ID</label>
+            <label className="text-sm text-gray-300">Tax Registration Number</label>
             <input
               type="text"
               className="bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring focus:ring-blue-500/40"

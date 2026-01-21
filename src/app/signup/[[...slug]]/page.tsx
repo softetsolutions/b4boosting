@@ -12,14 +12,15 @@ export default function SignupPage() {
   const [error, setError] = useState("");
 
   async function clientSafeAction(formData: FormData) {
-    try {
-      await registerAction(formData);
-      toast.success("Signup successful!");
-    } catch (err) {
-      if (err?.message?.includes("NEXT_REDIRECT")) return;
-      setError(err.message || "Something went wrong");
-      toast.error(err.message || "Something went wrong");
-    }
+   const result = await registerAction(formData);
+
+  if (!result.success) {
+    setError(result.message);
+    toast.error(result.message);
+    return;
+  }
+
+  toast.success(result.message);
   }
 
   return (

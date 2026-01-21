@@ -112,7 +112,7 @@ export default function Navbar({ activeService, dynamicdata }: NavbarProps) {
               <p className="text-white sm:text-lg lg:text-lg lg:mb-6 md:mb-4 sm:mb-2 mb-2">
                 {SettingsData?.bannerSubtitle}
               </p>
-              <Link href={SettingsData?.bannerRedirectionLink}>
+              <Link href={SettingsData?.bannerRedirectionLink || "/"}>
                 <button
                   type="button"
                   className="lg:text-2xl md:text-2xl sm:text-lg  yellow-bg text-zinc-950 lg:px-16 md:px-12 sm:px-5 px-5  lg:py-3 py-1  rounded-xl font-bold shadow-lg transition-all duration-300"
@@ -265,17 +265,19 @@ export default function Navbar({ activeService, dynamicdata }: NavbarProps) {
                     >
                       Affiliate Program
                     </Link>
-                    <Link
-                      href="/profile"
-                      className="w-full text-left px-4 py-2 hover:bg-gray-500"
-                    >
-                      Profile
-                    </Link>
+                   
 
                     <div className="px-4 py-2 flex justify-between items-center hover:bg-gray-500 cursor-pointer">
                       <ThemeToggle />
                     </div>
                     {isLoggedIn && (
+                      <>
+                       <Link
+                      href="/profile"
+                      className="w-full text-left px-4 py-2 hover:bg-gray-500"
+                    >
+                      Profile
+                    </Link>
                       <button
                         type="button"
                         onClick={handleLogout}
@@ -283,6 +285,7 @@ export default function Navbar({ activeService, dynamicdata }: NavbarProps) {
                       >
                         Logout
                       </button>
+                      </>
                     )}
                   </div>
                 )}
