@@ -8,37 +8,38 @@ import { getFileUrl } from "src/utils/imageUtils";
 
 interface SellerRequests {
   _id: string;
-  user: { _id: string; name?: string; email?: string, displayName?: string };
+  user: {
+    _id: string;
+    email?: string;
+    displayName?: string;
+  };
   dob: string;
-  aadharId: string;
-  panId: string;
+  Nationalidentitynumber?: string;
+  Taxregistrationnumber?: string;
   address: string;
   city: string;
   state: string;
   pincode: string;
-  idProofImages: (string | File)[];
+  idProofImages: string[];
   status: "pending" | "approved" | "rejected";
   createdAt: string;
-  adminNote?: string;
-   Nationalidentitynumber?: string;
-  Taxregistrationnumber?: string;
 }
 
 const mapSellerRequestToUI = (r: SellerRequest): SellerRequests => ({
   _id: r._id,
   user: {
     _id: r.user._id,
-    name: `${r.user.firstName} ${r.user.lastName}`,
+    name: r.user.displayName,
     email: r.user.email,
   },
   dob: r.dob,
   aadharId: r.Nationalidentitynumber || "",
   panId: r.Taxregistrationnumber || "",
-  address: r.Address,
-  city: r.City,
-  state: "", // backend not sending → keep empty or update API
-  pincode: r.Postalcode,
-  idProofImages: [], // backend not sending → keep empty or update API
+  address: r.address,
+  city: r.city,
+  state: r.state, // backend not sending → keep empty or update API
+  pincode: r.pincode,
+  idProofImages: r.idProofImages || [], // backend not sending → keep empty or update API
   status: r.status,
   createdAt: r.createdAt,
 });
@@ -48,6 +49,9 @@ export default function SellerRequests() {
   const [requests, setRequests] = useState<SellerRequests[]>([]);
   const [loading, setLoading] = useState(true);
   const [updatingId, setUpdatingId] = useState<string | null>(null);
+  const [rejectingId, setRejectingId] = useState<string | null>(null);
+const [adminNote, setAdminNote] = useState("");
+
 
  const fetchRequests = async () => {
   try {
@@ -73,34 +77,69 @@ export default function SellerRequests() {
     fetchRequests();
   }, []);
 
-   const updateStatus = async (
-    id: string,
-    status: "approved" | "rejected"
-  ) => {
+  //  const updateStatus = async (
+  //   id: string,
+  //   status: "approved" | "rejected"
+  // ) => {
    
-    const adminNote =
-      status === "rejected"
-        ? window.prompt("Reason for rejection? (optional)") || ""
-        : "";
+  //   const adminNote =
+  //     status === "rejected"
+  //       ? window.prompt("Reason for rejection? (optional)") || ""
+  //       : "";
 
-    setUpdatingId(id);
-    try {
+  //   setUpdatingId(id);
+  //   try {
     
-      if (status === "approved") {
-        await approveSellerRequest(id);         
-      } else {
-        await rejectSellerRequest(id, adminNote);          
-      }
+  //     if (status === "approved") {
+  //       await approveSellerRequest(id);         
+  //     } else {
+  //       await rejectSellerRequest(id, adminNote);          
+  //     }
 
-      toast.success(`Request ${status}`);       
-      await fetchRequests();                   
-    } catch (error) {
-      console.error(error);
-      toast.error(error instanceof Error ? error.message : "Something went wrong"); 
-    } finally {
-      setUpdatingId(null);
-    }
-  };
+  //     toast.success(`Request ${status}`);       
+  //     await fetchRequests();                   
+  //   } catch (error) {
+  //     console.error(error);
+  //     toast.error(error instanceof Error ? error.message : "Something went wrong"); 
+  //   } finally {
+  //     setUpdatingId(null);
+  //   }
+  // };
+  const updateStatus = async (id: string, status: "approved" | "rejected") => {
+  if (status === "rejected") {
+    setRejectingId(id); // open modal
+    return;
+  }
+
+  // approve flow
+  setUpdatingId(id);
+  try {
+    await approveSellerRequest(id);
+    toast.success("Request approved");
+    await fetchRequests();
+  } catch (error) {
+    toast.error(error instanceof Error ? error.message : "Something went wrong");
+  } finally {
+    setUpdatingId(null);
+  }
+};
+
+const confirmReject = async () => {
+  if (!rejectingId) return;
+
+  setUpdatingId(rejectingId);
+  try {
+    await rejectSellerRequest(rejectingId, adminNote);
+    toast.success("Request rejected");
+    await fetchRequests();
+  } catch (error) {
+    toast.error(error instanceof Error ? error.message : "Something went wrong");
+  } finally {
+    setUpdatingId(null);
+    setRejectingId(null);
+    setAdminNote("");
+  }
+};
 
   if (loading) {
     return <p className="text-sm text-gray-400">Loading requests...</p>;
@@ -148,7 +187,7 @@ export default function SellerRequests() {
               <td className="px-4 py-3 align-top">
                 <div className="space-y-0.5">
                   <p className="font-medium">
-                    {req.user?.displayName || "N/A"}
+                    {req.user?.name || "N/A"}
                   </p>
                   <p className="text-xs text-gray-400">
                     {req.user?.email}
@@ -160,8 +199,8 @@ export default function SellerRequests() {
               </td>
               <td className="px-4 py-3 align-top text-xs text-gray-300">
                 <p>DOB: {new Date(req.dob).toLocaleDateString()}</p>
-                <p>Aadhar: {req?.Nationalidentitynumber}</p>
-                <p>PAN: {req?.Taxregistrationnumber}</p>
+                <p>National ID: {req?.aadharId}</p>
+                <p>Tax ID: {req?.panId}</p>
               </td>
               <td className="px-4 py-3 align-top text-xs text-gray-300">
                 <p>{req.address}</p>
@@ -237,7 +276,47 @@ export default function SellerRequests() {
         </tbody>
       </table>
     </div>
-     
+     {rejectingId && (
+  <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
+    <div className="w-full max-w-md rounded-xl bg-gray-900 p-6 shadow-lg">
+      <h2 className="text-lg font-semibold mb-2">Reject Seller Request</h2>
+      <p className="text-sm text-gray-400 mb-4">
+        Please provide a reason for rejection (optional).
+      </p>
+
+      <textarea
+        value={adminNote}
+        onChange={(e) => setAdminNote(e.target.value)}
+        placeholder="Reason for rejection..."
+        className="w-full rounded-lg bg-gray-800 border border-gray-700 p-3 text-sm text-gray-200 focus:outline-none focus:ring-2 focus:ring-red-500"
+        rows={4}
+      />
+
+      <div className="mt-4 flex justify-end gap-2">
+        <button
+          type="button"
+          className="px-4 py-2 text-sm rounded-lg bg-gray-700 hover:bg-gray-600"
+          onClick={() => {
+            setRejectingId(null);
+            setAdminNote("");
+          }}
+        >
+          Cancel
+        </button>
+
+        <button
+          type="button"
+          className="px-4 py-2 text-sm rounded-lg bg-red-600 hover:bg-red-500 disabled:opacity-50"
+          onClick={confirmReject}
+          disabled={!!updatingId}
+        >
+          {updatingId ? "Rejecting..." : "Confirm Reject"}
+        </button>
+      </div>
+    </div>
+  </div>
+)}
+
     </div>
     </>
   
