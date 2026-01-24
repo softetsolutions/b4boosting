@@ -99,9 +99,15 @@ export const fetchAllServices = async (): Promise<Service[]> => {
   if (!response.ok) {
     throw new Error("Failed to fetch services");
   }
-  const data = await response.json();
-  console.log("service",data)
-  return Array.isArray(data) ? data : [];
+ const result = await response.json();
+  console.log("service result", result);
+
+  
+  if (!result.success || !Array.isArray(result.data)) {
+    throw new Error("Invalid service data");
+  }
+
+  return result.data;
 };
 
 export const deleteService = async (serviceId: string): Promise<void> => {
