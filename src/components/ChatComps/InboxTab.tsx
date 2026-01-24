@@ -56,7 +56,7 @@ export default function InboxTab({
       {/* Right: Time + Unread Count */}
       <div className="flex flex-col items-end gap-1">
         <span className="text-xs text-gray-400">
-          {formatDate(lastMessageTime)}
+          {formatDate(lastMessageTime) || "No messages yet"}
         </span>
         {hasUnread && (
           <span className="bg-amber-400 text-white text-xs font-semibold rounded-full px-2 py-0.5 shadow-sm">
