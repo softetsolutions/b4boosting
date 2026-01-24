@@ -10,8 +10,12 @@ export default function SignupPage() {
  
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   async function clientSafeAction(formData: FormData) {
+    setLoading(true);
+  setError("");
+  try{
    const result = await registerAction(formData);
 
   if (!result.success) {
@@ -21,6 +25,12 @@ export default function SignupPage() {
   }
 
   toast.success(result.message);
+}catch(err){
+  toast.error("Something went wrong");
+}
+finally{
+    setLoading(false);
+}
   }
 
   return (
@@ -52,7 +62,11 @@ export default function SignupPage() {
               {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
 
               {/* ✅ Use server action directly */}
-              <form action={clientSafeAction} className="space-y-6">
+              <form onSubmit={async (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    await clientSafeAction(formData);
+  }} className="space-y-6">
                 <div>
                   <label className="block text-sm font-medium text-gray-300 mb-1.5">
                     First Name
@@ -141,12 +155,22 @@ export default function SignupPage() {
                 </div>
 
                 <button
-                  aria-label="Sign Up"
                   type="submit"
-                  className="w-full py-3 font-medium rounded-lg transition flex items-center justify-center bg-cyan-400 hover:bg-cyan-300 text-black"
+                  disabled={loading}
+                  className={`w-full py-3 font-medium rounded-lg transition flex items-center justify-center text-black
+                    ${loading
+                      ? "bg-cyan-400/60 cursor-not-allowed"
+                      : "bg-cyan-400 hover:bg-cyan-300"}`}
                 >
-                  Sign Up
-                </button>
+                  {loading ? (
+                    <span className="flex items-center gap-2">
+                      <span className="h-4 w-4 animate-spin rounded-full border-2 border-black border-t-transparent" />
+                      Signing up...
+                    </span>
+                  ) : (
+                    "Sign Up"
+                  )}
+                  </button>
               </form>
 
               <div className="mt-8 text-center text-sm text-gray-400">

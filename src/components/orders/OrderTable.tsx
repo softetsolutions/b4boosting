@@ -44,7 +44,18 @@ export default function OrderTable({ orders, currentPage, totalPages, onPageChan
             <tr key={order._id} className="border-t border-gray-800">
               <td className="p-3">{order._id}</td>
               {/* <td className="p-3">{order.paypalTransactionId}</td> */}
-              <td className="p-3">{order.productId?.title}</td>
+              {/* <td className="p-3">{order.productTitle}</td> */}
+              <td className="p-3">
+  <div className="w-10 h-10 relative">
+    <Image
+      src={order.productImage}
+      alt={order.productTitle}
+      fill
+      className="object-cover rounded"
+    />
+  </div>
+</td>
+
 
               <td className="p-3">
                 <div className="flex items-center">
@@ -56,9 +67,9 @@ export default function OrderTable({ orders, currentPage, totalPages, onPageChan
     className="rounded-full object-cover"
   />
 </div>
-                  {order.buyerId?.username}
+                  {order.buyerName}
                 </div>
-                {order.buyerId?.email}
+                {order.buyerEmail}
               </td>
 
               <td className="p-3">
@@ -73,9 +84,9 @@ export default function OrderTable({ orders, currentPage, totalPages, onPageChan
   height={20}
   className="rounded-full mr-2 object-cover"
 />
-                  {order.sellerId?.username}
+                  {order.sellerName}
                 </div>
-                {order.sellerId?.email}
+                {order.sellerEmail}
               </td>
 
               <td className="p-3">${order.amount}</td>

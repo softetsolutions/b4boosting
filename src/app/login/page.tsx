@@ -11,8 +11,10 @@ import { signIn } from "next-auth/react";
 export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [loadingGoogle, setLoadingGoogle] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   async function clientSafeAction(formData: FormData) {
+    setLoading(true);
     try {
       const result = await Loginaction(formData);
 
@@ -30,6 +32,9 @@ export default function Login() {
       } else {
         toast.error("Login failed");
       }
+    }
+    finally {
+      setLoading(false);
     }
   }
 
@@ -67,7 +72,11 @@ export default function Login() {
               </h1>
 
               {/* Form submits directly to server action */}
-              <form action={clientSafeAction} className="space-y-5">
+              <form onSubmit={async (e) => {
+    e.preventDefault()
+    const formData = new FormData(e.currentTarget);
+    await clientSafeAction(formData);
+  }} className="space-y-5">
                 {/* Email */}
                 <div>
                   <label className="block text-sm font-medium text-gray-300 mb-1">
@@ -131,11 +140,21 @@ export default function Login() {
 
                 {/* Submit */}
                 <button
-                  aria-label="Submit"
                   type="submit"
-                  className="w-full py-3 font-medium rounded-lg flex items-center justify-center bg-cyan-400 hover:bg-cyan-300 text-black transition"
+                  disabled={loading}
+                  className={`w-full py-3 font-medium rounded-lg transition flex items-center justify-center text-black
+                    ${loading
+                      ? "bg-cyan-400/60 cursor-not-allowed"
+                      : "bg-cyan-400 hover:bg-cyan-300"}`}
                 >
-                  Sign In
+                  {loading ? (
+                    <span className="flex items-center gap-2">
+                      <span className="h-4 w-4 animate-spin rounded-full border-2 border-black border-t-transparent" />
+                      Signing in...
+                    </span>
+                  ) : (
+                    "Sign In"
+                  )}
                 </button>
               </form>
 

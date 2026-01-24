@@ -100,6 +100,7 @@ export const fetchAllServices = async (): Promise<Service[]> => {
     throw new Error("Failed to fetch services");
   }
   const data = await response.json();
+  console.log("service",data)
   return Array.isArray(data) ? data : [];
 };
 

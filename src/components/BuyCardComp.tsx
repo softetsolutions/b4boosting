@@ -2,13 +2,13 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
-import type { ApiOffer } from "src/api/offers";
+import type { ApiOffer,OfferDetails } from "src/api/offers";
 import toast from "react-hot-toast";
 import { createPayPalOrder, capturePayPalOrder } from "src/api/orders";
 import ShareMenu from "./ShareMenu";
 import { startConversation } from "src/api/conversation";
 import Image from "next/image";
-
+import Link from "next/link";
 interface BuyCardCompProps {
   offer: ApiOffer;
 }
@@ -17,7 +17,13 @@ interface PayPalApproveData {
 }
 
 function BuyCardComp({ offer }: BuyCardCompProps) {
+  
   const router = useRouter();
+ const serviceSlug = offer.product.service?.name
+  ?.toLowerCase()
+  .replace(/\s+/g, "-");
+
+ 
   const [count, setCount] = useState<number>(1);
 
   // const {userId}  = getAuthInfo();
@@ -74,17 +80,20 @@ function BuyCardComp({ offer }: BuyCardCompProps) {
       <div className="min-h-screen pb-16 relative mt-20">
         {/* Top Navigation */}
         <div className=" backdrop-blur-sm max-w-7xl mx-auto py-4 px-4 lg:px-8text-sm text-gray-400 relative z-10">
-          <a href="#" className="hover:text-amber-400 transition-colors">
-            Home
-          </a>{" "}
+          <Link href="/" className="hover:text-amber-400 transition-colors">
+    Home
+  </Link>{" "}
           &gt;
-          <a href="#" className="hover:text-amber-400 transition-colors">
-            Gift Cards
-          </a>{" "}
+          <Link href="/gift-cards" className="hover:text-amber-400 transition-colors">
+    Gift Cards
+  </Link>{" "}
           &gt;
-          <a href="#" className="hover:text-amber-400 transition-colors">
-            Xbox
-          </a>
+           <Link
+    href={`/gift-cards/${serviceSlug}`}
+    className="hover:text-amber-400 transition-colors text-gray-200"
+  >
+    {offer.product.title}
+  </Link>
         </div>
 
         <div className="flex flex-col lg:flex-row max-w-7xl mx-auto py-8 px-4 lg:px-8 relative z-10">

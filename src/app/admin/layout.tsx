@@ -44,18 +44,26 @@ export default async function AdminLayout({
 
 
   return (
-    <div className="flex h-screen bg-gray-900">
-      {/* Sidebar (Client Component) */}
-      <Sidebar title="Admin Dashboard" navigation={navigation} role="admin"
-        />
+    
+    <div className="flex min-h-screen bg-gray-900">
+    
+    <Sidebar
+      title="Admin Dashboard"
+      navigation={navigation}
+      role="admin"
+    />
 
-      {/* Main Content */}
-      <main className={`flex-1 h-screen overflow-hidden transition-all duration-300 mt-10
-          lg:ml-64
-          md:ml-5
-          ml-0`}>
-        <div className="h-full overflow-auto p-6 md:p-8">{children}</div>
-      </main>
-    </div>
+    
+    <main
+      className={`flex-1 min-h-screen transition-all duration-300
+        lg:ml-64
+        md:ml-5
+        ml-0`}
+    >
+      <div className="min-h-screen overflow-y-auto p-6 md:p-8">
+        {children}
+      </div>
+    </main>
+  </div>
   );
 }

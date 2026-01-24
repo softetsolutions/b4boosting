@@ -62,7 +62,7 @@ export default function AffiliateLandingPage() {
       setAffiliateId(newAffiliateId);
 
       // After joining, maybe redirect to create-ref-link or performance
-      router.push("/user/dashboard/affiliate/create-reflink");
+      router.push("/user/dashboard/affiliate/createReflink");
     } catch (err) {
       console.error(err);
     } finally {

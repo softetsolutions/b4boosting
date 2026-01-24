@@ -46,6 +46,7 @@ export default function ManageServices() {
  const handleServiceClick = (serviceId: string) => {
     router.push(`/admin/manageServices?serviceId=${serviceId}`);
   };
+  
 
   const handleDeleteClick = (serviceId: string, serviceName: string) => {
     setServiceToDelete({ id: serviceId, name: serviceName });
@@ -92,20 +93,15 @@ export default function ManageServices() {
     }
   };
 
-  const renderIcon = (icon: string) => {
-    if (!icon) {
-      return (
-        <div className="w-10 h-10 bg-gradient-to-r from-gray-600 to-gray-700 rounded-lg flex items-center justify-center">
-          <span className="text-gray-400 text-lg">?</span>
-        </div>
-      );
-    }
-
+  
+const renderIcon = (icon?: string) => {
+  const fallback = "/images/fallback.png"; 
+  const src = icon || fallback;
     return (
       <div className="w-10 h-10 rounded-lg overflow-hidden bg-gray-700/50 flex items-center justify-center">
       
          <Image
-      src={icon || "/images/fallback.png"}
+      src={src}
       alt="Service icon"
       // fill
       width={100}

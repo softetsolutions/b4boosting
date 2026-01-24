@@ -15,22 +15,30 @@ export interface OrderUI {
   buyerName: string;
   sellerName: string;
   productTitle: string;
+  buyerEmail: string;
+  sellerEmail: string;
+  productImage: string;
 
   createdAt: string;
 }
 
 const mapApiOrderToUI = (o: ApiOrder): OrderUI => ({
+  
   _id: o._id,
   orderStatus: o.orderStatus,
   paymentStatus: o.paymentStatus,
   amount: o.amount,
   quantity: o.quantity,
   buyerName: o.buyerId.displayName,
+  buyerEmail: o.buyerId.email,
+  sellerEmail: o.sellerId.email,
   sellerName: o.sellerId.displayName,
   productTitle: o.productId.title,
+  productImage:
+    o.productId.images?.[0] || "/images/product-placeholder.png",
   createdAt: o.createdAt,
 });
-
+console.log("mapApiOrderToUI", mapApiOrderToUI);
 export default function ManageOrders() {
   const [orders, setOrders] = useState<OrderUI[]>([]);
   const [loading, setLoading] = useState(true);

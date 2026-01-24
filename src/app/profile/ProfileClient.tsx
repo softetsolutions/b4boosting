@@ -14,6 +14,9 @@ import StarRating from "src/components/Reviews/StarRating";
 import type {AccountDetails} from "src/api/types";
 import type { BuyerOrder, OrderReview } from "src/api/orders";
 import {getImageSrc} from "src/utils/imageUtils";
+import { useRouter } from "next/navigation";
+import { ArrowLeft } from "lucide-react";
+import Link from "next/link";
 
 
 
@@ -25,6 +28,8 @@ interface DecodedToken {
 }
 
 export default function ProfilePage() {
+  const router = useRouter();
+
   const searchParams = useSearchParams();
   const defaultTabFromUrl = searchParams.get("tab") || "profile";
 
@@ -99,6 +104,15 @@ export default function ProfilePage() {
           <div className="max-w-5xl mx-auto rounded-2xl border border-gray-400/20 overflow-hidden">
             {/* Header Section */}
             <div className="relative h-38">
+               <Link
+                   href="/"
+                       className="group inline-flex items-center gap-2 rounded-full border border-gray-400/30 bg-black/40 px-4 py-2 text-sm font-medium text-gray-300 backdrop-blur transition-all duration-200 hover:border-cyan-400/60 hover:bg-cyan-400/10 hover:text-cyan-400"
+                        >
+            <span className="flex items-center justify-center rounded-full bg-gray-700/40 p-1 transition group-hover:bg-cyan-400/20">
+        <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-1" />
+             </span>
+           <span>Back to Home</span>
+         </Link>
               <div className="absolute bottom-0 left-6 flex items-end space-x-4">
                 <Image
                   src="/images/profile-avatar.png"
@@ -131,7 +145,11 @@ export default function ProfilePage() {
                   aria-label="active tab"
                   type="button"
                   key={tab.key}
-                  onClick={() => setActiveTab(tab.key)}
+                  onClick={() => {
+  //setActiveTab(tab.key);
+  router.push(`/profile?tab=${tab.key}`);
+}}
+
                   className={`py-2 px-5 text-sm font-medium rounded-full transition-all ${
                     activeTab === tab.key
                       ? "yellow-bg text-white shadow-sm"

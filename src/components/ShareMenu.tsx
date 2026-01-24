@@ -13,6 +13,7 @@ import {
 } from "react-share";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
 interface ShareMenuProps {
   shareUrl: string;
@@ -29,11 +30,21 @@ export default function ShareMenu({ shareUrl, title = "Check this out!" }: Share
   const [affiliateId, setAffiliateId] = useState<string | null>(
     Cookies.get("affiliateId") || null
   );
+  const [message, setMessage] = useState<{
+  type: "success" | "error" | "info";
+  text: string;
+} | null>(null);
+
 
   const userId = Cookies.get("userId");
 
   const openModal = () => setIsOpen(true);
-  const closeModal = () => setIsOpen(false);
+
+
+  const closeModal = () => {
+    setMessage(null);
+    setIsOpen(false);
+  }
 
   const handleCopy = async () => {
     try {
@@ -51,10 +62,21 @@ export default function ShareMenu({ shareUrl, title = "Check this out!" }: Share
 
   const handleJoinAffiliate = async () => {
     if (!userId) {
+      setMessage({
+    type: "error",
+    text: "Please login to join the affiliate program.",
+  });
       console.warn("No userId provided");
       router.push("/login");
       return;
     }
+    if (affiliateId) {
+     setMessage({
+    type: "info",
+    text: "You are already an affiliate.",
+  });
+    return;
+  }
 
     try {
       setIsJoining(true);
@@ -73,7 +95,13 @@ export default function ShareMenu({ shareUrl, title = "Check this out!" }: Share
       const newAffiliateId = data.affiliate.affiliateId;
       Cookies.set("affiliateId", newAffiliateId, { expires: 7 }); // 7 days or whatever
       setAffiliateId(newAffiliateId);
-      closeModal();
+      setMessage({
+  type: "success",
+  text: "You are now an affiliate! Start sharing your link.",
+});
+      setTimeout(() => {
+  closeModal();
+}, 3000);
     } catch (err) {
       console.error(err);
     } finally {
@@ -122,6 +150,19 @@ export default function ShareMenu({ shareUrl, title = "Check this out!" }: Share
             </button>
 
             <h2 className="text-lg font-semibold text-gray-100 mb-4">Share this</h2>
+            {message && (
+  <div
+    className={`mb-4 rounded-md px-3 py-2 text-sm border ${
+      message.type === "success"
+        ? "bg-emerald-900/30 text-emerald-400 border-emerald-800"
+        : message.type === "error"
+        ? "bg-red-900/30 text-red-400 border-red-800"
+        : "bg-yellow-900/30 text-yellow-400 border-yellow-800"
+    }`}
+  >
+    {message.text}
+  </div>
+)}
 
             {/* Social Icons */}
             <div className="flex gap-3 mb-4">
