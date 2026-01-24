@@ -260,6 +260,8 @@ export default function MessageContainer({
 }, [conversationsId, loadMessages]);
 
 
+console.log("messageList", messageList);
+
   return (
     <div className="flex flex-col h-full text-white">
       {/* HEADER */}

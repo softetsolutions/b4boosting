@@ -11,6 +11,13 @@ import Marquee from "src/components/Marquee";
 import { jwtDecode } from "jwt-decode";
 import { logoutAction } from "src/utils/actions/actions";
 import { HomePageData } from "src/api/types";
+import { Bell } from "lucide-react";
+import {
+  fetchNotifications,
+  fetchUnreadCount,
+  markNotificationAsRead,
+} from "src/api/notification";
+import type { Notification } from "src/api/notification";
 
 interface NavbarProps {
   activeService?: string;
@@ -21,7 +28,7 @@ interface AuthTokenPayload {
   id: string;
   role: string;
   allowedRoutes: string[];
-   affiliateId?: string;
+  affiliateId?: string;
   [key: string]: unknown;
 }
 
@@ -42,6 +49,29 @@ export default function Navbar({ activeService, dynamicdata }: NavbarProps) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userRole, setUserRole] = useState("");
+
+  const [notifications, setNotifications] = useState<Notification[]>([]);
+  const [unreadCount, setUnreadCount] = useState(0);
+  const [isNotificationOpen, setIsNotificationOpen] = useState(false);
+
+  useEffect(() => {
+    if (!isLoggedIn) return;
+
+    const loadNotifications = async () => {
+      try {
+        const [list, count] = await Promise.all([
+          fetchNotifications(),
+          fetchUnreadCount(),
+        ]);
+        setNotifications(list);
+        setUnreadCount(count);
+      } catch (err) {
+        console.error("Notification fetch failed", err);
+      }
+    };
+
+    loadNotifications();
+  }, [isLoggedIn]);
 
   const pathname = usePathname();
   const isHomePage = pathname === "/";
@@ -154,15 +184,80 @@ export default function Navbar({ activeService, dynamicdata }: NavbarProps) {
               </Link>
 
               {/* Hamburger icon for mobile */}
-              <button
-                type="button"
-                className="lg:hidden  hover:text-yellow-400 transition-colors"
-                onClick={() => setIsMenuOpen(!isMenuOpen)}
-              >
-                {isMenuOpen ? <X /> : <Menu />}
-              </button>
-            </div>
+              <div className="flex items-center">
+                {/* Notification Bell */}
+                {isLoggedIn && (
+                  <div className="relative">
+                    <button
+                      type="button"
+                      onClick={() => setIsNotificationOpen(!isNotificationOpen)}
+                      className="relative p-2 rounded-full hover:bg-white/10 transition"
+                    >
+                      <Bell
+                        className={`text-white ${isNotificationOpen || unreadCount > 0 ? "text-yellow-400" : ""}`}
+                      />
 
+                      {unreadCount > 0 && (
+                        <span className="absolute -top-1 -right-1 bg-red-500 text-xs text-white rounded-full px-1.5">
+                          {unreadCount}
+                        </span>
+                      )}
+                    </button>
+
+                    {isNotificationOpen && (
+                      <div className="absolute right-0 mt-2 w-80 bg-zinc-900 rounded-lg shadow-xl z-50 max-h-96 overflow-auto">
+                        <div className="px-4 py-2 font-semibold text-white border-b border-white/10">
+                          Notifications
+                        </div>
+
+                        {notifications.length === 0 ? (
+                          <p className="px-4 py-4 text-sm text-gray-400">
+                            No notifications
+                          </p>
+                        ) : (
+                          notifications.map((n) => (
+                            <div
+                              key={n._id}
+                              className={`px-4 py-3 cursor-pointer border-b border-white/5 ${
+                                !n.isRead ? "bg-white/5" : ""
+                              }`}
+                              onClick={async () => {
+                                if (!n.isRead) {
+                                  await markNotificationAsRead(n._id);
+                                  setUnreadCount((c) => c - 1);
+                                }
+
+                                // Optional redirect
+                                if (n.data?.orderId) {
+                                  router.push(`/chats`);
+                                }
+
+                                setIsNotificationOpen(false);
+                              }}
+                            >
+                              <p className="text-sm font-medium text-white">
+                                {n.title}
+                              </p>
+                              <p className="text-xs text-gray-400">
+                                {n.message}
+                              </p>
+                            </div>
+                          ))
+                        )}
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                <button
+                  type="button"
+                  className="lg:hidden  hover:text-yellow-400 transition-colors"
+                  onClick={() => setIsMenuOpen(!isMenuOpen)}
+                >
+                  {isMenuOpen ? <X /> : <Menu />}
+                </button>
+              </div>
+            </div>
             {/* Desktop Links */}
             {isHomePage && (
               <div className="hidden lg:flex items-center xl:gap-10 lg:gap-6">
@@ -198,6 +293,68 @@ export default function Navbar({ activeService, dynamicdata }: NavbarProps) {
                     className="bg-transparent border-none outline-none w-full text-white placeholder-white/70"
                     placeholder="Search ..."
                   />
+                </div>
+              )}
+
+              {/* Notification Bell */}
+              {isLoggedIn && (
+                <div className="relative">
+                  <button
+                    type="button"
+                    onClick={() => setIsNotificationOpen(!isNotificationOpen)}
+                    className="relative p-2 rounded-full hover:bg-white/10 transition"
+                  >
+                    <Bell
+                      className={`text-white ${isNotificationOpen || unreadCount > 0 ? "text-yellow-400" : ""}`}
+                    />
+
+                    {unreadCount > 0 && (
+                      <span className="absolute -top-1 -right-1 bg-red-500 text-xs text-white rounded-full px-1.5">
+                        {unreadCount}
+                      </span>
+                    )}
+                  </button>
+
+                  {isNotificationOpen && (
+                    <div className="absolute right-0 mt-2 w-80 bg-zinc-900 rounded-lg shadow-xl z-50 max-h-96 overflow-auto">
+                      <div className="px-4 py-2 font-semibold text-white border-b border-white/10">
+                        Notifications
+                      </div>
+
+                      {notifications.length === 0 ? (
+                        <p className="px-4 py-4 text-sm text-gray-400">
+                          No notifications
+                        </p>
+                      ) : (
+                        notifications.map((n) => (
+                          <div
+                            key={n._id}
+                            className={`px-4 py-3 cursor-pointer border-b border-white/5 ${
+                              !n.isRead ? "bg-white/5" : ""
+                            }`}
+                            onClick={async () => {
+                              if (!n.isRead) {
+                                await markNotificationAsRead(n._id);
+                                setUnreadCount((c) => c - 1);
+                              }
+
+                              // Optional redirect
+                              if (n.data?.orderId) {
+                                router.push(`/chats`);
+                              }
+
+                              setIsNotificationOpen(false);
+                            }}
+                          >
+                            <p className="text-sm font-medium text-white">
+                              {n.title}
+                            </p>
+                            <p className="text-xs text-gray-400">{n.message}</p>
+                          </div>
+                        ))
+                      )}
+                    </div>
+                  )}
                 </div>
               )}
 
@@ -265,26 +422,25 @@ export default function Navbar({ activeService, dynamicdata }: NavbarProps) {
                     >
                       Affiliate Program
                     </Link>
-                   
 
                     <div className="px-4 py-2 flex justify-between items-center hover:bg-gray-500 cursor-pointer">
                       <ThemeToggle />
                     </div>
                     {isLoggedIn && (
                       <>
-                       <Link
-                      href="/profile"
-                      className="w-full text-left px-4 py-2 hover:bg-gray-500"
-                    >
-                      Profile
-                    </Link>
-                      <button
-                        type="button"
-                        onClick={handleLogout}
-                        className="w-full text-left px-4 py-2 text-red-500 hover:bg-red-100"
-                      >
-                        Logout
-                      </button>
+                        <Link
+                          href="/profile"
+                          className="w-full text-left px-4 py-2 hover:bg-gray-500"
+                        >
+                          Profile
+                        </Link>
+                        <button
+                          type="button"
+                          onClick={handleLogout}
+                          className="w-full text-left px-4 py-2 text-red-500 hover:bg-red-100"
+                        >
+                          Logout
+                        </button>
                       </>
                     )}
                   </div>
