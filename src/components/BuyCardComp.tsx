@@ -88,12 +88,13 @@ function BuyCardComp({ offer }: BuyCardCompProps) {
     Gift Cards
   </Link>{" "}
           &gt;
-           <Link
+           {/* <Link
     href={`/gift-cards/${serviceSlug}`}
     className="hover:text-amber-400 transition-colors text-gray-200"
   >
     {offer.product.title}
-  </Link>
+  </Link> */}
+  <span className="hover:text-amber-400 transition-colors text-gray-200">{offer.product.title}</span>
         </div>
 
         <div className="flex flex-col lg:flex-row max-w-7xl mx-auto py-8 px-4 lg:px-8 relative z-10">
