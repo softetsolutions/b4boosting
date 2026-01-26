@@ -18,6 +18,7 @@ import {
   markNotificationAsRead,
 } from "src/api/notification";
 import type { Notification } from "src/api/notification";
+import SearchMegaDropdown from "./SearchMegaDropdown";
 
 interface NavbarProps {
   activeService?: string;
@@ -32,16 +33,29 @@ interface AuthTokenPayload {
   [key: string]: unknown;
 }
 
-const dummyNavbarOptions = [
-  { label: "Currency", link: "#currency" },
-  { label: "Accounts", link: "#account" },
-  { label: "Top Ups", link: "#topups" },
-  { label: "Items", link: "#item" },
-  { label: "Boosting", link: "#boosting" },
-  { label: "Gift Cards", link: "#gift-card" },
-];
+export interface Product {
+  _id: string;
+  title: string;
+  images: string[];
+}
 
-export default function Navbar({ activeService, dynamicdata }: NavbarProps) {
+export interface Service {
+  _id: string;
+  name: string;
+  products: Product[];
+}
+
+export interface NavbarItem {
+  label: string;
+  key: string;
+  items: {
+    name: string;
+    image?: string;
+    slug: string;
+  }[];
+}
+
+export default function Navbar({ dynamicdata }: NavbarProps) {
   const SettingsData = dynamicdata?.settings;
   const router = useRouter();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -54,20 +68,62 @@ export default function Navbar({ activeService, dynamicdata }: NavbarProps) {
   const [unreadCount, setUnreadCount] = useState(0);
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
 
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+
+  const [activeHover, setActiveHover] = useState<string | null>(null);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [openMobileMenu, setOpenMobileMenu] = useState<string | null>(null);
+
+  let hoverTimeout: NodeJS.Timeout;
+  const navbarData: NavbarItem[] = (dynamicdata?.services ?? [])
+    .filter((service) => service.products?.length > 0)
+    .map((service: Service) => ({
+      label: formatLabel(service.name),
+      key: service.name,
+      items: service.products.map((product) => ({
+        name: formatLabel(product.title),
+        image: product.images?.[0] || "/images/fallback.png",
+        slug: `/categories/${service.name}/${product.title}`,
+      })),
+    }));
+
+  function formatLabel(label: string) {
+    return label
+      .replace(/[-_]+/g, " ")
+      .trim()
+      .split(/\s+/)
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+      .join(" ");
+  }
+
   useEffect(() => {
-    if (!isLoggedIn) return;
+    if (!isLoggedIn) {
+      setNotifications([]);
+      setUnreadCount(0);
+      return;
+    }
 
     const loadNotifications = async () => {
-      try {
-        const [list, count] = await Promise.all([
-          fetchNotifications(),
-          fetchUnreadCount(),
-        ]);
-        setNotifications(list);
-        setUnreadCount(count);
-      } catch (err) {
-        console.error("Notification fetch failed", err);
+      const [listResult, countResult] = await Promise.all([
+        fetchNotifications(),
+        fetchUnreadCount(),
+      ]);
+
+      // Token expired or unauthorized → silent reset
+      if (listResult?.unauthorized) {
+        setNotifications([]);
+        setUnreadCount(0);
+        return;
       }
+
+      // Normal success
+      if (Array.isArray(listResult?.data)) {
+        setNotifications(listResult.data);
+      } else {
+        setNotifications([]);
+      }
+
+      setUnreadCount(typeof countResult === "number" ? countResult : 0);
     };
 
     loadNotifications();
@@ -80,10 +136,7 @@ export default function Navbar({ activeService, dynamicdata }: NavbarProps) {
     const handleScroll = () => setIsScrolled(window.scrollY > 50);
     handleScroll();
     window.addEventListener("scroll", handleScroll);
-
     const token = Cookies.get("token");
-
-    console.log(token, "token navbar");
 
     if (token && typeof token == "string") {
       try {
@@ -115,18 +168,27 @@ export default function Navbar({ activeService, dynamicdata }: NavbarProps) {
     }
   };
 
+  useEffect(() => {
+    setActiveHover(null);
+    setIsMenuOpen(false);
+  }, [pathname]);
+
   return (
     <>
       <header className="relative w-full">
         {/* Banner */}
         {isHomePage && (
           <div className="relative w-full">
-            <Marquee
-              text={SettingsData?.marqueeText}
-              link={SettingsData?.marqueeLink}
-              speed={150}
-              className="fixed top-0 left-0 right-0 z-50"
-            />
+            {SettingsData?.marqueeText?.trim() && (
+              <Marquee
+                text={SettingsData?.marqueeText}
+                link={SettingsData?.marqueeLink}
+                speed={150}
+                className={`fixed top-0 left-0 right-0 z-50 ${
+                  !SettingsData?.marqueeText ? "hidden" : ""
+                } `}
+              />
+            )}
             <Image
               src={SettingsData?.bannerImg || "/images/fallback.png"}
               alt="Banner"
@@ -187,7 +249,7 @@ export default function Navbar({ activeService, dynamicdata }: NavbarProps) {
               <div className="flex items-center">
                 {/* Notification Bell */}
                 {isLoggedIn && (
-                  <div className="relative">
+                  <div className="relative lg:hidden">
                     <button
                       type="button"
                       onClick={() => setIsNotificationOpen(!isNotificationOpen)}
@@ -259,7 +321,7 @@ export default function Navbar({ activeService, dynamicdata }: NavbarProps) {
               </div>
             </div>
             {/* Desktop Links */}
-            {isHomePage && (
+            {/* {isHomePage && (
               <div className="hidden lg:flex items-center xl:gap-10 lg:gap-6">
                 {dummyNavbarOptions.map((option) => {
                   const isActive =
@@ -281,18 +343,107 @@ export default function Navbar({ activeService, dynamicdata }: NavbarProps) {
                   );
                 })}
               </div>
-            )}
+            )} */}
+
+            <div className="hidden lg:flex items-center xl:gap-10 lg:gap-6 relative">
+              {navbarData.map((menu) => (
+                <div
+                  key={menu.key}
+                  className="relative"
+                  onMouseEnter={() => {
+                    setSearchTerm("");
+                    clearTimeout(hoverTimeout);
+                    setActiveHover(menu.key);
+                  }}
+                  onMouseLeave={() => {
+                    setSearchTerm("");
+                    hoverTimeout = setTimeout(() => setActiveHover(null), 150);
+                  }}
+                >
+                  {/* NAV ITEM */}
+                  <button
+                    type="button"
+                    className="text-2xl cursor-pointer hover:text-yellow-400 font-medium"
+                  >
+                    {menu.label}
+                  </button>
+
+                  {activeHover === menu.key && (
+                    <div className="absolute left-0 top-full mt-5 w-[420px] bg-zinc-900 rounded-xl shadow-2xl p-4 z-50">
+                      {/* Search inside dropdown */}
+                      <div className="mb-3">
+                        <input
+                          type="text"
+                          placeholder={`Search ${menu.label}`}
+                          value={searchTerm}
+                          onChange={(e) => setSearchTerm(e.target.value)}
+                          className="w-full px-3 py-2 rounded-lg bg-black/40 text-white outline-none placeholder-gray-400"
+                        />
+                      </div>
+
+                      {/* Filtered Items */}
+                      <div className="grid grid-cols-2 gap-2">
+                        {menu.items
+                          .filter((item) =>
+                            item.name
+                              .toLowerCase()
+                              .includes(searchTerm.toLowerCase()),
+                          )
+                          .map((item) => (
+                            <Link
+                              key={item.slug}
+                              href={item.slug}
+                              className="px-3 py-2 rounded-lg text-md text-gray-300 hover:bg-yellow-400 hover:text-black transition"
+                            >
+                              <span className="flex items-center gap-2 ">
+                                <Image
+                                  src={item.image || "images/fallback.png"}
+                                  alt="product image"
+                                  width={50}
+                                  height={50}
+                                  className="rounded-xs"
+                                />
+                                {item.name}
+                              </span>
+                            </Link>
+                          ))}
+
+                        {menu.items.filter((item) =>
+                          item.name
+                            .toLowerCase()
+                            .includes(searchTerm.toLowerCase()),
+                        ).length === 0 && (
+                          <p className="col-span-2 text-sm text-gray-400">
+                            No results found
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+
             {/* Desktop Right Items */}
-            <div className="hidden lg:flex flex-row items-center gap-4">
+            <div className="hidden lg:flex flex-row items-center gap-4 w-xl">
               {/* Search */}
               {isHomePage && (
-                <div className="flex items-center gap-2 p-2 rounded-lg bg-white/10 text-white hover:bg-white/20 transition-colors w-full">
-                  <SearchIcon />
-                  <input
-                    type="text"
-                    className="bg-transparent border-none outline-none w-full text-white placeholder-white/70"
-                    placeholder="Search ..."
-                  />
+                <div className="relative w-full">
+                  <button
+                    type="button"
+                    onClick={() => setIsSearchOpen((prev) => !prev)}
+                    className="flex items-center gap-2 p-2 rounded-lg bg-white/10 text-white hover:bg-white/20 transition-colors w-full"
+                  >
+                    <SearchIcon />
+                    <span className="text-white/70">Search…</span>
+                  </button>
+
+                  {isSearchOpen && (
+                    <SearchMegaDropdown
+                      navbarData={navbarData}
+                      onClose={() => setIsSearchOpen(false)}
+                    />
+                  )}
                 </div>
               )}
 
@@ -455,34 +606,85 @@ export default function Navbar({ activeService, dynamicdata }: NavbarProps) {
               <div className="flex flex-col space-y-4 px-4 pb-4">
                 {/* Search */}
                 {isHomePage && (
-                  <div className="flex items-center gap-2 p-2 rounded-lg bg-white/10 text-white hover:bg-white/20 transition-colors w-full">
-                    <SearchIcon />
-                    <input
-                      type="text"
-                      className="bg-transparent border-none outline-none w-full text-white placeholder-white/70"
-                      placeholder="Search ..."
-                    />
+                  <div className="relative w-full">
+                    <button
+                      type="button"
+                      onClick={() => setIsSearchOpen((prev) => !prev)}
+                      className="flex items-center gap-2 p-2 rounded-lg bg-white/10 text-white hover:bg-white/20 transition-colors w-full"
+                    >
+                      <SearchIcon />
+                      <span className="text-white/70">Search…</span>
+                    </button>
+
+                    {isSearchOpen && (
+                      <SearchMegaDropdown
+                        navbarData={navbarData}
+                        onClose={() => setIsSearchOpen(false)}
+                      />
+                    )}
                   </div>
                 )}
-                {/* <div className="flex items-center gap-2 p-2 rounded-lg bg-white/10 text-white hover:bg-white/20 transition-colors w-full">
-                  <SearchIcon />
-                  <input
-                    type="text"
-                    className="bg-transparent border-none outline-none w-full text-white placeholder-white/70"
-                    placeholder="Search ..."
-                  />
-                </div> */}
 
-                {/* Links */}
-                {dummyNavbarOptions.map((option) => (
-                  <Link
-                    key={option.link}
-                    href={option.link}
-                    className="text-white hover:text-yellow-400 font-medium"
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    {option.label}
-                  </Link>
+                {navbarData.map((menu) => (
+                  <div key={menu.key} className="border-b border-white/10 pb-2">
+                    {/* Service Header */}
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setOpenMobileMenu(
+                          openMobileMenu === menu.key ? null : menu.key,
+                        )
+                      }
+                      className="w-full flex justify-between items-center text-white text-lg font-medium"
+                    >
+                      {menu.label}
+                      <span>{openMobileMenu === menu.key ? "−" : "+"}</span>
+                    </button>
+
+                    {/* Expanded Products */}
+                    {openMobileMenu === menu.key && (
+                      <div className="mt-3 space-y-2">
+                        <input
+                          type="text"
+                          placeholder={`Search ${menu.label}`}
+                          value={searchTerm}
+                          onChange={(e) => setSearchTerm(e.target.value)}
+                          className="w-full px-3 py-2 rounded-lg bg-black/40 text-white outline-none placeholder-gray-400"
+                        />
+
+                        {menu.items
+                          .filter((item) =>
+                            item.name
+                              .toLowerCase()
+                              .includes(searchTerm.toLowerCase()),
+                          )
+                          .map((item) => (
+                            <Link
+                              key={item.slug}
+                              href={item.slug}
+                              onClick={() => setIsMenuOpen(false)}
+                              className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-gray-300 hover:bg-yellow-400 hover:text-black"
+                            >
+                              <Image
+                                src={item.image || "/images/fallback.png"}
+                                alt={item.name}
+                                width={40}
+                                height={40}
+                              />
+                              {item.name}
+                            </Link>
+                          ))}
+
+                        {menu.items.filter((item) =>
+                          item.name
+                            .toLowerCase()
+                            .includes(searchTerm.toLowerCase()),
+                        ).length === 0 && (
+                          <p className="text-sm text-gray-400">No results</p>
+                        )}
+                      </div>
+                    )}
+                  </div>
                 ))}
 
                 {/* Settings */}

@@ -82,7 +82,7 @@ export async function registerAction(formData: FormData) {
     }
     return {
   success: true,
-  message: "Registration successful. Please verify your email.",
+  message: data.message,
 };
 
   
