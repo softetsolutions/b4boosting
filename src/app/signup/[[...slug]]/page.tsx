@@ -138,19 +138,19 @@ finally{
 
                 <div className="text-sm text-gray-400 text-center mb-4">
                   By registering, you agree to our{" "}
-                  <p
-                    // href="/terms-conditions"
-                    className="text-cyan-400 hover:underline"
-                  >
-                    Terms & Conditions {" "}<span className="text-cyan-400 hover:underline">and{" "}</span>Privacy Policy. 
-                  </p>{" "}
-                  {/* and{" "}
-                  <p
-                    // href="/privacy-policy"
-                    className="text-cyan-400 hover:underline"
-                  >
-                    Privacy Policy
-                  </p> */}
+                 <Link
+    href="/terms-conditions"
+    className="text-cyan-400 hover:underline"
+  >
+    Terms & Conditions
+  </Link>{" "}
+  and{" "}
+  <Link
+    href="/privacy-policy"
+    className="text-cyan-400 hover:underline"
+  >
+    Privacy Policy
+  </Link>.
                   
                 </div>
 
