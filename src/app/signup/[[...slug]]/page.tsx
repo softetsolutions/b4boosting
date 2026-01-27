@@ -142,20 +142,21 @@ finally{
                     // href="/terms-conditions"
                     className="text-cyan-400 hover:underline"
                   >
-                    Terms & Conditions
+                    Terms & Conditions {" "}<span className="text-cyan-400 hover:underline">and{" "}</span>Privacy Policy. 
                   </p>{" "}
-                  and{" "}
+                  {/* and{" "}
                   <p
                     // href="/privacy-policy"
                     className="text-cyan-400 hover:underline"
                   >
                     Privacy Policy
-                  </p>
-                  .
+                  </p> */}
+                  
                 </div>
 
                 <button
                   type="submit"
+                  aria-label="Sign Up"
                   disabled={loading}
                   className={`w-full py-3 font-medium rounded-lg transition flex items-center justify-center text-black
                     ${loading
